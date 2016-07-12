@@ -9,7 +9,9 @@
   },
   "dependencies": {
     "nprogress": "^0.2.0",
-    "vue": "^2.0.0-beta.5"
+    "purecss": "^0.6.0",
+    "vue": "^2.0.0-beta.5",
+    "vue-router": "^2.0.0-beta.4"
   },
   "devDependencies": {
     "autoprefixer": "^6.4.1",
