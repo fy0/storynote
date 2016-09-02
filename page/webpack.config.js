@@ -40,6 +40,12 @@ module.exports = {
             },
         ]
     },
+    babel: {
+        presets: ['es2015', 'stage-2'],
+        plugins: ['transform-runtime'],
+        compact: false,
+        cacheDirectory: true, //important for performance
+    },
     postcss: function () {
         return [autoprefixer];
     },

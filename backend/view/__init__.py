@@ -192,6 +192,14 @@ class View(tornado.web.RequestHandler):
         """ just for pycharm warning fix """
         pass
 
+    def set_default_headers(self):
+        self.set_header('Access-Control-Allow-Origin', config.ORIGIN_DOMAIN)
+        #self.set_header('Access-Control-Allow-Origin', '*')
+        self.set_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+        self.set_header('Access-Control-Max-Age', 1000)
+        self.set_header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+        self.set_header('Access-Control-Allow-Credentials', 'true')
+
 
 class LoginView(View):
     def prepare(self):
@@ -212,8 +220,16 @@ class AjaxView(View):
         pass
 
     def prepare(self):
+        # body arguments 的补丁
+        if self.request.headers.get("Content-Type", "").startswith('application/json'):
+            body_args = json.loads(self.decode_argument(self.request.body))
+            for k, v in body_args.items():
+                self.request.arguments.setdefault(k, []).extend([v])
         self.set_header('Content-Type', 'application/json')
         super(AjaxView, self).prepare()
+
+    def options(self, *args, **kwargs):
+        self.finish()
 
 
 class AjaxLoginView(LoginView):
@@ -224,6 +240,9 @@ class AjaxLoginView(LoginView):
     def prepare(self):
         self.set_header('Content-Type', 'application/json')
         super(AjaxLoginView, self).prepare()
+
+    def options(self, *args, **kwargs):
+        self.finish()
 
 
 # sugar

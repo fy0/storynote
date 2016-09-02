@@ -8,7 +8,7 @@
     <h1>这里是标题</h1>
     <div class="pure-g">
         <div class="pure-u-3-4">
-            <div class="article-item" v-for="item in articles">
+            <div class="article-item" v-for="item in topics">
                 <p><a>{{item.title}}</a></p>
                 <p>{{item.date}}</p>
                 <div class="divider-line"></div>
@@ -22,16 +22,22 @@
 </template>
 
 <script>
+import api from "../netapi.js"
+
 export default {
     data () {
         return {
-            articles: [
+            topics: [
                 {title: '这是一篇文章1', author: 'fy', date: '2016-01-01', brief: '简介简介简介简介简介'},
                 {title: '这是一篇文章2', author: 'fy', date: '2016-01-01', brief: '简介简介简介简介简介'},
                 {title: '这是一篇文章3', author: 'fy', date: '2016-01-01', brief: '简介简介简介简介简介'},
             ],
             msg: 'Hello Vue 2.0!'
         }
+    },
+    mounted: function () {
+        api.test();
+        console.log(1111111);
     }
 }
 </script>

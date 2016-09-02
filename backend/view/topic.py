@@ -5,7 +5,7 @@ from model.topic import Topic
 from view import route, AjaxView, AjaxLoginView, url_for
 
 
-@route('/topic/new', name='topic_new')
+@route('/api/topic/new', name='topic_new')
 class TopicNew(AjaxLoginView):
     def post(self):
         title = self.get_argument('title', '').strip()
@@ -19,7 +19,7 @@ class TopicNew(AjaxLoginView):
             self.finish({'code': -1})
 
 
-@route('/topic/(\d+)', name='topic')
+@route('/api/topic/(\d+)', name='topic')
 class TopicPage(AjaxLoginView):
     def get(self, topic_id):
         topic = Topic.get_by_pk(topic_id)
@@ -32,7 +32,7 @@ class TopicPage(AjaxLoginView):
             self.finish({'code': -1})
 
 
-@route('/recent', name='recent')
+@route('/api/recent', name='recent')
 class Recent(AjaxLoginView):
     def get(self):
         page = self.get_argument('p', '1')
