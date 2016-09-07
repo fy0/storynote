@@ -38,6 +38,8 @@ export default {
     mounted: async function () {
         let ret = await api.topicRecent();
         console.log(1111111, ret);
+        //ret = await api.topicNew('这是一篇文章1', "内容内容内容内容内容内容内容内容");
+        //console.log(1111111, ret);
     }
 }
 </script>

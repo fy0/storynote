@@ -6,13 +6,12 @@ from view import route, AjaxView, AjaxLoginView, url_for
 
 
 @route('/api/topic/new', name='topic_new')
-class TopicNew(AjaxLoginView):
+class TopicNew(AjaxView):
     def post(self):
         title = self.get_argument('title', '').strip()
         content = self.get_argument('content', '').strip()
         if title and config.TITLE_LENGTH_MIN <= len(title) <= config.TITLE_LENGTH_MAX:
             t = Topic.new(title, self.current_user() or 0, content)
-            self.redirect(url_for('topic', t.id))
             self.finish({'code': 0, 'topic': {'id': t.id}})
         else:
             # 非标准提交
@@ -40,4 +39,5 @@ class Recent(AjaxView):
         pg = pagination(count, query, config.TOPIC_PAGE_SIZE, page)
         pg["items"] = list(map(Topic.to_dict, pg["items"]))
         pg['page_numbers'] = list(pg['page_numbers'])
+        print(pg)
         self.finish({'code': 0, 'data': pg})

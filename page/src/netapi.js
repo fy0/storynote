@@ -47,6 +47,17 @@ export default {
         }
     },
 
+    topicNew: async function (title, content) {
+        try {
+            let resp = await post(`${API_SERVER}/api/topic/new`, {title, content});
+            if (!resp.ok) throw "NOT 200";
+            let data = await resp.json();
+            return data;
+        } catch(e) {
+            console.log("Oops, error", e);
+        }
+    },
+
     userSignin: async function (username, password) {
         try {
             let resp = await post(`${API_SERVER}`, {username: '123'});
