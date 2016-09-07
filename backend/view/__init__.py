@@ -221,7 +221,7 @@ class AjaxView(View):
 
     def prepare(self):
         # body arguments 的补丁
-        if self.request.headers.get("Content-Type", "").startswith('application/json'):
+        if self.request.body and self.request.headers.get("Content-Type", "").startswith('application/json'):
             body_args = json.loads(self.decode_argument(self.request.body))
             for k, v in body_args.items():
                 self.request.arguments.setdefault(k, []).extend([v])

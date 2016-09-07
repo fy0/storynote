@@ -9,7 +9,7 @@ let info_post = {credentials: 'include', 'method': 'POST'};
 let info_get = {credentials: 'include', 'method': 'GET'};
 
 async function do_fetch (url, method, data, fix) {
-    return fetch('http://127.0.0.1:9000/', {
+    return fetch(url, {
         method: method,
         headers: {
             'Accept': 'application/json',
@@ -31,6 +31,17 @@ export default {
             if (!resp.ok) throw "NOT 200";
             let data = await resp.json();
             console.log(data);
+        } catch(e) {
+            console.log("Oops, error", e);
+        }
+    },
+
+    topicRecent: async function () {
+        try {
+            let resp = await get(`${API_SERVER}/api/recent`);
+            if (!resp.ok) throw "NOT 200";
+            let data = await resp.json();
+            return data;
         } catch(e) {
             console.log("Oops, error", e);
         }

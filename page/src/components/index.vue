@@ -35,9 +35,9 @@ export default {
             msg: 'Hello Vue 2.0!'
         }
     },
-    mounted: function () {
-        api.test();
-        console.log(1111111);
+    mounted: async function () {
+        let ret = await api.topicRecent();
+        console.log(1111111, ret);
     }
 }
 </script>

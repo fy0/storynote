@@ -33,10 +33,11 @@ class TopicPage(AjaxLoginView):
 
 
 @route('/api/recent', name='recent')
-class Recent(AjaxLoginView):
+class Recent(AjaxView):
     def get(self):
         page = self.get_argument('p', '1')
         count, query = Topic.get_list()
         pg = pagination(count, query, config.TOPIC_PAGE_SIZE, page)
-        pg["items"] = map(Topic.to_dict, pg["items"])
+        pg["items"] = list(map(Topic.to_dict, pg["items"]))
+        pg['page_numbers'] = list(pg['page_numbers'])
         self.finish({'code': 0, 'data': pg})
