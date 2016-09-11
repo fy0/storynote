@@ -49,6 +49,17 @@ module.exports = {
     postcss: function () {
         return [autoprefixer];
     },
+    resolve: {
+        alias: {
+            cash: path.join(__dirname, 'node_modules/cash-dom/dist/cash.js'),
+        },
+        modulesDirectories: ["node_modules"],
+    },
+    plugins: [
+        new webpack.ProvidePlugin({
+            $: "cash",
+        }),
+    ],
     devServer: {
         historyApiFallback: true,
         noInfo: true

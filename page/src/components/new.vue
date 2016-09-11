@@ -1,7 +1,7 @@
 <template>
 <div class="">
     <h3 class="">新建主题</h3>
-    <form class="pure-form" id="form_topic" method="POST" @submit="send">
+    <form class="pure-form" id="form_topic" method="POST" @submit.prevent="send">
         <fieldset>
             <div class="">
                 <input type="text" name="title" placeholder="这里填写标题，最长50个字" style="width: 100%">
@@ -18,6 +18,8 @@
 </template>
 
 <script>
+
+import cash from "cash-dom";
 
 export default {
     data () {
