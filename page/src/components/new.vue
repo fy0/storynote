@@ -19,7 +19,9 @@
 
 <script>
 
-import cash from "cash-dom";
+import api from "../netapi.js"
+import SimpleMDE from "simplemde"
+import "simplemde/dist/simplemde.min.css"
 
 export default {
     data () {
@@ -28,11 +30,46 @@ export default {
         }
     },
     methods: {
-        send: function (e) {
-            console.log(12312321);
-            console.log($("#form_topic"))
-            //for (let i of a.entries()) {b[i[0]] = b[i[1]];}
+        send: async function (e) {
+            let formdata = new FormData($("#form_topic")[0]);
+            //for (let i of formdata.entries()) { data[i[0]] = i[1]; }
+            let title = (formdata.get("title") || "").trim();
+            let content = this.editor.value();
+
+            if (!title) {
+                //$.messages_error('请至少输入一个标题！');
+                return false;
+            }
+
+            if (title.length < 5) {
+                //$.messages_error('标题应不少于 5 个字！');
+                return false;
+            }
+
+            if (title.length > 30) {
+                //$.messages_error('标题应不多于 30 个字！');
+                return false;
+            }
+
+            if (!content) return;
+            api.topicNew(title, content);
+            alert("OK!");
         }
+    },
+    mounted: function () {
+        this.editor = new SimpleMDE({
+            element: document.getElementById("editor"),
+            spellChecker: false,
+            autoDownloadFontAwesome: false,
+            autosave: {
+                enabled: true,
+                unique_id: "editor",
+            },
+            renderingConfig: {
+                singleLineBreaks: false,
+                codeSyntaxHighlighting: true,
+            },
+        });
     }
 }
 </script>
