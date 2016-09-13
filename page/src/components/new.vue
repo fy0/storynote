@@ -21,7 +21,6 @@
 
 import api from "../netapi.js"
 import SimpleMDE from "simplemde"
-import "simplemde/dist/simplemde.min.css"
 
 export default {
     data () {
@@ -60,7 +59,7 @@ export default {
         this.editor = new SimpleMDE({
             element: document.getElementById("editor"),
             spellChecker: false,
-            autoDownloadFontAwesome: false,
+            autoDownloadFontAwesome: true,
             autosave: {
                 enabled: true,
                 unique_id: "editor",
