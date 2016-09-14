@@ -2,8 +2,9 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import "purecss"
-import "./assets/css/bass.css"
 import "simplemde/dist/simplemde.min.css"
+import "./assets/css/bass.css"
+import "./tools.js"
 
 import App from './app.vue'
 import Index from './components/index.vue'

@@ -12,7 +12,7 @@
             <div v-if="page_info.items">
                 <div class="topic-item" v-for="item in page_info.items">
                     <p><a>{{item.title}}</a></p>
-                    <p>{{item.time}}</p>
+                    <p>{{time_to_text(item.time)}}</p>
                     <div class="divider-line"></div>
                 </div>
             </div>
@@ -38,6 +38,9 @@ export default {
             page_info: {},
             msg: 'Hello Vue 2.0!'
         }
+    },
+    methods: {
+        time_to_text: $.time_to_text,
     },
     mounted: async function () {
         let ret = await api.topicRecent();
