@@ -11,7 +11,9 @@
         <div class="pure-u-3-4">
             <div v-if="page_info.items">
                 <div class="topic-item" v-for="item in page_info.items">
-                    <p><a>{{item.title}}</a></p>
+                    <p>
+                        <router-link :to="{ path: '/t/' + item.id }">{{item.title}}</router-link>
+                    </p>
                     <p>{{time_to_text(item.time)}}</p>
                     <div class="divider-line"></div>
                 </div>
@@ -25,16 +27,12 @@
 </template>
 
 <script>
+
 import api from "../netapi.js"
 
 export default {
     data () {
         return {
-            topics: [
-                {title: '这是一篇文章1', author: 'fy', date: '2016-01-01', brief: '简介简介简介简介简介'},
-                {title: '这是一篇文章2', author: 'fy', date: '2016-01-01', brief: '简介简介简介简介简介'},
-                {title: '这是一篇文章3', author: 'fy', date: '2016-01-01', brief: '简介简介简介简介简介'},
-            ],
             page_info: {},
             msg: 'Hello Vue 2.0!'
         }

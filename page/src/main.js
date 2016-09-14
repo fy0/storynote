@@ -9,6 +9,7 @@ import "./tools.js"
 import App from './app.vue'
 import Index from './components/index.vue'
 import TopicNew from './components/new.vue'
+import TopicPage from './components/topic.vue'
 import ArticleList from './components/alist.vue'
 
 Vue.use(VueRouter)
@@ -16,6 +17,7 @@ Vue.use(VueRouter)
 var routes = [
     { path: '/', component: Index },
     { path: '/new', component: TopicNew },
+    { path: '/t/:id(\\d+)', component: TopicPage },
     { path: '/foo', component: ArticleList },
 ]
 

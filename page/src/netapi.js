@@ -36,6 +36,17 @@ export default {
         }
     },
 
+    topicGet: async function (id) {
+        try {
+            let resp = await get(`${API_SERVER}/api/topic/${id}`);
+            if (!resp.ok) throw "NOT 200";
+            let data = await resp.json();
+            return data;
+        } catch(e) {
+            console.log("Oops, error", e);
+        }
+    },
+
     topicRecent: async function () {
         try {
             let resp = await get(`${API_SERVER}/api/recent`);

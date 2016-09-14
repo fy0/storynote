@@ -80,3 +80,7 @@ class Topic(BaseModel):
     def get_list_by_user(cls, user):
         q = cls.select().where(cls.user==user, cls.state>TOPIC_STATE.HIDE)
         return q.count(), q
+
+    def view_count_inc(self):
+        cls = Topic
+        cls.update(view_count=cls.view_count + 1).where(cls.id == self.id).execute()
