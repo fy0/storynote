@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 
 import "purecss"
 import "simplemde/dist/simplemde.min.css"
-import "./assets/css/bass.css"
+import "./assets/css/base.css"
 import "./tools.js"
 
 import App from './app.vue'
