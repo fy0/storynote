@@ -4,6 +4,8 @@
         <a href="#">标签</a>
         <a href="#">文章</a>
         <a href="#">项目</a>
+        <router-link :to="{ path: '/signup' }">注册</router-link>
+        <router-link :to="{ path: '/signin' }">登录</router-link>
         <router-link :to="{ path: '/new' }">新建</router-link>
     </div>
     <h1>这里是标题</h1>

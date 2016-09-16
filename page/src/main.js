@@ -11,6 +11,8 @@ import Index from './components/index.vue'
 import TopicNew from './components/new.vue'
 import TopicPage from './components/topic.vue'
 import ArticleList from './components/alist.vue'
+import SignIn from './components/signin.vue'
+import SignUp from './components/signup.vue'
 
 Vue.use(VueRouter)
 
@@ -18,7 +20,9 @@ var routes = [
     { path: '/', component: Index },
     { path: '/new', component: TopicNew },
     { path: '/t/:id(\\d+)', component: TopicPage },
-    { path: '/foo', component: ArticleList },
+    { path: '/new', component: TopicNew },
+    { path: '/signin', component: SignIn },
+    { path: '/signup', component: SignUp },
 ]
 
 var router = new VueRouter({

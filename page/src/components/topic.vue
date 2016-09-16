@@ -11,7 +11,6 @@
 </template>
 
 <script>
-
 import api from "../netapi.js"
 
 export default {

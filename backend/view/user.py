@@ -36,7 +36,6 @@ class SignUp(AjaxView):
     def post(self):
         username = self.get_argument("username")
         password = self.get_argument("password")
-        password_again = self.get_argument("password_again")
 
         error_info = []
         if not (3 <= len(username) <= 15):
@@ -45,8 +44,6 @@ class SignUp(AjaxView):
             error_info.append("密码长度必须大于等于3")
         if User.exist(username):
             error_info.append("用户已存在！")
-        if password != password_again:
-            error_info.append("两次输入的密码不一致！")
 
         if not error_info:
             u = User.new(username, password)
