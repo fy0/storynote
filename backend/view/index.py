@@ -7,10 +7,8 @@ from view import route, url_for, AjaxView
 class Index(AjaxView):
     def get(self):
         a = self.get_argument('username')
-        print(a)
         self.finish({'code': 0, 'status': 'ready'})
 
     def post(self):
-        #print(self.request.body_arguments)
         a = self.get_argument('username')
         self.finish({'code': 0, 'status': 'ready'})

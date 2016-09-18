@@ -28,12 +28,32 @@
 </template>
 
 <script>
+import api from "../netapi.js"
+
 export default {
     data () {
         return {
-            msg: 'Hello Vue 2.0!'
         }
-    }
+    },
+    methods: {
+        send: async function (e) {
+            let formdata = new FormData(e.target);
+            let username = (formdata.get("username") || "").trim();
+            let password = (formdata.get("password") || "").trim();
+            let password_again = (formdata.get("password_again") || "").trim();
+            if (password != password_again) {
+                alert("两次输入的密码不一致！");
+                return;
+            }
+            let ret = await api.userSignup(username, password);
+            if (ret.code == 0) {
+                this.$router.replace({ path: '/'})
+            } else {
+                console.log(ret);
+                alert(ret.error_msgs);
+            }
+        }
+    },
 }
 </script>
 
