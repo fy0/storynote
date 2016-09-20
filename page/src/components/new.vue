@@ -20,6 +20,7 @@
 <script>
 
 import api from "../netapi.js"
+import state from "../state.js"
 import SimpleMDE from "simplemde"
 
 export default {
@@ -69,6 +70,12 @@ export default {
                 codeSyntaxHighlighting: true,
             },
         });
+    },
+    beforeRouteEnter: (to, from, next) => {
+        if (!state.data.user) {
+            return;
+        }
+        next();
     }
 }
 </script>

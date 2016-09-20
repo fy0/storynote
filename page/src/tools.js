@@ -1,12 +1,13 @@
 
-$.get_time = function(timestamp) {
+$.get_time = function (timestamp) {
     var date;
     date = new Date();
-    date.setTime(timestamp);
-    return date.toLocaleString();
+    date.setTime(timestamp * 1000);
+    //return date.toLocaleString();
+    return date.format('yyyy-MM-dd');
 };
 
-Date.prototype.format = function(format) {
+Date.prototype.format = function (format) {
     var date, k;
     date = {
         'M+': this.getMonth() + 1,
@@ -28,7 +29,7 @@ Date.prototype.format = function(format) {
     return format;
 };
 
-$.time_to_text = function(timestamp) {
+$.time_to_text = function (timestamp) {
     var date, now, offset, str;
     timestamp = Number(timestamp);
     if (timestamp === 0) {
@@ -61,7 +62,7 @@ $.time_to_text = function(timestamp) {
     return str;
 };
 
-$.time_replace = function() {
+$.time_replace = function () {
     var i, item, j, len, ref;
     ref = $('time[timestamp]');
     for (j = 0, len = ref.length; j < len; j++) {

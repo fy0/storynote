@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div class="nav" v-if="state.user">
+    <div class="nav" v-if="state.data.user">
         <a href="#">标签</a>
         <a href="#">文章</a>
         <a href="#">项目</a>
@@ -8,15 +8,15 @@
         <router-link :to="{ path: '/signin' }">登录</router-link>
         <router-link :to="{ path: '/new' }">新建</router-link>
     </div>
-    <h1>这里是标题</h1>
+    <h1>SinglePage</h1>
     <div class="pure-g">
         <div class="pure-u-3-4">
             <div v-if="page_info.items">
                 <div class="topic-item" v-for="item in page_info.items">
-                    <p>
+                    <p class="title">
                         <router-link :to="{ path: '/t/' + item.id }">{{item.title}}</router-link>
                     </p>
-                    <p>{{time_to_text(item.time)}}</p>
+                    <p class="info">{{time_to_text(item.time)}}</p>
                     <div class="divider-line"></div>
                 </div>
             </div>
@@ -27,6 +27,17 @@
     </div>
 </div>
 </template>
+
+<style>
+.topic-item > .title {
+
+}
+
+.topic-item > .info {
+    color: rgb(153, 153, 153);
+    font-size: small;
+}
+</style>
 
 <script>
 import Vue from 'vue'
@@ -49,7 +60,7 @@ export default {
 
         ret = await api.userInfo();
         if (ret.code == 0) {
-            Vue.set(state, 'user', ret.user);
+            Vue.set(state.data, 'user', ret.user);
         }
     }
 }
