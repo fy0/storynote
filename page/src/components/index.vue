@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div class="nav">
+    <div class="nav" v-if="state.user">
         <a href="#">标签</a>
         <a href="#">文章</a>
         <a href="#">项目</a>
@@ -29,14 +29,15 @@
 </template>
 
 <script>
-
+import Vue from 'vue'
 import api from "../netapi.js"
+import state from "../state.js"
 
 export default {
     data () {
         return {
             page_info: {},
-            msg: 'Hello Vue 2.0!'
+            state: state,
         }
     },
     methods: {
@@ -44,10 +45,12 @@ export default {
     },
     mounted: async function () {
         let ret = await api.topicRecent();
-        console.log(1111111, ret);
         this.$set(this, "page_info", ret.data);
-        //ret = await api.topicNew('这是一篇文章1', "内容内容内容内容内容内容内容内容");
-        //console.log(1111111, ret);
+
+        ret = await api.userInfo();
+        if (ret.code == 0) {
+            Vue.set(state, 'user', ret.user);
+        }
     }
 }
 </script>

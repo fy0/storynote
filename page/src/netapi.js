@@ -69,6 +69,17 @@ export default {
         }
     },
 
+    userInfo: async function () {
+        try {
+            let resp = await post(`${API_SERVER}/api/userinfo`);
+            if (!resp.ok) throw "NOT 200";
+            let data = await resp.json();
+            return data;
+        } catch(e) {
+            console.log("Oops, error", e);
+        }
+    },
+
     userSignup: async function (username, password) {
         try {
             let resp = await post(`${API_SERVER}/api/signup`, {username, password});

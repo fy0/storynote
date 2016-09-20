@@ -109,3 +109,11 @@ class User(BaseModel):
     @classmethod
     def count(cls):
         return cls.select(cls.level>0).count()
+
+    def to_dict(self):
+        ret = super().to_dict()
+        del ret['key']
+        del ret['key_time']
+        del ret['password']
+        del ret['salt']
+        return ret

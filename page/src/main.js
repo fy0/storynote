@@ -4,7 +4,8 @@ import VueRouter from 'vue-router'
 import "purecss"
 import "simplemde/dist/simplemde.min.css"
 import "./assets/css/base.css"
-import "./tools.js"
+import tools from "./tools.js"
+import state from "./state.js"
 
 import App from './app.vue'
 import Index from './components/index.vue'

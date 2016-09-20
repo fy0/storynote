@@ -24,6 +24,13 @@ class SignIn(AjaxView):
         return self.finish({'code': -1, 'error_msgs': error_info})
 
 
+@route('/api/userinfo', name='userinfo')
+class SignOut(AjaxView):
+    def post(self):
+        user = self.current_user()
+        return self.finish({'code': 0, 'user': user.to_dict() if user else None})
+
+
 @route('/api/signout', name='signout')
 class SignOut(AjaxLoginView):
     def get(self):
@@ -38,8 +45,8 @@ class SignUp(AjaxView):
         password = self.get_argument("password")
 
         error_info = []
-        if not (3 <= len(username) <= 15):
-            error_info.append("用户名长度必须在 3-15 之间")
+        if not (2 <= len(username) <= 15):
+            error_info.append("用户名长度必须在 2-15 之间")
         if len(password) < 3:
             error_info.append("密码长度必须大于等于3")
         if User.exist(username):
