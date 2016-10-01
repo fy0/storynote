@@ -31,6 +31,9 @@ class Topic(BaseModel):
     sticky_weight = IntegerField(index=True, default=0)  # 置顶权重
     weight = IntegerField(index=True, default=0) # 排序权值，越大越靠前，默认权重与id相同
 
+    class Meta:
+        db_table = 'topic'
+
     def can_edit(self, user):
         if self.user == user:
             return True
@@ -84,3 +87,8 @@ class Topic(BaseModel):
     def view_count_inc(self):
         cls = Topic
         cls.update(view_count=cls.view_count + 1).where(cls.id == self.id).execute()
+
+    def to_dict(self):
+        ret = super().to_dict()
+        ret['user'] = self.user.to_dict()
+        return ret

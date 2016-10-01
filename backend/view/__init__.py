@@ -224,7 +224,7 @@ class AjaxView(View):
         if self.request.body and self.request.headers.get("Content-Type", "").startswith('application/json'):
             body_args = json.loads(self.decode_argument(self.request.body))
             for k, v in body_args.items():
-                self.request.arguments.setdefault(k, []).extend([v])
+                self.request.arguments.setdefault(k, []).extend([str(v)])
         self.set_header('Content-Type', 'application/json')
         super(AjaxView, self).prepare()
 
@@ -232,17 +232,11 @@ class AjaxView(View):
         self.finish()
 
 
-class AjaxLoginView(LoginView):
-    def check_xsrf_cookie(self):
-        # useless for json request
-        pass
-
+class AjaxLoginView(AjaxView):
     def prepare(self):
-        self.set_header('Content-Type', 'application/json')
+        if not self.current_user():
+            return self.finish({'code': -255})
         super(AjaxLoginView, self).prepare()
-
-    def options(self, *args, **kwargs):
-        self.finish()
 
 
 # sugar
