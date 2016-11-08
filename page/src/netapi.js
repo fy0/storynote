@@ -1,9 +1,7 @@
 
-let API_SERVER = 'http://127.0.0.1:9000'
-let REQUEST_TIMEOUT = 3000
+import config from "./config.js"
 
-let ERR_TIMEOUT = -255
-let ERR_REUQEST_FAIL = -254
+let API_SERVER = config.remote.API_SERVER;
 
 let info_post = {credentials: 'include', 'method': 'POST'};
 let info_get = {credentials: 'include', 'method': 'GET'};

@@ -11,9 +11,9 @@ import App from './app.vue'
 import Index from './components/index.vue'
 import TopicNew from './components/new.vue'
 import TopicPage from './components/topic.vue'
-import ArticleList from './components/alist.vue'
 import SignIn from './components/signin.vue'
 import SignUp from './components/signup.vue'
+import './components/msgtip.vue'
 
 Vue.use(VueRouter)
 

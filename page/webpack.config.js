@@ -1,6 +1,5 @@
 var path = require('path')
 var webpack = require('webpack')
-var autoprefixer = require('autoprefixer')
 
 module.exports = {
     entry: './src/main.js',
@@ -47,7 +46,7 @@ module.exports = {
         cacheDirectory: true, //important for performance
     },
     postcss: function () {
-        return [autoprefixer];
+        return [require('autoprefixer'), require('precss')];
     },
     resolve: {
         alias: {
