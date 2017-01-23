@@ -30,7 +30,7 @@ USER_LEVEL.init()
 
 
 class User(BaseModel):
-    username = TextField(index=True, unique=True)
+    username = CharField(index=True, unique=True, max_length=20)
     password = TextField()
     salt = TextField()
 

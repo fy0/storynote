@@ -50,10 +50,11 @@ class SignUp(AjaxView):
         if len(password) < 3:
             error_info.append("密码长度必须大于等于3")
         if User.exist(username):
-            error_info.append("用户已存在！")
+            error_info.append("用户已存在")
 
         if not error_info:
             u = User.new(username, password)
             return self.finish({'code': 0, 'msg': '账户创建成功'})
 
+        print(error_info)
         return self.finish({'code': -1, 'error_msgs': error_info})
