@@ -30,11 +30,12 @@ USER_LEVEL.init()
 
 
 class User(BaseModel):
-    username = CharField(index=True, unique=True, max_length=20)
-    password = TextField()
-    salt = TextField()
+    username = CharField(index=True, unique=True, max_length=32)
+    nickname = CharField(index=True, max_length=32, null=True, default=None)
+    password = CharField(max_length=64)
+    salt = CharField(max_length=64)
 
-    key = TextField(index=True)
+    key = CharField(index=True, max_length=64)
     level = IntegerField()
 
     reg_time = BigIntegerField()
@@ -72,6 +73,9 @@ class User(BaseModel):
 
     @classmethod
     def auth(cls, username, password):
+        if not (username and password):
+            return
+
         username = username.lower()
         try:
             u = cls.get(cls.username==username)
@@ -92,9 +96,9 @@ class User(BaseModel):
             return u
 
     @classmethod
-    def exist(cls, username):
-        username = username.lower()
-        return cls.select().where(cls.username==username).exists()
+    def exist(cls, rusername):
+        username = rusername.lower()
+        return cls.select().where(cls.username==username | cls.nickname == rusername).exists()
 
     @classmethod
     def get_by_key(cls, key):
@@ -114,6 +118,10 @@ class User(BaseModel):
     @classmethod
     def count(cls):
         return cls.select(cls.level>0).count()
+        
+    @property
+    def name(self):
+        return self.nickname or self.username
 
     def to_dict(self):
         ret = super().to_dict()
