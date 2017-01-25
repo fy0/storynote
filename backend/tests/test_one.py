@@ -141,7 +141,51 @@ class Tests(unittest.TestCase):
         self.assertEqual(resp.json()['code'], -255)
 
     def test_password_change(self):
-        pass
+        url_signin = 'http://%s:%s/api/signin' % (HOST, WEB_PORT)
+        url_pwchange = 'http://%s:%s/api/password_change' % (HOST, WEB_PORT)
+        url_userinfo = 'http://%s:%s/api/userinfo' % (HOST, WEB_PORT)
+        session = requests.Session()
+
+        # without signin
+        resp = requests.post(url_pwchange, {'password': '1234', 'new_password': '1230'})
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.json()['code'], -255)
+
+        # sign in
+        resp = session.post(url_signin, {'username': 'test', 'password': '1234'})
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.json()['code'], 0)
+
+        # change with wrong password
+        resp = session.post(url_pwchange, {'password': '123', 'new_password': '123.'})
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.json()['code'], -1)
+
+        # change without params
+        resp = session.post(url_pwchange, {})
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.json()['code'], -1)
+
+        # change with same old and new password
+        resp = session.post(url_pwchange, {'password': '1234', 'new_password': '1234'})
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.json()['code'], -2)
+
+        # change
+        resp = session.post(url_pwchange, {'password': '1234', 'new_password': '123X'})
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.json()['code'], 0)
+
+        # already signout
+        resp = session.get(url_userinfo)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.json()['code'], -255)
+        
+        # signin and change password back
+        resp = session.post(url_signin, {'username': 'test', 'password': '123X'})
+        resp = session.post(url_pwchange, {'password': '123X', 'new_password': '1234'})
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.json()['code'], 0)
 
 
 if __name__ == '__main__':

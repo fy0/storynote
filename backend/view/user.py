@@ -15,12 +15,18 @@ class UserInfo(AjaxLoginView):
 @route('/api/password_change', name='password_change')
 class PasswordChange(AjaxLoginView):
     def post(self):
-        username = self.get_argument("username", None)
-        password = self.get_argument("password", None)
-        new_password = self.get_argument("new_password", None)
-
         user = self.current_user()
-        self.finish({'code': 0, 'user': user.to_dict()})
+        password = self.get_argument("password", '').strip()
+        new_password = self.get_argument("new_password", '').strip()
+
+        if password and password == new_password:
+            self.finish({'code': -2})
+        elif User.password_change(user.username, password, new_password):
+            # 重置密码后需要重新登录
+            self.clear_cookie('u')
+            self.finish({'code': 0})
+        else:
+            self.finish({'code': -1})
 
 
 @route('/api/signout', name='signout')

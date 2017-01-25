@@ -88,6 +88,8 @@ class User(BaseModel):
 
     @classmethod
     def password_change(cls, username, password, new_password):
+        if not (username and password and new_password):
+            return
         username = username.lower()
         u = cls.auth(username, password)
         if u:
@@ -98,7 +100,7 @@ class User(BaseModel):
     @classmethod
     def exist(cls, rusername):
         username = rusername.lower()
-        return cls.select().where(cls.username==username | cls.nickname == rusername).exists()
+        return cls.select().where((cls.username==username) | (cls.nickname == rusername)).exists()
 
     @classmethod
     def get_by_key(cls, key):
