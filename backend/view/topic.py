@@ -7,16 +7,16 @@ from view import route, AjaxView, AjaxLoginView, url_for
 
 
 @route('/api/topic/new', name='topic_new')
-class TopicNew(AjaxView):
+class TopicNew(AjaxLoginView):
     def post(self):
         title = self.get_argument('title', '').strip()
         content = self.get_argument('content', '').strip()
-        if title and config.TITLE_LENGTH_MIN <= len(title) <= config.TITLE_LENGTH_MAX:
-            t = Topic.new(title, self.current_user() or 0, content)
-            self.finish({'code': 0, 'topic': {'id': t.id}})
+
+        if not (title and config.TITLE_LENGTH_MIN <= len(title) <= config.TITLE_LENGTH_MAX):
+            self.finish({'code': -1, 'msg': '标题长度必须在 %d 到 %d 之间' % (config.TITLE_LENGTH_MIN, config.TITLE_LENGTH_MAX)})
         else:
-            # 非标准提交
-            self.finish({'code': -1})
+            t = Topic.new(title, self.current_user(), content)
+            self.finish({'code': 0, 'topic': {'id': t.id}})
 
 
 @route('/api/topic/(\d+)', name='topic')

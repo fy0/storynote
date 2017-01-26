@@ -1,6 +1,7 @@
 # coding:utf-8
 
 import re
+import config
 from view import route, AjaxView, AjaxLoginView
 from model.user import User
 
@@ -61,6 +62,9 @@ class SignUp(AjaxView):
     def post(self):
         username = self.get_argument("username")
         password = self.get_argument("password")
+
+        if not config.USER_ALLOW_SIGNUP:
+            return self.finish({'code': -2, 'error_msgs': ['注册已关闭']})
 
         error_info = []
         if not (2 <= len(username) <= 15):

@@ -18,7 +18,7 @@ TOPIC_STATE.init()
 
 
 class Topic(BaseModel):
-    title = CharField(index=True, max_length=50)
+    title = CharField(index=True, max_length=255)
     user = ForeignKeyField(User, index=True)
     time = BigIntegerField(index=True)
     state = IntegerField(default=TOPIC_STATE.NORMAL, index=True)
@@ -32,7 +32,7 @@ class Topic(BaseModel):
     weight = IntegerField(index=True, default=0) # 排序权值，越大越靠前，默认权重与id相同
 
     class Meta:
-        db_table = 'topic'
+        db_table = 'topics'
 
     def can_edit(self, user):
         if self.user == user:

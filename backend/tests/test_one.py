@@ -186,6 +186,18 @@ class Tests(unittest.TestCase):
         resp = session.post(url_pwchange, {'password': '123X', 'new_password': '1234'})
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.json()['code'], 0)
+        
+    def test_misc(self):
+        url = 'http://%s:%s/api/misc' % (HOST, WEB_PORT)
+        resp = requests.get(url)
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertEqual(data['code'], 0)
+        self.assertTrue(data['config']['PAGE_TITLE'])
+        self.assertTrue(data['config']['TITLE_LENGTH_MIN'])
+        self.assertTrue(data['config']['TITLE_LENGTH_MAX'])
+        self.assertTrue(data['config']['TOPIC_PAGE_SIZE'])
+        self.assertTrue(data['config']['REPLY_PAGE_SIZE'])
 
 
 if __name__ == '__main__':
