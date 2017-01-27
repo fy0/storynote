@@ -74,37 +74,37 @@ class Tests(unittest.TestCase):
         # wrong password
         resp = requests.post(url, {'username': 'test', 'password': '123*'})
         self.assertEqual(resp.status_code, 200)
-        data = resp.json()
-        self.assertEqual(data['code'], -1)
-        self.assertTrue('帐号或密码错误' in data['error_msgs'])
+        info = resp.json()
+        self.assertEqual(info['code'], -1)
+        self.assertTrue('帐号或密码错误' in info['error_msgs'])
 
         # username too short
         resp = requests.post(url, {'username': 'u', 'password': '123*'})
         self.assertEqual(resp.status_code, 200)
-        data = resp.json()
-        self.assertEqual(data['code'], -1)
-        self.assertTrue('帐号或密码错误' in data['error_msgs'])
+        info = resp.json()
+        self.assertEqual(info['code'], -1)
+        self.assertTrue('帐号或密码错误' in info['error_msgs'])
 
         # user isn't exists
         resp = requests.post(url, {'username': 'unotexist', 'password': '123*'})
         self.assertEqual(resp.status_code, 200)
-        data = resp.json()
-        self.assertEqual(data['code'], -1)
-        self.assertTrue('帐号或密码错误' in data['error_msgs'])
+        info = resp.json()
+        self.assertEqual(info['code'], -1)
+        self.assertTrue('帐号或密码错误' in info['error_msgs'])
         
         # lost parameters
         resp = requests.post(url, {})
         self.assertEqual(resp.status_code, 200)
-        data = resp.json()
-        self.assertEqual(data['code'], -1)
-        self.assertTrue('帐号或密码错误' in data['error_msgs'])        
+        info = resp.json()
+        self.assertEqual(info['code'], -1)
+        self.assertTrue('帐号或密码错误' in info['error_msgs'])        
 
         # right user
         resp = requests.post(url, {'username': 'test', 'password': '1234'})
         self.assertEqual(resp.status_code, 200)
-        data = resp.json()
-        self.assertEqual(data['code'], 0)
-        self.assertEqual(data['msg'], '登陆成功')
+        info = resp.json()
+        self.assertEqual(info['code'], 0)
+        self.assertEqual(info['msg'], '登陆成功')
 
     def test_userinfo(self):
         url_signin = 'http://%s:%s/api/signin' % (HOST, WEB_PORT)
@@ -120,9 +120,9 @@ class Tests(unittest.TestCase):
         resp = session.post(url_signin, {'username': 'test', 'password': '1234'})
         resp = session.get(url_userinfo)
         self.assertEqual(resp.status_code, 200)
-        data = resp.json()
-        self.assertEqual(data['code'], 0)
-        self.assertEqual(data['user']['username'], 'test')
+        info = resp.json()
+        self.assertEqual(info['code'], 0)
+        self.assertEqual(info['user']['username'], 'test')
 
     def test_signout(self):
         url_signin = 'http://%s:%s/api/signin' % (HOST, WEB_PORT)
@@ -191,13 +191,113 @@ class Tests(unittest.TestCase):
         url = 'http://%s:%s/api/misc' % (HOST, WEB_PORT)
         resp = requests.get(url)
         self.assertEqual(resp.status_code, 200)
-        data = resp.json()
-        self.assertEqual(data['code'], 0)
-        self.assertTrue(data['config']['PAGE_TITLE'])
-        self.assertTrue(data['config']['TITLE_LENGTH_MIN'])
-        self.assertTrue(data['config']['TITLE_LENGTH_MAX'])
-        self.assertTrue(data['config']['TOPIC_PAGE_SIZE'])
-        self.assertTrue(data['config']['REPLY_PAGE_SIZE'])
+        info = resp.json()
+        self.assertEqual(info['code'], 0)
+        self.assertTrue(info['config']['PAGE_TITLE'])
+        self.assertTrue(info['config']['TITLE_LENGTH_MIN'])
+        self.assertTrue(info['config']['TITLE_LENGTH_MAX'])
+        self.assertTrue(info['config']['TOPIC_PAGE_SIZE'])
+        self.assertTrue(info['config']['REPLY_PAGE_SIZE'])
+
+    def test_topic(self):
+        url_misc = 'http://%s:%s/api/misc' % (HOST, WEB_PORT)
+        url_signin = 'http://%s:%s/api/signin' % (HOST, WEB_PORT)
+        url_topic = 'http://%s:%s/api/topic/%%s' % (HOST, WEB_PORT)
+        url_topic_new = 'http://%s:%s/api/topic/new' % (HOST, WEB_PORT)
+        url_recent = 'http://%s:%s/api/recent/%%s' % (HOST, WEB_PORT)
+        url_recent2 = 'http://%s:%s/api/recent' % (HOST, WEB_PORT)
+
+        # get config
+        config = requests.get(url_misc).json()['config']
+
+        # sign in
+        session = requests.Session()
+        resp = session.post(url_signin, {'username': 'test', 'password': '1234'})
+
+        # too short topic title
+        resp = session.post(url_topic_new, {'title': 'a' * (config['TITLE_LENGTH_MIN']-1), 'content': ''})
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.json()['code'], -1)
+        
+        # too long topic title
+        resp = session.post(url_topic_new, {'title': 'a' * (config['TITLE_LENGTH_MAX']+1), 'content': ''})
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.json()['code'], -1)
+
+        # new topic
+        resp = session.post(url_topic_new, {'title': 'a' * (config['TITLE_LENGTH_MIN']), 'content': 'topic 1'})
+        self.assertEqual(resp.status_code, 200)
+        info = resp.json()
+        self.assertEqual(info['code'], 0)
+        topic1 = info['data']['id']
+
+        val = int((config['TITLE_LENGTH_MIN'] + config['TITLE_LENGTH_MAX']) / 2)
+        resp = session.post(url_topic_new, {'title': 'a' * val, 'content': 'topic 2'})
+        self.assertEqual(resp.status_code, 200)
+        info = resp.json()
+        self.assertEqual(info['code'], 0)
+        topic2 = info['data']['id']
+
+        resp = session.post(url_topic_new, {'title': 'a' * (config['TITLE_LENGTH_MAX']), 'content': 'topic 3'})
+        self.assertEqual(resp.status_code, 200)
+        info = resp.json()
+        self.assertEqual(info['code'], 0)
+        topic3 = info['data']['id']
+
+        # read topic
+        resp = requests.get(url_topic % topic1)
+        self.assertEqual(resp.status_code, 200)
+        info = resp.json()
+        self.assertEqual(info['code'], 0)
+        self.assertEqual(info['data']['id'], topic1)
+        self.assertTrue(info['data']['title'])
+        self.assertEqual('topic 1', info['data']['content'])
+        
+        resp = requests.get(url_topic % topic2)
+        self.assertEqual(resp.status_code, 200)
+        info = resp.json()
+        self.assertEqual(info['code'], 0)
+        self.assertEqual(info['data']['id'], topic2)
+        self.assertTrue(info['data']['title'])
+        self.assertEqual('topic 2', info['data']['content'])
+
+        resp = requests.get(url_topic % topic3)
+        self.assertEqual(resp.status_code, 200)
+        info = resp.json()
+        self.assertEqual(info['code'], 0)
+        self.assertEqual(info['data']['id'], topic3)
+        self.assertTrue(info['data']['title'])
+        self.assertEqual('topic 3', info['data']['content'])
+
+        resp = requests.get(url_topic % 0)
+        self.assertEqual(resp.status_code, 200)
+        info = resp.json()
+        self.assertEqual(info['code'], -1)
+        
+        # recent
+        resp = requests.get(url_recent % 1)
+        self.assertEqual(resp.status_code, 200)
+        info = resp.json()
+        self.assertEqual(info['code'], 0)
+        self.assertTrue(info['data']['page_numbers'])
+        self.assertTrue(len(info['data']['items']) > 0)
+        
+        resp = requests.get(url_recent2)
+        self.assertEqual(resp.status_code, 200)
+        info = resp.json()
+        self.assertEqual(info['code'], 0)
+        self.assertTrue(info['data']['page_numbers'])
+        self.assertTrue(len(info['data']['items']) > 0)
+        
+        resp = requests.get(url_recent % 2)
+        self.assertEqual(resp.status_code, 200)
+        info = resp.json()
+        self.assertEqual(info['code'], 0)
+        self.assertTrue(info['data']['page_numbers'])
+        self.assertTrue(len(info['data']['items']) == 0)
+        
+        resp = requests.get(url_recent % 'test')
+        self.assertEqual(resp.status_code, 404)
 
 
 if __name__ == '__main__':
