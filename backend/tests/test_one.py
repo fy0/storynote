@@ -26,15 +26,10 @@ class Tests(unittest.TestCase):
     def tearDownClass(cls):
         pass
 
-    def test_about(self):
-        #resp = requests.get('http://%s:%s/about' % (HOST, WEB_PORT))
-        #self.assertEqual(resp.status_code, 200)
-        pass
-
-    def test_logout_without_login(self):
-        #resp = requests.get('http://%s:%s/signout' % (HOST, WEB_PORT))
-        #self.assertEqual(resp.history[0].status_code, 302)
-        pass
+    def test_index(self):
+        resp = requests.get('http://%s:%s/' % (HOST, WEB_PORT))
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.json()['code'], 0)
 
     def test_sign_up(self):
         url = 'http://%s:%s/api/signup' % (HOST, WEB_PORT)
