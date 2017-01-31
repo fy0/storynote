@@ -197,8 +197,10 @@ class Tests(unittest.TestCase):
     def test_topic(self):
         url_misc = 'http://%s:%s/api/misc' % (HOST, WEB_PORT)
         url_signin = 'http://%s:%s/api/signin' % (HOST, WEB_PORT)
+        url_signup = 'http://%s:%s/api/signup' % (HOST, WEB_PORT)
         url_topic = 'http://%s:%s/api/topic/%%s' % (HOST, WEB_PORT)
         url_topic_new = 'http://%s:%s/api/topic/new' % (HOST, WEB_PORT)
+        url_topic_edit = 'http://%s:%s/api/topic/edit/%%s' % (HOST, WEB_PORT)
         url_recent = 'http://%s:%s/api/recent/%%s' % (HOST, WEB_PORT)
         url_recent2 = 'http://%s:%s/api/recent' % (HOST, WEB_PORT)
 
@@ -268,7 +270,37 @@ class Tests(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
         info = resp.json()
         self.assertEqual(info['code'], -1)
+
+        # topic edit
+        resp = session.post(url_topic_edit % topic3, {'title': 'a' * (config['TITLE_LENGTH_MIN']), 'content': 'topic 233'})
+        self.assertEqual(resp.status_code, 200)
+        info = resp.json()
+        self.assertEqual(info['code'], 0)
+
+        # edit - success
+        resp = requests.get(url_topic % topic3)
+        info = resp.json()
+        self.assertEqual('a' * config['TITLE_LENGTH_MIN'], info['data']['title'])
+        self.assertEqual('topic 233', info['data']['content'])
+
+        # edit - topic not found
+        resp = session.post(url_topic_edit % 0, {'title': 'a' * (config['TITLE_LENGTH_MIN']), 'content': 'topic 233'})
+        self.assertEqual(resp.status_code, 200)
+        info = resp.json()
+        self.assertEqual(info['code'], -1)
         
+        # edit - others
+        session2 = requests.Session()
+        resp = session2.post(url_signup, {'username': 'author', 'password': '5678'})
+        resp = session2.post(url_topic_new, {'title': 'a' * (config['TITLE_LENGTH_MAX']), 'content': 'topic 3'})
+        info = resp.json()
+        topic_other = info['data']['id']
+        
+        resp = session.post(url_topic_edit % topic_other, {'title': 'a' * (config['TITLE_LENGTH_MIN']), 'content': 'topic 233'})
+        self.assertEqual(resp.status_code, 200)
+        info = resp.json()
+        self.assertEqual(info['code'], -2)
+
         # recent
         resp = requests.get(url_recent % 1)
         self.assertEqual(resp.status_code, 200)
@@ -283,7 +315,7 @@ class Tests(unittest.TestCase):
         self.assertEqual(info['code'], 0)
         self.assertTrue(info['data']['page_numbers'])
         self.assertTrue(len(info['data']['items']) > 0)
-        
+
         resp = requests.get(url_recent % 2)
         self.assertEqual(resp.status_code, 200)
         info = resp.json()

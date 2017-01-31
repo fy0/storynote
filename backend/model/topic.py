@@ -46,6 +46,7 @@ class Topic(BaseModel):
         self.last_edit_user = user
         self.edit_time = int(time.time())
         self.save()
+        return self
 
     @property
     def reply_count(self):

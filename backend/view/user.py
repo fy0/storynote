@@ -78,6 +78,7 @@ class SignUp(AjaxView):
 
         if not error_info:
             u = User.new(username, password)
+            self.set_secure_cookie("u", u.key)
             return self.finish({'code': 0, 'msg': '账户创建成功'})
 
         return self.finish({'code': -1, 'error_msgs': error_info})
