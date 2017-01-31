@@ -201,6 +201,7 @@ class Tests(unittest.TestCase):
         url_topic = 'http://%s:%s/api/topic/%%s' % (HOST, WEB_PORT)
         url_topic_new = 'http://%s:%s/api/topic/new' % (HOST, WEB_PORT)
         url_topic_edit = 'http://%s:%s/api/topic/edit/%%s' % (HOST, WEB_PORT)
+        url_topic_del = 'http://%s:%s/api/topic/del/%%s' % (HOST, WEB_PORT)
         url_recent = 'http://%s:%s/api/recent/%%s' % (HOST, WEB_PORT)
         url_recent2 = 'http://%s:%s/api/recent' % (HOST, WEB_PORT)
 
@@ -325,6 +326,24 @@ class Tests(unittest.TestCase):
         
         resp = requests.get(url_recent % 'test')
         self.assertEqual(resp.status_code, 404)
+        
+        # delete - not found
+        resp = session.post(url_topic_del % 0)
+        self.assertEqual(resp.status_code, 200)
+        info = resp.json()
+        self.assertEqual(info['code'], -1)
+        
+        # delete - others
+        resp = session2.post(url_topic_del % topic3)
+        self.assertEqual(resp.status_code, 200)
+        info = resp.json()
+        self.assertEqual(info['code'], -2)
+
+        # delete - success
+        resp = session.post(url_topic_del % topic3)
+        self.assertEqual(resp.status_code, 200)
+        info = resp.json()
+        self.assertEqual(info['code'], 0)       
 
 
 if __name__ == '__main__':

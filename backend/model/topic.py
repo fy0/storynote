@@ -47,6 +47,10 @@ class Topic(BaseModel):
         self.edit_time = int(time.time())
         self.save()
         return self
+        
+    def delete(self):
+        self.state = TOPIC_STATE.DEL
+        self.save()
 
     @property
     def reply_count(self):

@@ -39,6 +39,18 @@ class TopicEdit(AjaxLoginView):
             self.finish({'code': 0, 'data': {'id': t.id}})
 
 
+@route('/api/topic/del/(\d+)', name='topic_del')
+class TopicDel(AjaxLoginView):
+    def post(self, topic_id):
+        topic = Topic.get_by_pk(topic_id)
+        if not topic:
+            return self.finish({'code': -1, 'msg': '找不到指定的主题'})
+        if not topic.can_edit(self.current_user()):
+            return self.finish({'code': -2, 'msg': '你没有编辑该主题的权限'})            
+        topic.delete()
+        self.finish({'code': 0, 'data': {'id': topic.id}})
+
+
 @route('/api/topic/(\d+)', name='topic')
 class TopicView(AjaxView):
     def get(self, topic_id):
