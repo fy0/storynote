@@ -11,6 +11,20 @@ import requests
 HOST = '127.0.0.1'
 WEB_PORT = 9000
 
+url_misc = 'http://%s:%s/api/misc' % (HOST, WEB_PORT)
+url_signin = 'http://%s:%s/api/signin' % (HOST, WEB_PORT)
+url_signup = 'http://%s:%s/api/signup' % (HOST, WEB_PORT)
+url_signout = 'http://%s:%s/api/signout' % (HOST, WEB_PORT)
+url_userinfo = 'http://%s:%s/api/userinfo' % (HOST, WEB_PORT)
+url_pwchange = 'http://%s:%s/api/password_change' % (HOST, WEB_PORT)
+
+url_topic = 'http://%s:%s/api/topic/%%s' % (HOST, WEB_PORT)
+url_topic_new = 'http://%s:%s/api/topic/new' % (HOST, WEB_PORT)
+url_topic_edit = 'http://%s:%s/api/topic/edit/%%s' % (HOST, WEB_PORT)
+url_topic_del = 'http://%s:%s/api/topic/del/%%s' % (HOST, WEB_PORT)
+url_recent = 'http://%s:%s/api/recent/%%s' % (HOST, WEB_PORT)
+url_recent2 = 'http://%s:%s/api/recent' % (HOST, WEB_PORT)
+
 def uescape(text):
     return str(bytes(text, 'utf-8'), 'unicode-escape')
 
@@ -32,79 +46,72 @@ class Tests(unittest.TestCase):
         self.assertEqual(resp.json()['code'], 0)
 
     def test_sign_up(self):
-        url = 'http://%s:%s/api/signup' % (HOST, WEB_PORT)
-
         # length of username must not be less than 2
-        resp = requests.post(url, {'username': 'a', 'password': '1234'})
+        resp = requests.post(url_signup, {'username': 'a', 'password': '1234'})
         self.assertEqual(resp.status_code, 200)
         self.assertTrue(u'用户名长度必须在 2-15 之间' in uescape(resp.text))
 
         # length of username must not be more than 15
-        resp = requests.post(url, {'username': 'a' * 16, 'password': '1234'})
+        resp = requests.post(url_signup, {'username': 'a' * 16, 'password': '1234'})
         self.assertEqual(resp.status_code, 200)
         self.assertTrue(u'用户名长度必须在 2-15 之间' in uescape(resp.text))
         
         # username matches '^[a-zA-Z][a-zA-Z0-9]+$'
-        resp = requests.post(url, {'username': '测试', 'password': '1234'})
+        resp = requests.post(url_signup, {'username': '测试', 'password': '1234'})
         self.assertEqual(resp.status_code, 200)
         self.assertTrue(u'用户名应为英文与数字的组合，同时首字为英文' in uescape(resp.text))      
 
-        resp = requests.post(url, {'username': '12', 'password': '1234'})
+        resp = requests.post(url_signup, {'username': '12', 'password': '1234'})
         self.assertEqual(resp.status_code, 200)
         self.assertTrue(u'用户名应为英文与数字的组合，同时首字为英文' in uescape(resp.text))        
 
         # success
-        resp = requests.post(url, {'username': 'ab', 'password': '1234'})
+        resp = requests.post(url_signup, {'username': 'ab', 'password': '1234'})
         self.assertEqual(resp.status_code, 200)
         self.assertTrue(u'账户创建成功' in uescape(resp.text))
 
         # user exists
-        resp = requests.post(url, {'username': 'ab', 'password': '1234'})
+        resp = requests.post(url_signup, {'username': 'ab', 'password': '1234'})
         self.assertEqual(resp.status_code, 200)
         self.assertTrue(u'用户已存在' in uescape(resp.text))
 
     def test_sign_in(self):
-        url = 'http://%s:%s/api/signin' % (HOST, WEB_PORT)
-        
         # wrong password
-        resp = requests.post(url, {'username': 'test', 'password': '123*'})
+        resp = requests.post(url_signin, {'username': 'test', 'password': '123*'})
         self.assertEqual(resp.status_code, 200)
         info = resp.json()
         self.assertEqual(info['code'], -1)
         self.assertTrue('帐号或密码错误' in info['error_msgs'])
 
         # username too short
-        resp = requests.post(url, {'username': 'u', 'password': '123*'})
+        resp = requests.post(url_signin, {'username': 'u', 'password': '123*'})
         self.assertEqual(resp.status_code, 200)
         info = resp.json()
         self.assertEqual(info['code'], -1)
         self.assertTrue('帐号或密码错误' in info['error_msgs'])
 
         # user isn't exists
-        resp = requests.post(url, {'username': 'unotexist', 'password': '123*'})
+        resp = requests.post(url_signin, {'username': 'unotexist', 'password': '123*'})
         self.assertEqual(resp.status_code, 200)
         info = resp.json()
         self.assertEqual(info['code'], -1)
         self.assertTrue('帐号或密码错误' in info['error_msgs'])
         
         # lost parameters
-        resp = requests.post(url, {})
+        resp = requests.post(url_signin, {})
         self.assertEqual(resp.status_code, 200)
         info = resp.json()
         self.assertEqual(info['code'], -1)
         self.assertTrue('帐号或密码错误' in info['error_msgs'])        
 
         # right user
-        resp = requests.post(url, {'username': 'test', 'password': '1234'})
+        resp = requests.post(url_signin, {'username': 'test', 'password': '1234'})
         self.assertEqual(resp.status_code, 200)
         info = resp.json()
         self.assertEqual(info['code'], 0)
         self.assertEqual(info['msg'], '登陆成功')
 
     def test_userinfo(self):
-        url_signin = 'http://%s:%s/api/signin' % (HOST, WEB_PORT)
-        url_userinfo = 'http://%s:%s/api/userinfo' % (HOST, WEB_PORT)
-
         # without signin
         resp = requests.get(url_userinfo)
         self.assertEqual(resp.status_code, 200)
@@ -120,9 +127,6 @@ class Tests(unittest.TestCase):
         self.assertEqual(info['user']['username'], 'test')
 
     def test_signout(self):
-        url_signin = 'http://%s:%s/api/signin' % (HOST, WEB_PORT)
-        url_signout = 'http://%s:%s/api/signout' % (HOST, WEB_PORT)
-        url_userinfo = 'http://%s:%s/api/userinfo' % (HOST, WEB_PORT)
         session = requests.Session()
 
         resp = session.post(url_signin, {'username': 'test', 'password': '1234'})
@@ -136,9 +140,6 @@ class Tests(unittest.TestCase):
         self.assertEqual(resp.json()['code'], -255)
 
     def test_password_change(self):
-        url_signin = 'http://%s:%s/api/signin' % (HOST, WEB_PORT)
-        url_pwchange = 'http://%s:%s/api/password_change' % (HOST, WEB_PORT)
-        url_userinfo = 'http://%s:%s/api/userinfo' % (HOST, WEB_PORT)
         session = requests.Session()
 
         # without signin
@@ -183,8 +184,7 @@ class Tests(unittest.TestCase):
         self.assertEqual(resp.json()['code'], 0)
         
     def test_misc(self):
-        url = 'http://%s:%s/api/misc' % (HOST, WEB_PORT)
-        resp = requests.get(url)
+        resp = requests.get(url_misc)
         self.assertEqual(resp.status_code, 200)
         info = resp.json()
         self.assertEqual(info['code'], 0)
@@ -195,16 +195,6 @@ class Tests(unittest.TestCase):
         self.assertTrue(info['config']['REPLY_PAGE_SIZE'])
 
     def test_topic(self):
-        url_misc = 'http://%s:%s/api/misc' % (HOST, WEB_PORT)
-        url_signin = 'http://%s:%s/api/signin' % (HOST, WEB_PORT)
-        url_signup = 'http://%s:%s/api/signup' % (HOST, WEB_PORT)
-        url_topic = 'http://%s:%s/api/topic/%%s' % (HOST, WEB_PORT)
-        url_topic_new = 'http://%s:%s/api/topic/new' % (HOST, WEB_PORT)
-        url_topic_edit = 'http://%s:%s/api/topic/edit/%%s' % (HOST, WEB_PORT)
-        url_topic_del = 'http://%s:%s/api/topic/del/%%s' % (HOST, WEB_PORT)
-        url_recent = 'http://%s:%s/api/recent/%%s' % (HOST, WEB_PORT)
-        url_recent2 = 'http://%s:%s/api/recent' % (HOST, WEB_PORT)
-
         # get config
         config = requests.get(url_misc).json()['config']
 
@@ -343,7 +333,10 @@ class Tests(unittest.TestCase):
         resp = session.post(url_topic_del % topic3)
         self.assertEqual(resp.status_code, 200)
         info = resp.json()
-        self.assertEqual(info['code'], 0)       
+        self.assertEqual(info['code'], 0)      
+
+    def test_reply(self):
+        pass
 
 
 if __name__ == '__main__':
