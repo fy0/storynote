@@ -96,4 +96,6 @@ class Topic(BaseModel):
     def to_dict(self):
         ret = super().to_dict()
         ret['user'] = self.user.to_dict()
+        if self.last_edit_user:
+            ret['last_edit_user'] = self.last_edit_user.to_dict()
         return ret

@@ -120,7 +120,7 @@ class User(BaseModel):
     @classmethod
     def count(cls):
         return cls.select(cls.level>0).count()
-        
+
     @property
     def name(self):
         return self.nickname or self.username
@@ -131,4 +131,5 @@ class User(BaseModel):
         del ret['key_time']
         del ret['password']
         del ret['salt']
+        ret['name'] = self.name
         return ret

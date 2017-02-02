@@ -8,20 +8,23 @@ import time
 import unittest
 import requests
 
+config = {}
 HOST = '127.0.0.1'
 WEB_PORT = 9000
 
 url_misc = 'http://%s:%s/api/misc' % (HOST, WEB_PORT)
-url_signin = 'http://%s:%s/api/signin' % (HOST, WEB_PORT)
-url_signup = 'http://%s:%s/api/signup' % (HOST, WEB_PORT)
-url_signout = 'http://%s:%s/api/signout' % (HOST, WEB_PORT)
-url_userinfo = 'http://%s:%s/api/userinfo' % (HOST, WEB_PORT)
-url_pwchange = 'http://%s:%s/api/password_change' % (HOST, WEB_PORT)
+url_signin = 'http://%s:%s/api/user/signin' % (HOST, WEB_PORT)
+url_signup = 'http://%s:%s/api/user/signup' % (HOST, WEB_PORT)
+url_signout = 'http://%s:%s/api/user/signout' % (HOST, WEB_PORT)
+url_userinfo = 'http://%s:%s/api/user/userinfo' % (HOST, WEB_PORT)
+url_pwchange = 'http://%s:%s/api/user/password_change' % (HOST, WEB_PORT)
 
 url_topic = 'http://%s:%s/api/topic/%%s' % (HOST, WEB_PORT)
 url_topic_new = 'http://%s:%s/api/topic/new' % (HOST, WEB_PORT)
 url_topic_edit = 'http://%s:%s/api/topic/edit/%%s' % (HOST, WEB_PORT)
 url_topic_del = 'http://%s:%s/api/topic/del/%%s' % (HOST, WEB_PORT)
+
+url_reply = 'http://%s:%s/api/reply/%%s' % (HOST, WEB_PORT)
 url_recent = 'http://%s:%s/api/recent/%%s' % (HOST, WEB_PORT)
 url_recent2 = 'http://%s:%s/api/recent' % (HOST, WEB_PORT)
 
@@ -33,8 +36,10 @@ class Tests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # register first account (admin account)
-        url = 'http://%s:%s/api/signup' % (HOST, WEB_PORT)
-        resp = requests.post(url, {'username': 'test', 'password': '1234'})
+        resp = requests.post(url_signup, {'username': 'test', 'password': '1234'})
+        
+        global config
+        config = requests.get(url_misc).json()['config']
 
     @classmethod
     def tearDownClass(cls):
@@ -335,8 +340,54 @@ class Tests(unittest.TestCase):
         info = resp.json()
         self.assertEqual(info['code'], 0)      
 
-    def test_reply(self):
-        pass
+    def test_comment(self):
+        # signin and send topic
+        session = requests.Session()
+        resp = session.post(url_signin, {'username': 'test', 'password': '1234'})
+        resp = session.post(url_topic_new, {'title': 'a' * config['TITLE_LENGTH_MIN'], 'content': 'topic test'})
+        print(resp.json())
+        topic_id = resp.json()['data']['id']
+
+        # without signin
+        resp = requests.post(url_reply % topic_id, {'content': '123'})
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.json()['code'], -255)
+
+        # empty content
+        resp = session.post(url_reply % topic_id, {'content': '  \n '})
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.json()['code'], -3)
+
+        # too long reply (4096)
+        resp = session.post(url_reply % topic_id, {'content': '测' * 4097})
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.json()['code'], -4)
+
+        # wrong topic id
+        resp = session.post(url_reply % 0, {'content': '123'})
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.json()['code'], -6)
+
+        # success
+        resp = session.post(url_reply % topic_id, {'content': '测' * 4096})
+        self.assertEqual(resp.status_code, 200)
+        info = resp.json()
+        self.assertEqual(info['code'], 0)
+        rid = info['data']['id']
+
+        # reply a comment which not exists
+        resp = session.post(url_reply % rid, {'content': '123', 'send_to_id': 0})
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.json()['code'], -5)
+
+        resp = session.post(url_reply % rid, {'content': '123', 'send_to_id': 'test'})
+        self.assertEqual(resp.status_code, 404)
+        
+        # success
+        resp = session.post(url_reply % 0, {'content': '123', 'send_to_id': rid})
+        self.assertEqual(resp.status_code, 200)
+        info = resp.json()
+        self.assertEqual(info['code'], 0)
 
 
 if __name__ == '__main__':

@@ -6,14 +6,14 @@ from view import route, AjaxView, AjaxLoginView
 from model.user import User
 
 
-@route('/api/userinfo', name='userinfo')
+@route('/api/user/userinfo', name='userinfo')
 class UserInfo(AjaxLoginView):
     def get(self):
         user = self.current_user()
         self.finish({'code': 0, 'user': user.to_dict()})
 
 
-@route('/api/password_change', name='password_change')
+@route('/api/user/password_change', name='password_change')
 class PasswordChange(AjaxLoginView):
     def post(self):
         user = self.current_user()
@@ -30,14 +30,14 @@ class PasswordChange(AjaxLoginView):
             self.finish({'code': -1})
 
 
-@route('/api/signout', name='signout')
+@route('/api/user/signout', name='signout')
 class SignOut(AjaxLoginView):
     def post(self):
         self.clear_cookie('u')
         self.finish({'code': 0, 'msg': '您已成功登出'})
 
 
-@route('/api/signin', name='signin')
+@route('/api/user/signin', name='signin')
 class SignIn(AjaxView):
     def post(self):
         username = self.get_argument("username", None)
@@ -57,7 +57,7 @@ class SignIn(AjaxView):
         return self.finish({'code': -1, 'error_msgs': error_info})
 
 
-@route('/api/signup', name='signup')
+@route('/api/user/signup', name='signup')
 class SignUp(AjaxView):
     def post(self):
         username = self.get_argument("username")
