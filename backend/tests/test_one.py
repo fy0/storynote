@@ -25,6 +25,8 @@ url_topic_edit = 'http://%s:%s/api/topic/edit/%%s' % (HOST, WEB_PORT)
 url_topic_del = 'http://%s:%s/api/topic/del/%%s' % (HOST, WEB_PORT)
 
 url_reply = 'http://%s:%s/api/reply/%%s' % (HOST, WEB_PORT)
+url_reply_del = 'http://%s:%s/api/reply/del/%%s' % (HOST, WEB_PORT)
+
 url_recent = 'http://%s:%s/api/recent/%%s' % (HOST, WEB_PORT)
 url_recent2 = 'http://%s:%s/api/recent' % (HOST, WEB_PORT)
 
@@ -37,6 +39,7 @@ class Tests(unittest.TestCase):
     def setUpClass(cls):
         # register first account (admin account)
         resp = requests.post(url_signup, {'username': 'test', 'password': '1234'})
+        resp = requests.post(url_signup, {'username': 'test2', 'password': '1234'})
         
         global config
         config = requests.get(url_misc).json()['config']
@@ -345,7 +348,6 @@ class Tests(unittest.TestCase):
         session = requests.Session()
         resp = session.post(url_signin, {'username': 'test', 'password': '1234'})
         resp = session.post(url_topic_new, {'title': 'a' * config['TITLE_LENGTH_MIN'], 'content': 'topic test'})
-        print(resp.json())
         topic_id = resp.json()['data']['id']
 
         # without signin
@@ -376,18 +378,33 @@ class Tests(unittest.TestCase):
         rid = info['data']['id']
 
         # reply a comment which not exists
-        resp = session.post(url_reply % rid, {'content': '123', 'send_to_id': 0})
-        self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.json()['code'], -5)
+        #resp = session.post(url_reply % rid, {'content': '123', 'send_to_id': 0})
+        #self.assertEqual(resp.status_code, 200)
+        #self.assertEqual(resp.json()['code'], -5)
 
-        resp = session.post(url_reply % rid, {'content': '123', 'send_to_id': 'test'})
-        self.assertEqual(resp.status_code, 404)
+        #resp = session.post(url_reply % rid, {'content': '123', 'send_to_id': 'test'})
+        #self.assertEqual(resp.status_code, 404)
         
         # success
-        resp = session.post(url_reply % 0, {'content': '123', 'send_to_id': rid})
+        #resp = session.post(url_reply % 0, {'content': '123', 'send_to_id': rid})
+        #self.assertEqual(resp.status_code, 200)
+        #info = resp.json()
+        #self.assertEqual(info['code'], 0)
+        
+        # delete
+        resp = session.post(url_reply_del % 0)
         self.assertEqual(resp.status_code, 200)
-        info = resp.json()
-        self.assertEqual(info['code'], 0)
+        self.assertEqual(resp.json()['code'], -1)
+
+        session2 = requests.Session()
+        resp = session2.post(url_signin, {'username': 'test2', 'password': '1234'})
+        resp = session2.post(url_reply_del % rid)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.json()['code'], -2)
+
+        resp = session.post(url_reply_del % rid)
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.json()['code'], 0)
 
 
 if __name__ == '__main__':

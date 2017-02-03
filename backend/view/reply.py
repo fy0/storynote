@@ -2,8 +2,21 @@
 
 import config
 from model.topic import Topic
-from view import route, url_for, View, AjaxView
+from view import route, url_for, View, AjaxView, AjaxLoginView
 from model.reply import Reply
+
+@route('/api/reply/del/(\d+)')
+class ReplyDeleteView(AjaxLoginView):
+    def post(self, comment_id):
+        reply = Reply.get_by_pk(comment_id)
+        if not reply:
+            self.finish({'code': -1})
+        else:
+            if reply.can_edit(self.current_user()):
+                reply.delete()
+                self.finish({'code': 0})
+            else:
+                self.finish({'code': -2})
 
 
 @route('/api/reply/(\d+)', name="reply")
@@ -34,7 +47,6 @@ class ReplyView(AjaxView):
             return -255, '请先登录后再做此操作'
 
         content = self.get_argument('content', '').strip()
-        send_to_id = self.get_argument('send_to', '').strip()
 
         # 3. 正文必须存在
         if not content:
@@ -44,19 +56,13 @@ class ReplyView(AjaxView):
         if len(content) > 4096:
             return -4, '评论不能超过4096字'
 
-        # 5. 如果指定了父级评论，那么父级评论必须存在
-        if not send_to_id:
-            send_to_id = None
-
-        if send_to_id and not Reply.exists(send_to_id, relate_id):
-            return -5, '无法回复一条不存在的评论' # 间接地，只允许一级楼中楼，而不允许楼中楼中楼等
-
+        # TODO: 未来允许评论评论（楼中楼）
         # 6. relate_id 存在检查
         t = Topic.get_by_pk(relate_id)
         if not t:
             return -6, '你试图评论一个不存在的主题'
 
         # 7. 存入数据库
-        r = Reply.new(relate_id, self.current_user(), content, send_to_id)
+        r = Reply.new(relate_id, self.current_user(), content)
         self._r = r
         return 0, '评论发送成功'

@@ -19,9 +19,9 @@ REPLY_STATE.init()
 
 class Reply(BaseModel):
     related_id = BigIntegerField(index=True)  # 被评论文章
+    related_type = IntegerField(index=True, default=0)  # 被评论文章的类型
     extra_id = BigIntegerField(index=True, null=True)  # 关联ID
     user = ForeignKeyField(User)  # 发布用户
-    send_to_id = BigIntegerField(null=True)  # 是否是回复某个评论
     time = BigIntegerField(index=True)  # 发布时间
     state = IntegerField(default=REPLY_STATE.NORMAL)  # 当前状态
     content = CharField(max_length=4096)  # 文本，varchar(4096)
@@ -47,6 +47,14 @@ class Reply(BaseModel):
         return cls.select().where(cls._meta.primary_key == pk_id, cls.related_id == related_id).exists()
 
     @classmethod
-    def new(cls, relate_id, user, content, send_to_id=None, extra_id=None):
+    def new(cls, relate_id, user, content, extra_id=None):
         return cls.create(related_id=relate_id, user=user, content=content,
-                          send_to_id=send_to_id, time=int(time.time()), extra_id=extra_id)
+                          time=int(time.time()), extra_id=extra_id)
+
+    def can_edit(self, user):
+        if self.user == user:
+            return True
+
+    def delete(self):
+        self.state = REPLY_STATE.DEL
+        self.save()
