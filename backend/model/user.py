@@ -22,9 +22,11 @@ class USER_LEVEL(StateObject):
     DEL = 0
     BAN = 30
     NORMAL = 50
+    WRITER = 80
     ADMIN = 100
 
-    txt = {DEL: '删除', BAN: '封禁', NORMAL: '正常', ADMIN: '管理'}
+    txt = {DEL: '删除', BAN: '封禁', NORMAL: '正常', WRITER: '作者', ADMIN: '管理'}
+
 
 USER_LEVEL.init()
 
