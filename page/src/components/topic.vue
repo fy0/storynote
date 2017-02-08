@@ -1,20 +1,19 @@
 <template>
-<div>
-    <div class="topic-content entry">
-        <div class="content" v-if="topic">
-            <h1 class="post-title">{{topic.title}}</h1>
-            <div class="post-info">
-                <span>{{topic.user.name}}</span>
-                <span>{{getTime(topic.time)}}</span>
-            </div>
-            <div v-html="topic.content"></div>
+<div class="topic-content entry">
+    <div class="content" v-if="topic">
+        <h1 class="post-title">{{topic.title}}</h1>
+        <div class="post-info">
+            <span>{{topic.user.name}}</span>
+            <span>{{getTime(topic.time)}}</span>
         </div>
+        <div v-html="topic.content"></div>
     </div>
 </div>
 </template>
 
 <style>
 .post-title {
+    word-wrap: break-word;
     margin: 0.3em 0;
 }
 .post-info {

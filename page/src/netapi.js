@@ -51,6 +51,11 @@ async function npost(url, info) {
 }
 
 export default {
+    /** 获取综合信息 */
+    misc: async function (page=1) {
+        return await nget(`${remote.API_SERVER}/api/misc`);
+    },
+
     /** 获取文章 */
     recent: async function (page=1) {
         return await nget(`${remote.API_SERVER}/api/recent/${page}`);
