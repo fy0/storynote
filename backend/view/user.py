@@ -10,7 +10,7 @@ from model.user import User
 class UserInfo(AjaxLoginView):
     def get(self):
         user = self.current_user()
-        self.finish({'code': 0, 'user': user.to_dict()})
+        self.finish({'code': 0, 'data': user.to_dict()})
 
 
 @route('/api/user/password_change', name='password_change')

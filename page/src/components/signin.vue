@@ -39,6 +39,10 @@ export default {
             let password = (formdata.get("password") || "").trim();
             let ret = await api.userSignin(username, password);
             if (ret.code == 0) {
+                ret = await api.userInfo();
+                if (ret.code == 0) {
+                    Vue.set(state.data, 'user', ret.data);
+                }
                 this.$router.replace({ path: '/'})
             } else {
                 console.log(ret);

@@ -132,7 +132,7 @@ class Tests(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
         info = resp.json()
         self.assertEqual(info['code'], 0)
-        self.assertEqual(info['user']['username'], 'test')
+        self.assertEqual(info['data']['username'], 'test')
 
     def test_signout(self):
         session = requests.Session()

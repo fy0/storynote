@@ -1,18 +1,21 @@
 <template>
 <div id="app">
     <div class="ic-container">
-        <h1 class="page-header"><router-link :to="{ path: '/' }">SINGLE PAGE</router-link></h1>
-        <div class="nav" v-if="state.data.user">
-            <a href="#">标签</a>
-            <a href="#">文章</a>
-            <a href="#">项目</a>
-            <router-link :to="{ path: '/new' }">新建</router-link>
+        <div class="page-header">
+            <h1><router-link :to="{ path: '/' }">SINGLE PAGE</router-link></h1>
+            <div class="nav-top" v-if="state.data.user">
+                <p style="margin: 0">Wellcome, {{state.data.user.name}}</p>
+                <router-link :to="{ path: '/' }">主页</router-link>
+                <router-link :to="{ path: '/new' }">撰文</router-link>
+                <router-link :to="{ path: '/signout' }">注销</router-link>
+            </div>
         </div>
         <!-- 正文 -->
         <div class="pure-g">
             <div class="pure-u-6-24 left-bar">
                 <ul class="nav-bar">
-                    <li><a href="#">主页</a></li>
+                    <li><router-link :to="{ path: '/' }">主页</router-link></li>
+                    <li><router-link :to="{ path: '/signin' }">管理</router-link></li>
                     <li><a href="#">关于</a></li>
                 </ul>
             </div>
@@ -25,6 +28,9 @@
 </template>
 
 <style>
+.nav-top {
+    margin-top: -30px;
+}
 .nav-bar {
     height: 100%;
     padding-top: 10px;

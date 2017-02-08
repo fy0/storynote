@@ -113,7 +113,7 @@ export default {
 
     /** 用户 - 个人信息 */
     userInfo: async function () {
-        return await npost(`${remote.API_SERVER}/api/user/userinfo`);
+        return await nget(`${remote.API_SERVER}/api/user/userinfo`);
     },
 
     /** 用户 - 修改密码 */
