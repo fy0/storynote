@@ -1,5 +1,8 @@
 <template>
-<div>
+<p v-if="state.data.user">
+    已经登录，身份为 {{state.data.user.name}}
+</p>
+<div v-else>
     <form method="post" class="pure-form" @submit.prevent="send">
         <fieldset>
             <h3>登录</h3>
@@ -25,11 +28,12 @@
 
 <script>
 import api from "../netapi.js"
+import state from "../state.js"
 
 export default {
     data () {
         return {
-            msg: 'Hello Vue 2.0!'
+            state: state,
         }
     },
     methods: {
