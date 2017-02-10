@@ -13,6 +13,7 @@ import TopicNew from './components/new.vue'
 import TopicPage from './components/topic.vue'
 import SignIn from './components/signin.vue'
 import SignUp from './components/signup.vue'
+import About from './components/about.vue'
 import './components/msgtip.vue'
 
 Vue.use(VueRouter)
@@ -24,6 +25,7 @@ var routes = [
     { path: '/new', component: TopicNew },
     { path: '/signin', component: SignIn },
     { path: '/signup', component: SignUp },
+    { path: '/about', component: About },
 ]
 
 var router = new VueRouter({
