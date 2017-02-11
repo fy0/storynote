@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import api from "../netapi.js"
 import state from "../state.js"
 
