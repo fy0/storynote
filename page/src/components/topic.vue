@@ -15,11 +15,11 @@
 <style>
 .post-title {
     word-wrap: break-word;
-    margin: 0.3em 0;
+    margin: 0.3em 0 0;
 }
 .post-info {
     color: rgb(153, 153, 153);
-    padding: 10px 0px;
+    padding: 0px;
     font-size: small;
 }
 </style>

@@ -190,7 +190,7 @@ class Tests(unittest.TestCase):
         resp = session.post(url_pwchange, {'password': '123X', 'new_password': '1234'})
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.json()['code'], 0)
-        
+
     def test_misc(self):
         resp = requests.get(url_misc)
         self.assertEqual(resp.status_code, 200)
@@ -248,7 +248,7 @@ class Tests(unittest.TestCase):
         self.assertEqual(info['data']['id'], topic1)
         self.assertTrue(info['data']['title'])
         self.assertEqual('topic 1', info['data']['content'])
-        
+
         resp = requests.get(url_topic % topic2)
         self.assertEqual(resp.status_code, 200)
         info = resp.json()
@@ -287,14 +287,14 @@ class Tests(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
         info = resp.json()
         self.assertEqual(info['code'], -1)
-        
+
         # edit - others
         session2 = requests.Session()
         resp = session2.post(url_signup, {'username': 'author', 'password': '5678'})
         resp = session2.post(url_topic_new, {'title': 'a' * (config['TITLE_LENGTH_MAX']), 'content': 'topic 3'})
         info = resp.json()
         topic_other = info['data']['id']
-        
+
         resp = session.post(url_topic_edit % topic_other, {'title': 'a' * (config['TITLE_LENGTH_MIN']), 'content': 'topic 233'})
         self.assertEqual(resp.status_code, 200)
         info = resp.json()
@@ -307,7 +307,7 @@ class Tests(unittest.TestCase):
         self.assertEqual(info['code'], 0)
         self.assertTrue(info['data']['page_numbers'])
         self.assertTrue(len(info['data']['items']) > 0)
-        
+
         resp = requests.get(url_recent2)
         self.assertEqual(resp.status_code, 200)
         info = resp.json()
@@ -321,16 +321,16 @@ class Tests(unittest.TestCase):
         self.assertEqual(info['code'], 0)
         self.assertTrue(info['data']['page_numbers'])
         self.assertTrue(len(info['data']['items']) == 0)
-        
+
         resp = requests.get(url_recent % 'test')
         self.assertEqual(resp.status_code, 404)
-        
+
         # delete - not found
         resp = session.post(url_topic_del % 0)
         self.assertEqual(resp.status_code, 200)
         info = resp.json()
         self.assertEqual(info['code'], -1)
-        
+
         # delete - others
         resp = session2.post(url_topic_del % topic3)
         self.assertEqual(resp.status_code, 200)
@@ -341,7 +341,11 @@ class Tests(unittest.TestCase):
         resp = session.post(url_topic_del % topic3)
         self.assertEqual(resp.status_code, 200)
         info = resp.json()
-        self.assertEqual(info['code'], 0)      
+        self.assertEqual(info['code'], 0)
+
+        # 40 topics
+        for i in range(1, 41):
+            resp = session.post(url_topic_new, {'title': '文章标题 %d' % i, 'content': ('topic %d\n\n' % i) * 100})
 
     def test_comment(self):
         # signin and send topic
@@ -384,13 +388,13 @@ class Tests(unittest.TestCase):
 
         #resp = session.post(url_reply % rid, {'content': '123', 'send_to_id': 'test'})
         #self.assertEqual(resp.status_code, 404)
-        
+
         # success
         #resp = session.post(url_reply % 0, {'content': '123', 'send_to_id': rid})
         #self.assertEqual(resp.status_code, 200)
         #info = resp.json()
         #self.assertEqual(info['code'], 0)
-        
+
         # delete
         resp = session.post(url_reply_del % 0)
         self.assertEqual(resp.status_code, 200)

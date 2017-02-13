@@ -7,6 +7,12 @@
         <p class="info">{{time_to_text(item.time)}}</p>
         <div class="divider-line"></div>
     </div>
+    <span v-if="page_info.prev_page">
+        <router-link :to="{ path: `/p/${page_info.prev_page}` }">上一页</router-link>
+    </span>
+    <span v-if="page_info.next_page">
+        <router-link :to="{ path: `/p/${page_info.next_page}` }">下一页</router-link>
+    </span>
 </div>
 <loading v-else></loading>
 </template>
@@ -44,11 +50,19 @@ export default {
     },
     methods: {
         time_to_text: $.time_to_text,
+        fetchData: async function (page) {
+            let ret = await api.recent(page);
+            //console.log(ret);
+            this.$set(this, "page_info", ret.data);
+        }
     },
     mounted: async function () {
-        let ret = await api.recent();
-        //console.log(ret);
-        this.$set(this, "page_info", ret.data);
+        this.fetchData(this.$route.params.page);
+    },
+    watch: {
+        '$route' (to, from) {
+            this.fetchData(to.params.page);
+        }
     },
     components: {
         Loading,

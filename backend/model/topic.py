@@ -1,5 +1,6 @@
 ﻿# coding:utf-8
 import time
+import config
 from peewee import *
 from model import db, BaseModel
 from model.user import User
@@ -26,6 +27,7 @@ class Topic(BaseModel):
     edit_time = BigIntegerField(index=True, null=True)
     last_edit_user = ForeignKeyField(User, related_name="last_edit_user_id", null=True)
     view_count = IntegerField(default=0)
+    brief = CharField(max_length=500)
     content = CharField(max_length=50000)
 
     sticky_weight = IntegerField(index=True, default=0)  # 置顶权重
@@ -43,11 +45,12 @@ class Topic(BaseModel):
             self.title = data['title']
         if 'content' in data:
             self.content = data['content']
+            self.brief = data['content'][:config.TOPIC_BRIEF_LENGTH]
         self.last_edit_user = user
         self.edit_time = int(time.time())
         self.save()
         return self
-        
+
     def delete(self):
         self.state = TOPIC_STATE.DEL
         self.save()
@@ -60,7 +63,7 @@ class Topic(BaseModel):
     @classmethod
     def new(cls, title, user, content=None):
         with db.atomic():
-            ret = cls.create(title=title, user=user, time=int(time.time()), content=content)
+            ret = cls.create(title=title, user=user, time=int(time.time()), content=content, brief=content[:config.TOPIC_BRIEF_LENGTH])
             ret.weight = ret.id
             ret.save()
         return ret
