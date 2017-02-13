@@ -36,7 +36,8 @@ footer {
     margin-top: 40px;
     color: #aaa;
 }
-.main-box { min-height: 50vh; }
+/*.main-box { min-height: 70vh; }*/
+.main-box { min-height: 40vh; }
 .nav-top { margin-top: -30px; }
 .nav-bar {
     height: 100%;

@@ -1,10 +1,12 @@
 <template>
-<div v-if="page_info.items">
+<div class="tmp" v-if="page_info.items">
     <div class="topic-item" v-for="item in page_info.items">
         <h3 class="title">
             <router-link :to="{ path: '/t/' + item.id }">{{item.title}}</router-link>
         </h3>
-        <p class="info">{{time_to_text(item.time)}}</p>
+        <div class="brief" v-html="marked(item.brief)"></div>
+        <small><router-link :to="{ path: '/t/' + item.id }">阅读原文</router-link></small>
+        <p class="info">由 {{item.user.name}} 发表于 {{time_to_text(item.time)}}</p>
         <div class="divider-line"></div>
     </div>
     <span v-if="page_info.prev_page">
@@ -18,15 +20,25 @@
 </template>
 
 <style>
+/*.tmp {
+    max-height: 70vh;
+    overflow-y: scroll;
+}*/
 .topic-item {}
 
 .topic-item > .title {
     font-weight: normal;
+    margin-bottom: 0;
 }
 
 .topic-item > .info {
     color: rgb(153, 153, 153);
     font-size: small;
+}
+
+.topic-item > .brief {
+    max-height: 200px;
+    overflow: hidden;
 }
 
 .divider-line {
@@ -37,6 +49,7 @@
 
 <script>
 import Vue from 'vue'
+import marked from 'marked'
 import api from "../netapi.js"
 import state from "../state.js"
 import Loading from "./loading.vue"
@@ -49,6 +62,7 @@ export default {
         }
     },
     methods: {
+        marked,
         time_to_text: $.time_to_text,
         fetchData: async function (page) {
             let ret = await api.recent(page);

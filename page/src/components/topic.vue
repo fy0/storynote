@@ -25,18 +25,18 @@
 </style>
 
 <script>
-import marked from "marked"
+import marked from 'marked'
 import api from "../netapi.js"
 import Loading from "./loading.vue"
 
 export default {
     data () {
         return {
-            marked,
             topic: null,
         }
     },
     methods: {
+        marked,
         getTime: (timestamp) => {
             return $.get_time(timestamp);
         }
