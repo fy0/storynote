@@ -75,3 +75,7 @@ $.time_replace = function () {
 $.is_login = function() {
     return $.cookie('u') !== undefined;
 };
+
+$.messages_error = function (err) {
+    alert(err);
+}

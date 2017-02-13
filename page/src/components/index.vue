@@ -8,6 +8,7 @@
         <div class="divider-line"></div>
     </div>
 </div>
+<loading v-else></loading>
 </template>
 
 <style>
@@ -32,6 +33,7 @@
 import Vue from 'vue'
 import api from "../netapi.js"
 import state from "../state.js"
+import Loading from "./loading.vue"
 
 export default {
     data () {
@@ -47,6 +49,9 @@ export default {
         let ret = await api.recent();
         //console.log(ret);
         this.$set(this, "page_info", ret.data);
+    },
+    components: {
+        Loading,
     }
 }
 </script>

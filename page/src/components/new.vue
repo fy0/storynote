@@ -18,10 +18,10 @@
 </template>
 
 <script>
-
 import api from "../netapi.js"
 import state from "../state.js"
 import SimpleMDE from "simplemde"
+import Prism from "prismjs"
 
 export default {
     data () {
@@ -37,17 +37,17 @@ export default {
             let content = this.editor.value();
 
             if (!title) {
-                //$.messages_error('请至少输入一个标题！');
+                 $.messages_error('请至少输入一个标题！');
                 return false;
             }
 
             if (title.length < 5) {
-                //$.messages_error('标题应不少于 5 个字！');
+                $.messages_error('标题应不少于 5 个字！');
                 return false;
             }
 
             if (title.length > 30) {
-                //$.messages_error('标题应不多于 30 个字！');
+                $.messages_error('标题应不多于 30 个字！');
                 return false;
             }
 
@@ -67,7 +67,14 @@ export default {
             },
             renderingConfig: {
                 singleLineBreaks: false,
-                codeSyntaxHighlighting: true,
+                codeSyntaxHighlighting: false,
+            },
+            previewRender: function (plainText, preview) { // Async method
+                setTimeout(function () {
+                    preview.innerHTML = this.parent.markdown(plainText);
+                    Prism.highlightAll();
+                }.bind(this), 1);
+                return "Loading...";
             },
         });
     },

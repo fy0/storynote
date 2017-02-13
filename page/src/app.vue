@@ -58,6 +58,7 @@ footer {
 import Vue from 'vue'
 import api from "./netapi.js"
 import state from "./state.js"
+import Loading from "./components/loading.vue"
 import MsgTip from './components/msgtip.vue'
 
 export default {

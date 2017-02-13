@@ -6,8 +6,9 @@
             <span>{{topic.user.name}}</span>
             <span>{{getTime(topic.time)}}</span>
         </div>
-        <div v-html="topic.content"></div>
+        <div v-html="marked(topic.content)"></div>
     </div>
+    <loading v-else></loading>
 </div>
 </template>
 
@@ -24,11 +25,14 @@
 </style>
 
 <script>
+import marked from "marked"
 import api from "../netapi.js"
+import Loading from "./loading.vue"
 
 export default {
     data () {
         return {
+            marked,
             topic: null,
         }
     },
@@ -40,9 +44,11 @@ export default {
     mounted: async function () {
         let ret = await api.topicGet(this.$route.params.id);
         if (ret.code == 0) {
-            console.log(ret);
             this.$set(this, "topic", ret.data);
         }
+    },
+    components: {
+        Loading,
     }
 }
 </script>
