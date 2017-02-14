@@ -4,19 +4,14 @@
         <!-- header -->
         <div class="page-header">
             <h1><router-link :to="{ path: '/' }">SINGLE PAGE</router-link></h1>
-            <div class="nav-top" v-if="state.data.user">
-                <p style="margin: 0">Wellcome, {{state.data.user.name}}</p>
-                <router-link :to="{ path: '/' }">主页</router-link>
-                <router-link :to="{ path: '/new' }">撰文</router-link>
-                <router-link :to="{ path: '/signout' }">注销</router-link>
-            </div>
         </div>
         <!-- 正文 -->
         <div class="pure-g main-box">
             <div class="pure-u-6-24 left-bar">
                 <ul class="nav-bar">
                     <li><router-link :to="{ path: '/' }">主页</router-link></li>
-                    <li><router-link :to="{ path: '/signin' }">管理</router-link></li>
+                    <li><router-link :to="{ path: '/signin' }">用户</router-link></li>
+                    <li v-if="state.data.user"><router-link :to="{ path: '/new' }">撰文</router-link></li>
                     <li><router-link :to="{ path: '/about' }">关于</router-link></li>
                 </ul>
             </div>
@@ -53,6 +48,7 @@ footer {
 .nav-bar a:hover { color: black; }
 .nav-bar > li { margin-bottom: 15px; }
 .page-header { text-align: center; }
+.page-header > h2 { margin: 0; }
 </style>
 
 <script>

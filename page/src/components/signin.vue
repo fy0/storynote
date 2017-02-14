@@ -1,7 +1,8 @@
 <template>
-<p v-if="state.data.user">
-    已经登录，身份为 {{state.data.user.name}}
-</p>
+<div v-if="state.data.user">
+    <p>已经登录，身份为 {{state.data.user.name}}</p>
+    <router-link :to="{ path: '/signout' }">注销</router-link>
+</div>
 <div v-else>
     <form method="post" class="pure-form" @submit.prevent="send">
         <fieldset>
