@@ -30,7 +30,7 @@ class ReplyView(AjaxView):
         reply_count, replies = Reply.get_list(relate_id, offset=offset)
         
         self.finish({'code': 0, 'data': {
-            'items': list(replies),
+            'items': list(map(Reply.to_dict, replies)),
             'count': reply_count,
         }})
 
