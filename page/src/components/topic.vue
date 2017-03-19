@@ -17,7 +17,7 @@
             <div class="ic-comment-body">
                 <div class="ic-comment-content" v-html="marked(i.content)"></div>
                 <div class="ic-comment-meta">
-                    <b>{{i.user.username}}</b>
+                    <b>{{i.user.name}}</b>
                     <time>{{time_to_text(i.time)}}</time>
                     <span> | </span>
                     <span>#{{index+1}}</span>

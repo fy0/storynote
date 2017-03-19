@@ -45,6 +45,10 @@ class User(BaseModel):
 
     class Meta:
         db_table = 'users'
+        to_dict = {
+            'exclude': ['key', 'key_time', 'password', 'salt'],
+            'extra_attrs': ['name'],
+        }
 
     def is_admin(self):
         return self.level == USER_LEVEL.ADMIN
@@ -126,12 +130,3 @@ class User(BaseModel):
     @property
     def name(self):
         return self.nickname or self.username
-
-    def to_dict(self):
-        ret = super().to_dict()
-        del ret['key']
-        del ret['key_time']
-        del ret['password']
-        del ret['salt']
-        ret['name'] = self.name
-        return ret

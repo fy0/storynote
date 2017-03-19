@@ -1,5 +1,8 @@
 # coding:utf-8
 
+from lib.pvpatch import apply_to_dict_patch
+apply_to_dict_patch()
+
 import math
 import config
 import peewee
