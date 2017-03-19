@@ -41,10 +41,6 @@
     overflow: hidden;
 }
 
-.divider-line {
-    border-bottom: #EBF2F6 1px solid;
-    width: 50%;
-}
 </style>
 
 <script>

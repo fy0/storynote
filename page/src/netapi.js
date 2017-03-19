@@ -67,8 +67,8 @@ export default {
     },
 
     /** 评论 - 发表 */
-    replyPost: async function (topic_id) {
-        return await npost(`${remote.API_SERVER}/api/reply/${topic_id}`);
+    replyPost: async function (topic_id, content) {
+        return await npost(`${remote.API_SERVER}/api/reply/${topic_id}`, {content});
     },
 
     /** 评论 - 删除 */

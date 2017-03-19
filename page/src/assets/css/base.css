@@ -30,3 +30,37 @@ a {
 a:hover {
     color: #286090;
 }
+
+.comment-info {
+    line-height: 30px;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.comment-info-title {
+    display: inline;
+    font-weight: 700;
+    background: #fff;
+    padding-right: 20px;
+}
+
+.comment-info-line {
+    z-index: -1;
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    color: #eee;
+    background: currentColor;
+}
+
+.ic-comment-meta {
+    text-align: right;
+}
+
+.divider-line {
+    border-bottom: #EBF2F6 1px solid;
+    width: 50%;
+}
