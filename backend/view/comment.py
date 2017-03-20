@@ -23,6 +23,7 @@ class CommentDeleteView(AjaxLoginView):
 @route('/api/comment/(\d+)', name="comment")
 class CommentView(AjaxView):
     def get(self, relate_id):
+        # TODO: page 为 0 时取最后一页
         page = self.get_argument('page', '1')
         if not page.isdigit():
             return self.finish({'code': -1})
@@ -31,6 +32,7 @@ class CommentView(AjaxView):
         comment_count, comments = Comment.get_list(relate_id, offset=offset)
         
         self.finish({'code': 0, 'data': {
+            'page_size': config.COMMENT_PAGE_SIZE,
             'items': list(map(Comment.to_dict, comments)),
             'count': comment_count,
         }})

@@ -23,6 +23,6 @@ class MiscView(AjaxView):
                 'TITLE_LENGTH_MIN': config.TITLE_LENGTH_MIN,
                 'TITLE_LENGTH_MAX': config.TITLE_LENGTH_MAX,
                 'TOPIC_PAGE_SIZE': config.TOPIC_PAGE_SIZE,
-                'REPLY_PAGE_SIZE': config.COMMENT_PAGE_SIZE,
+                'COMMENT_PAGE_SIZE': config.COMMENT_PAGE_SIZE,
             }
         })

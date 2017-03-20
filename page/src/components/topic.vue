@@ -1,7 +1,7 @@
 <template>
 <div class="topic-content entry">
     <div class="content" v-if="topic">
-        <h1 class="post-title">{{topic.title}}</h1>
+        <h1 class="post-title"><router-link :to="{ path: '/t/' + topic.id }">{{topic.title}}</router-link></h1>
         <div class="post-info">
             <span>{{topic.user.name}}</span>
             <span>{{getTime(topic.time)}}</span>
@@ -20,16 +20,23 @@
                     <b>{{i.user.name}}</b>
                     <time>{{time_to_text(i.time)}}</time>
                     <span> | </span>
-                    <span>#{{index+1}}</span>
+                    <span>#{{i.id}}</span>
                 </div>
             </div>
             <div class="divider-line" v-if="index != comments.length-1"></div>
         </div>
 
+        <div v-if="comments_page > 1">
+            <span v-for="index in comments_page">
+                <span class="comment-page-btn" v-if="$route.params.cmtpage == index">{{index}}</span>
+                <router-link class="comment-page-btn" v-else :to="{ name: 'topic', params: {id: topic.id, cmtpage: index}}" replace>{{index}}</router-link>
+            </span>
+        </div>
+
         <div v-if="state.data.user" style="margin-top: 20px">
             <form method="POST">
                 <div>
-                    <textarea name="content" rows="5" placeholder="" style="width:100%;border-color:#d9d9d9" v-model="comment_text"></textarea>
+                    <textarea name="content" rows="5" placeholder="" style="width:100%;border-color:#d9d9d9" v-model="user_comment_text"></textarea>
                 </div>
                 <div>
                     <span class="pure-button" @click="commentPost">发表</span>
@@ -50,6 +57,11 @@
     word-wrap: break-word;
     margin: 0.3em 0 0;
 }
+
+.post-title > a {
+    color: #000;
+}
+
 .post-info {
     color: rgb(153, 153, 153);
     padding: 0px;
@@ -70,7 +82,8 @@ export default {
             topic: null,
             comments: [], // 当前显示的评论数
             comments_length: '?', // 总评论数
-            comment_text: '',
+            comments_page: 1,
+            user_comment_text: '',
             time_to_text: $.time_to_text,
         }
     },
@@ -79,18 +92,19 @@ export default {
         getTime: (timestamp) => {
             return $.get_time(timestamp);
         },
-        commentFetch: async function () {
-            let ret = await api.commentGet(this.topic.id);
+        commentFetch: async function (page=1) {
+            let ret = await api.commentGet(this.topic.id, page);
             if (ret.code == 0) {
                 this.comments_length = ret.data.count;
                 this.comments = ret.data.items;
+                this.comments_page = Math.ceil(this.comments_length / ret.data.page_size);
             }
         },
         commentPost: async function () {
-            let ret = await api.commentPost(this.topic.id, this.comment_text);
+            let ret = await api.commentPost(this.topic.id, this.user_comment_text);
             if (ret.code == 0) {
-                this.comment_text = '';
-                this.commentFetch();
+                this.user_comment_text = '';
+                this.commentFetch(this.comments_page);
             }
             console.log(ret);
         }
@@ -99,7 +113,14 @@ export default {
         let ret = await api.topicGet(this.$route.params.id);
         if (ret.code == 0) {
             this.$set(this, "topic", ret.data);
-            this.commentFetch();
+            this.commentFetch(this.$route.params.cmtpage || 1);
+        }
+    },
+    watch: {
+        '$route' (to, from) {
+            if (to.params.cmtpage) {
+                this.commentFetch(to.params.cmtpage);
+            }
         }
     },
     components: {

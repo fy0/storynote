@@ -25,6 +25,7 @@ var routes = [
     { path: '/p/:page(\\d+)', component: Index },
     { path: '/new', component: TopicNew},
     { path: '/t/:id(\\d+)', component: TopicPage },
+    { path: '/t/:id(\\d+)/:cmtpage(\\d+)', name: 'topic', component: TopicPage },
     { path: '/new', component: TopicNew },
     { path: '/signin', component: SignIn },
     { path: '/signup', component: SignUp },

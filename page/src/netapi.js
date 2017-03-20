@@ -5,7 +5,7 @@ let remote = config.remote;
 
 function paramSerialize (obj) {
     let str = [];
-    for (let i of Object.keys(data)) {
+    for (let i of Object.keys(obj)) {
         str.push(encodeURIComponent(i) + "=" + encodeURIComponent(obj[i]));
     }
     return str.join("&");
@@ -62,8 +62,8 @@ export default {
     },
 
     /** 评论 - 获取 */
-    commentGet: async function (topic_id) {
-        return await nget(`${remote.API_SERVER}/api/comment/${topic_id}`);
+    commentGet: async function (topic_id, page=1) {
+        return await nget(`${remote.API_SERVER}/api/comment/${topic_id}`, {page});
     },
 
     /** 评论 - 发表 */

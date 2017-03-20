@@ -56,6 +56,16 @@ a:hover {
     background: currentColor;
 }
 
+.comment-page-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 15px;
+    line-height: 32px;
+    margin: 0 8px;
+    padding: 3px;
+    text-align: center;
+}
+
 .ic-comment-meta {
     text-align: right;
 }
