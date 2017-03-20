@@ -57,8 +57,8 @@ class Topic(BaseModel):
 
     @property
     def reply_count(self):
-        from model.reply import Reply
-        return Reply.get_count(self.id)
+        from model.comment import Comment
+        return Comment.get_count(self.id)
 
     @classmethod
     def new(cls, title, user, content=None):

@@ -80,14 +80,14 @@ export default {
             return $.get_time(timestamp);
         },
         commentFetch: async function () {
-            let ret = await api.replyGet(this.topic.id);
+            let ret = await api.commentGet(this.topic.id);
             if (ret.code == 0) {
                 this.comments_length = ret.data.count;
                 this.comments = ret.data.items;
             }
         },
         commentPost: async function () {
-            let ret = await api.replyPost(this.topic.id, this.comment_text);
+            let ret = await api.commentPost(this.topic.id, this.comment_text);
             if (ret.code == 0) {
                 this.comment_text = '';
                 this.commentFetch();

@@ -62,18 +62,18 @@ export default {
     },
 
     /** 评论 - 获取 */
-    replyGet: async function (topic_id) {
-        return await nget(`${remote.API_SERVER}/api/reply/${topic_id}`);
+    commentGet: async function (topic_id) {
+        return await nget(`${remote.API_SERVER}/api/comment/${topic_id}`);
     },
 
     /** 评论 - 发表 */
-    replyPost: async function (topic_id, content) {
-        return await npost(`${remote.API_SERVER}/api/reply/${topic_id}`, {content});
+    commentPost: async function (topic_id, content) {
+        return await npost(`${remote.API_SERVER}/api/comment/${topic_id}`, {content});
     },
 
     /** 评论 - 删除 */
-    replyDel: async function (reply_id) {
-        return await npost(`${remote.API_SERVER}/api/reply/del/${reply_id}`);
+    commentDel: async function (comment_id) {
+        return await npost(`${remote.API_SERVER}/api/comment/del/${comment_id}`);
     },
 
     /** 主题 - 获取内容 */

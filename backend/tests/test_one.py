@@ -24,11 +24,12 @@ url_topic_new = 'http://%s:%s/api/topic/new' % (HOST, WEB_PORT)
 url_topic_edit = 'http://%s:%s/api/topic/edit/%%s' % (HOST, WEB_PORT)
 url_topic_del = 'http://%s:%s/api/topic/del/%%s' % (HOST, WEB_PORT)
 
-url_reply = 'http://%s:%s/api/reply/%%s' % (HOST, WEB_PORT)
-url_reply_del = 'http://%s:%s/api/reply/del/%%s' % (HOST, WEB_PORT)
+url_comment = 'http://%s:%s/api/comment/%%s' % (HOST, WEB_PORT)
+url_comment_del = 'http://%s:%s/api/comment/del/%%s' % (HOST, WEB_PORT)
 
 url_recent = 'http://%s:%s/api/recent/%%s' % (HOST, WEB_PORT)
 url_recent2 = 'http://%s:%s/api/recent' % (HOST, WEB_PORT)
+
 
 def uescape(text):
     return str(bytes(text, 'utf-8'), 'unicode-escape')
@@ -40,7 +41,7 @@ class Tests(unittest.TestCase):
         # register first account (admin account)
         resp = requests.post(url_signup, {'username': 'test', 'password': '1234'})
         resp = requests.post(url_signup, {'username': 'test2', 'password': '1234'})
-        
+
         global config
         config = requests.get(url_misc).json()['config']
 
@@ -63,15 +64,15 @@ class Tests(unittest.TestCase):
         resp = requests.post(url_signup, {'username': 'a' * 16, 'password': '1234'})
         self.assertEqual(resp.status_code, 200)
         self.assertTrue(u'用户名长度必须在 2-15 之间' in uescape(resp.text))
-        
+
         # username matches '^[a-zA-Z][a-zA-Z0-9]+$'
         resp = requests.post(url_signup, {'username': '测试', 'password': '1234'})
         self.assertEqual(resp.status_code, 200)
-        self.assertTrue(u'用户名应为英文与数字的组合，同时首字为英文' in uescape(resp.text))      
+        self.assertTrue(u'用户名应为英文与数字的组合，同时首字为英文' in uescape(resp.text))
 
         resp = requests.post(url_signup, {'username': '12', 'password': '1234'})
         self.assertEqual(resp.status_code, 200)
-        self.assertTrue(u'用户名应为英文与数字的组合，同时首字为英文' in uescape(resp.text))        
+        self.assertTrue(u'用户名应为英文与数字的组合，同时首字为英文' in uescape(resp.text))
 
         # success
         resp = requests.post(url_signup, {'username': 'ab', 'password': '1234'})
@@ -104,13 +105,13 @@ class Tests(unittest.TestCase):
         info = resp.json()
         self.assertEqual(info['code'], -1)
         self.assertTrue('帐号或密码错误' in info['error_msgs'])
-        
+
         # lost parameters
         resp = requests.post(url_signin, {})
         self.assertEqual(resp.status_code, 200)
         info = resp.json()
         self.assertEqual(info['code'], -1)
-        self.assertTrue('帐号或密码错误' in info['error_msgs'])        
+        self.assertTrue('帐号或密码错误' in info['error_msgs'])
 
         # right user
         resp = requests.post(url_signin, {'username': 'test', 'password': '1234'})
@@ -184,7 +185,7 @@ class Tests(unittest.TestCase):
         resp = session.get(url_userinfo)
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.json()['code'], -255)
-        
+
         # signin and change password back
         resp = session.post(url_signin, {'username': 'test', 'password': '123X'})
         resp = session.post(url_pwchange, {'password': '123X', 'new_password': '1234'})
@@ -211,12 +212,12 @@ class Tests(unittest.TestCase):
         resp = session.post(url_signin, {'username': 'test', 'password': '1234'})
 
         # too short topic title
-        resp = session.post(url_topic_new, {'title': 'a' * (config['TITLE_LENGTH_MIN']-1), 'content': ''})
+        resp = session.post(url_topic_new, {'title': 'a' * (config['TITLE_LENGTH_MIN'] - 1), 'content': ''})
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.json()['code'], -1)
-        
+
         # too long topic title
-        resp = session.post(url_topic_new, {'title': 'a' * (config['TITLE_LENGTH_MAX']+1), 'content': ''})
+        resp = session.post(url_topic_new, {'title': 'a' * (config['TITLE_LENGTH_MAX'] + 1), 'content': ''})
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.json()['code'], -1)
 
@@ -271,7 +272,8 @@ class Tests(unittest.TestCase):
         self.assertEqual(info['code'], -1)
 
         # topic edit
-        resp = session.post(url_topic_edit % topic3, {'title': 'a' * (config['TITLE_LENGTH_MIN']), 'content': 'topic 233'})
+        resp = session.post(url_topic_edit % topic3,
+                            {'title': 'a' * (config['TITLE_LENGTH_MIN']), 'content': 'topic 233'})
         self.assertEqual(resp.status_code, 200)
         info = resp.json()
         self.assertEqual(info['code'], 0)
@@ -295,7 +297,8 @@ class Tests(unittest.TestCase):
         info = resp.json()
         topic_other = info['data']['id']
 
-        resp = session.post(url_topic_edit % topic_other, {'title': 'a' * (config['TITLE_LENGTH_MIN']), 'content': 'topic 233'})
+        resp = session.post(url_topic_edit % topic_other,
+                            {'title': 'a' * (config['TITLE_LENGTH_MIN']), 'content': 'topic 233'})
         self.assertEqual(resp.status_code, 200)
         info = resp.json()
         self.assertEqual(info['code'], -2)
@@ -355,58 +358,58 @@ class Tests(unittest.TestCase):
         topic_id = resp.json()['data']['id']
 
         # without signin
-        resp = requests.post(url_reply % topic_id, {'content': '123'})
+        resp = requests.post(url_comment % topic_id, {'content': '123'})
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.json()['code'], -255)
 
         # empty content
-        resp = session.post(url_reply % topic_id, {'content': '  \n '})
+        resp = session.post(url_comment % topic_id, {'content': '  \n '})
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.json()['code'], -3)
 
-        # too long reply (4096)
-        resp = session.post(url_reply % topic_id, {'content': '测' * 4097})
+        # too long comment (4096)
+        resp = session.post(url_comment % topic_id, {'content': '测' * 4097})
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.json()['code'], -4)
 
         # wrong topic id
-        resp = session.post(url_reply % 0, {'content': '123'})
+        resp = session.post(url_comment % 0, {'content': '123'})
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.json()['code'], -6)
 
         # success
-        resp = session.post(url_reply % topic_id, {'content': '测' * 4096})
+        resp = session.post(url_comment % topic_id, {'content': '测' * 4096})
         self.assertEqual(resp.status_code, 200)
         info = resp.json()
         self.assertEqual(info['code'], 0)
         rid = info['data']['id']
 
         # reply a comment which not exists
-        #resp = session.post(url_reply % rid, {'content': '123', 'send_to_id': 0})
-        #self.assertEqual(resp.status_code, 200)
-        #self.assertEqual(resp.json()['code'], -5)
+        # resp = session.post(url_reply % rid, {'content': '123', 'send_to_id': 0})
+        # self.assertEqual(resp.status_code, 200)
+        # self.assertEqual(resp.json()['code'], -5)
 
-        #resp = session.post(url_reply % rid, {'content': '123', 'send_to_id': 'test'})
-        #self.assertEqual(resp.status_code, 404)
+        # resp = session.post(url_reply % rid, {'content': '123', 'send_to_id': 'test'})
+        # self.assertEqual(resp.status_code, 404)
 
         # success
-        #resp = session.post(url_reply % 0, {'content': '123', 'send_to_id': rid})
-        #self.assertEqual(resp.status_code, 200)
-        #info = resp.json()
-        #self.assertEqual(info['code'], 0)
+        # resp = session.post(url_reply % 0, {'content': '123', 'send_to_id': rid})
+        # self.assertEqual(resp.status_code, 200)
+        # info = resp.json()
+        # self.assertEqual(info['code'], 0)
 
         # delete
-        resp = session.post(url_reply_del % 0)
+        resp = session.post(url_comment_del % 0)
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.json()['code'], -1)
 
         session2 = requests.Session()
         resp = session2.post(url_signin, {'username': 'test2', 'password': '1234'})
-        resp = session2.post(url_reply_del % rid)
+        resp = session2.post(url_comment_del % rid)
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.json()['code'], -2)
 
-        resp = session.post(url_reply_del % rid)
+        resp = session.post(url_comment_del % rid)
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.json()['code'], 0)
 
