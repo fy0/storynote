@@ -6,7 +6,7 @@ from model import BaseModel
 
 class Tag(BaseModel):
     name = CharField(index=True, unique=True, max_length=40)
-    time = BigIntegerField(max_length=40)
+    time = BigIntegerField(index=True)
     desc = CharField(max_length=255)
 
     class Meta:

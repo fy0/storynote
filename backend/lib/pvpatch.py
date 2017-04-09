@@ -1,4 +1,4 @@
-# for peewee 2.8.1
+# for peewee 2.9.1
 
 import playhouse.shortcuts
 
@@ -9,7 +9,7 @@ def apply_to_dict_patch():
     # noinspection PyProtectedMember
     def my_model_to_dict(model, recurse=True, backrefs=False, only=None,
                          exclude=None, seen=None, extra_attrs=None,
-                         fields_from_query=None):
+                         fields_from_query=None, max_depth=None):
 
         if hasattr(model._meta, 'to_dict'):
             if 'exclude' in model._meta.to_dict:
@@ -31,6 +31,7 @@ def apply_to_dict_patch():
                     extra_attrs = model._meta.to_dict['extra_attrs']
 
         return old_model_to_dict(model, recurse=recurse, backrefs=backrefs, only=only, exclude=exclude,
-                                 extra_attrs=extra_attrs, fields_from_query=fields_from_query, seen=seen)
+                                 extra_attrs=extra_attrs, fields_from_query=fields_from_query, seen=seen,
+                                 max_depth=max_depth)
 
     playhouse.shortcuts.model_to_dict = my_model_to_dict
