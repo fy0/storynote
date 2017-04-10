@@ -8,13 +8,16 @@
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
+    "animate.css": "^3.5.2",
+    "lodash": "^4.17.4",
     "marked": "^0.3.6",
     "nprogress": "^0.2.0",
     "prismjs": "^1.6.0",
     "purecss": "^0.6.0",
     "simplemde": "^1.11.2",
     "vue": "^2.0.3",
-    "vue-router": "^2.0.1"
+    "vue-router": "^2.0.1",
+    "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
     "autoprefixer": "^6.4.1",

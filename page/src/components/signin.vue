@@ -48,11 +48,13 @@ export default {
                 ret = await api.userInfo();
                 if (ret.code == 0) {
                     Vue.set(state.data, 'user', ret.data);
+                    $.message_success(`欢迎回来，${ret.data.name}！`);
                 }
                 this.$router.replace({ path: '/'})
             } else {
-                console.log(ret);
-                alert(ret.error_msgs);
+                for (let i of ret.error_msgs) {
+                    $.message_error(i);
+                }
             }
         }
     },

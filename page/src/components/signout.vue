@@ -18,6 +18,7 @@ export default {
         let ret = await api.userSignout();
         Vue.delete(state.data, 'user');
         this.$router.replace('/');
+        $.message_success(`您已成功注销`);
     }
 }
 </script>

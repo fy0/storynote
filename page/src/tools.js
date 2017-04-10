@@ -1,4 +1,6 @@
 
+import state from "./state.js"
+
 $.get_time = function (timestamp) {
     var date;
     date = new Date();
@@ -76,6 +78,39 @@ $.is_login = function() {
     return $.cookie('u') !== undefined;
 };
 
-$.messages_error = function (err) {
-    alert(err);
+
+$.message = function (type, text) {
+    // type: default, secondary, success, warning, error
+    let convert = {
+        'default': '',
+        'secondary': 'am-alert-secondary',
+        'success': 'am-alert-success',
+        'warning': 'am-alert-warning',
+        'error': 'am-alert-danger',
+    }
+    let data = {type, text, class: convert[type]};
+    state.data.msgs.push(data);
+    _.delay(() => {
+        state.data.msgs.splice(state.data.msgs.indexOf(data), 1);
+    }, 3000);
+}
+
+$.message_text = function (text) {
+    $.message('default', text);
+}
+
+$.message_secondary = function (text) {
+    $.message('secondary', text);
+}
+
+$.message_success = function (text) {
+    $.message('success', text);
+}
+
+$.message_warning = function (text) {
+    $.message('warning', text);
+}
+
+$.message_error = function (text) {
+    $.message('error', text);
 }

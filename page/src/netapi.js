@@ -1,4 +1,5 @@
 
+import 'whatwg-fetch'
 import config from "./config.js"
 
 let remote = config.remote;

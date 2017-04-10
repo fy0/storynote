@@ -22,6 +22,7 @@
         <!-- footer -->
         <footer><p>Copyright © 2017 SinglePage</p></footer>
     </div>
+    <msg-box></msg-box>
 </div>
 </template>
 
@@ -56,7 +57,7 @@ import Vue from 'vue'
 import api from "./netapi.js"
 import state from "./state.js"
 import Loading from "./components/loading.vue"
-import MsgTip from './components/msgtip.vue'
+import MsgBox from './components/msgbox.vue'
 
 export default {
     data () {
@@ -76,7 +77,7 @@ export default {
     },
     components: {
         // <my-component> 将只在父模板可用
-        'msg-tip': MsgTip
+        'msg-box': MsgBox
     }
 }
 </script>

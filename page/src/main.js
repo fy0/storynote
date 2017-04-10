@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import "purecss"
-import "simplemde/dist/simplemde.min.css"
-import "./assets/css/base.css"
-import tools from "./tools.js"
-import state from "./state.js"
+import 'lodash'
+import 'purecss'
+import 'animate.css'
+import 'simplemde/dist/simplemde.min.css'
+import './assets/css/base.css'
+import tools from './tools.js'
+import state from './state.js'
 
 import App from './app.vue'
 import Index from './components/index.vue'
@@ -16,7 +18,7 @@ import SignUp from './components/signup.vue'
 import SignOut from './components/signout.vue'
 import Loading from './components/loading.vue'
 import About from './components/about.vue'
-import './components/msgtip.vue'
+import './components/msgbox.vue'
 
 Vue.use(VueRouter)
 
