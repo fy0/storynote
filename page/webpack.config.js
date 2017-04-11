@@ -34,7 +34,7 @@ module.exports = {
                 }
             },
             {
-                test: /\.(eot|svg|ttf|woff|woff2)$/,
+                test: /\.(eot|svg|ttf|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
                 loader: 'url-loader?limit=65000&name=fonts/[name]_[hash].[ext]'
             },
         ]

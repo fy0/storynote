@@ -23,6 +23,7 @@
         <footer><p>Copyright © 2017 SinglePage</p></footer>
     </div>
     <msg-box></msg-box>
+    <go-top></go-top>
 </div>
 </template>
 
@@ -58,6 +59,7 @@ import api from "./netapi.js"
 import state from "./state.js"
 import Loading from "./components/loading.vue"
 import MsgBox from './components/msgbox.vue'
+import GoTop from './components/gotop.vue'
 
 export default {
     data () {
@@ -77,6 +79,7 @@ export default {
     },
     components: {
         // <my-component> 将只在父模板可用
+        GoTop,
         'msg-box': MsgBox
     }
 }

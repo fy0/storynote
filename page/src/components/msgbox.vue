@@ -30,8 +30,8 @@ export default {
         }
     },
     mounted: async function () {
-        $.message('warning', '123');
-        $.message('success', '操作已完成');
+        // $.message('warning', '123');
+        // $.message('success', '操作已完成');
     },
 }
 </script>

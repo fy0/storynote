@@ -60,7 +60,7 @@ export default {
         this.editor = new SimpleMDE({
             element: document.getElementById("editor"),
             spellChecker: false,
-            autoDownloadFontAwesome: true,
+            autoDownloadFontAwesome: false,
             autosave: {
                 enabled: true,
                 unique_id: "editor",
