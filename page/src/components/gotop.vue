@@ -9,7 +9,12 @@
     position: fixed;
     right: 5%;
     bottom: 5%;
+    height: 40px;
+    width: 40px;
     color: #056ef0;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
 }
 
 .tipbox > .item {
@@ -27,22 +32,12 @@ export default {
         }
     },
     mounted: async function () {
-        let updatePosition = function () {
-            console.log(111, this.y)
-        }
-        // state.data.iscroll.on('scroll', updatePosition);
-        // state.data.iscroll.on('scrollEnd', updatePosition);
-        // $.message('warning', '123');
-        // $.message('success', '操作已完成');
-
         var timer = setInterval(() => {
             this.showGoTop = document.body.scrollTop > 1;
         }, 100);
     },
     methods: {
         gotop: function () {
-            // state.data.iscroll.refresh ('#app', 0, 0);
-
             var top = document.body.scrollTop;
             var timer = setInterval(() => {
                 top -= Math.abs(top * 0.1);
@@ -52,13 +47,10 @@ export default {
                 }
                 document.body.scrollTop = top;
             }, 20);
-
-            //state.data.iscroll.scrollToElement(document.querySelector('.page-header'));
         }
     }
 }
 </script>
 
 <style>
-
 </style>

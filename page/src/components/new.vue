@@ -26,34 +26,37 @@ import Prism from "prismjs"
 export default {
     data () {
         return {
-            msg: 'Hello Vue 2.0!'
         }
     },
     methods: {
         send: async function (e) {
             let formdata = new FormData($("#form_topic")[0]);
-            //for (let i of formdata.entries()) { data[i[0]] = i[1]; }
             let title = (formdata.get("title") || "").trim();
             let content = this.editor.value();
 
             if (!title) {
-                 $.messages_error('请至少输入一个标题！');
+                 $.message_error('请至少输入一个标题！');
                 return false;
             }
 
             if (title.length < 5) {
-                $.messages_error('标题应不少于 5 个字！');
+                $.message_error('标题应不少于 5 个字！');
                 return false;
             }
 
             if (title.length > 30) {
-                $.messages_error('标题应不多于 30 个字！');
+                $.message_error('标题应不多于 30 个字！');
                 return false;
             }
 
             if (!content) return;
-            api.topicNew(title, content);
-            alert("OK!");
+            let ret = await api.topicNew(title, content);
+            if (ret.code == 0) {
+                this.$router.push({ name: 'topic1', params: { id: ret.data.id }})
+                $.message_success('发表成功！已自动跳转至文章页面。');
+            } else {
+                $.message_error('发表失败！');                
+            }
         }
     },
     mounted: function () {

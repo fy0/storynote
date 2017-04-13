@@ -44,15 +44,17 @@ export default {
             let password = (formdata.get("password") || "").trim();
             let password_again = (formdata.get("password_again") || "").trim();
             if (password != password_again) {
-                alert("两次输入的密码不一致！");
+                $.message_error("两次输入的密码不一致！");
                 return;
             }
             let ret = await api.userSignup(username, password);
             if (ret.code == 0) {
+                $.message_success(`注册成功！现以新的身份跳转首页。`);
                 this.$router.replace({ path: '/'})
             } else {
-                console.log(ret);
-                alert(ret.error_msgs);
+                for (let i of ret.error_msgs) {
+                    $.message_error(i);
+                }
             }
         }
     },

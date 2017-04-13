@@ -11,8 +11,7 @@ import state from "../state.js"
 
 export default {
     data () {
-        return {
-        }
+        return {}
     },
     mounted: async function () {
         let ret = await api.userSignout();
