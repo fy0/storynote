@@ -12,6 +12,7 @@ import state from './state.js'
 
 import App from './app.vue'
 import Index from './components/index.vue'
+import Timeline from './components/timeline.vue'
 import TopicNew from './components/new.vue'
 import TopicPage from './components/topic.vue'
 import SignIn from './components/signin.vue'
@@ -26,6 +27,7 @@ Vue.use(VueRouter)
 var routes = [
     { path: '/', component: Index },
     { path: '/p/:page(\\d+)', component: Index },
+    { path: '/timeline/:page(\\d+)', component: Timeline },
     { path: '/new', component: TopicNew},
     { path: '/t/:id(\\d+)', name: 'topic1', component: TopicPage },
     { path: '/t/:id(\\d+)/:cmtpage(\\d+)', name: 'topic', component: TopicPage },

@@ -2,7 +2,7 @@
 import config
 from model import pagination
 from model.topic import Topic
-#from lib import markdown
+from datetime import datetime
 from view import route, AjaxView, AjaxLoginView, url_for
 
 
@@ -80,3 +80,24 @@ class Recent(AjaxView):
         pg["items"] = list(map(Topic.to_dict, pg["items"]))
         pg['page_numbers'] = list(pg['page_numbers'])
         self.finish({'code': 0, 'data': pg})
+
+
+@route('/api/timeline/(\d+)', name='timeline')
+class Timeline(AjaxView):
+    def get(self, page):
+        count, query = Topic.get_list_order_by_time()
+        pg = pagination(count, query, config.TOPIC_PAGE_SIZE, page)
+        pg["items"] = list(map(Topic.to_dict, pg["items"]))
+        pg['page_numbers'] = list(pg['page_numbers'])
+
+        timeline = {}
+        for i in pg['items']:
+            dt = datetime.fromtimestamp(i['time'])
+            k = dt.strftime('%Y.%m')
+            timeline.setdefault(k, [])
+            timeline[k].append(i)
+
+        key_order = list(timeline.keys())
+        key_order.sort()
+        key_order.reverse()
+        self.finish({'code': 0, 'data': pg, 'timeline': timeline, 'key_order': key_order})

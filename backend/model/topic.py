@@ -76,9 +76,9 @@ class Topic(BaseModel):
     @classmethod
     def get_list_order_by_time(cls, state=-1):
         if state == -1:
-            q = cls.select().order_by(cls.time.desc())
+            q = cls.select().where(cls.state>TOPIC_STATE.HIDE).order_by(cls.time.desc())
         else:
-            q = cls.select().where(cls.state==TOPIC_STATE.HIDE).order_by(cls.time.desc())
+            q = cls.select().where(cls.state==state).order_by(cls.time.desc())
         return q.count(), q
 
     @classmethod

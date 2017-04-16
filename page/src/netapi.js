@@ -62,6 +62,11 @@ export default {
         return await nget(`${remote.API_SERVER}/api/recent/${page}`);
     },
 
+    /** 时间线 */
+    timeline: async function (page=1) {
+        return await nget(`${remote.API_SERVER}/api/timeline/${page}`);
+    },
+
     /** 评论 - 获取 */
     commentGet: async function (topic_id, page=1) {
         return await nget(`${remote.API_SERVER}/api/comment/${topic_id}`, {page});

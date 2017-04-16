@@ -1,20 +1,21 @@
 <template>
-<div class="tmp" v-if="page_info.items">
-    <div class="topic-item" v-for="item in page_info.items">
-        <h3 class="title">
-            <router-link :to="{ path: '/t/' + item.id }">{{item.title}}</router-link>
-        </h3>
-        <div class="brief" v-html="marked(item.brief)"></div>
-        <small><router-link :to="{ path: '/t/' + item.id }">阅读原文</router-link></small>
-        <p class="info">由 {{item.user.name}} 发表于 {{time_to_text(item.time)}}</p>
-        <div class="divider-line"></div>
+<div class="tmp" v-if="page_info">
+    <div class="pure-g" v-for="key in page_info.key_order">
+        <div class="pure-u-2-24 timeline-tag">
+            <span>{{key}}</span>
+        </div>
+        <div class="pure-u-22-24">
+            <div class="topic-item" v-for="item in page_info.timeline[key]">
+                <h3 class="title">
+                    <router-link :to="{ path: '/t/' + item.id }">{{item.title}}</router-link>
+                </h3>
+                <div class="brief" v-html="marked(item.brief)"></div>
+                <small><router-link :to="{ path: '/t/' + item.id }">阅读原文</router-link></small>
+                <p class="info">由 {{item.user.name}} 发表于 {{time_to_text(item.time)}}</p>
+                <div class="divider-line"></div>
+            </div>
+        </div>
     </div>
-    <span v-if="page_info.prev_page">
-        <router-link :to="{ path: `/p/${page_info.prev_page}` }">上一页</router-link>
-    </span>
-    <span v-if="page_info.next_page">
-        <router-link :to="{ path: `/p/${page_info.next_page}` }">下一页</router-link>
-    </span>
 </div>
 <loading v-else></loading>
 </template>
@@ -24,6 +25,11 @@
     max-height: 70vh;
     overflow-y: scroll;
 }*/
+
+.timeline-tag {
+    margin-top: 20px;
+}
+
 .topic-item {}
 
 .topic-item > .title {
@@ -60,9 +66,9 @@ export default {
         marked,
         time_to_text: $.time_to_text,
         fetchData: async function (page) {
-            let ret = await api.recent(page);
-            //console.log(ret);
-            this.$set(this, "page_info", ret.data);
+            let ret = await api.timeline(page);
+            console.log(ret, ret.key_order);
+            this.$set(this, "page_info", ret);
         }
     },
     mounted: async function () {
