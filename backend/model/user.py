@@ -5,7 +5,9 @@ from peewee import *
 from hashlib import md5
 from random import Random
 from model import BaseModel
+from model.tag import Tag
 from lib.state_obj import StateObject
+from playhouse.gfk import ReverseGFK
 
 
 def random_str(random_length=16):
@@ -42,6 +44,8 @@ class User(BaseModel):
 
     reg_time = BigIntegerField()
     key_time = BigIntegerField()
+
+    tags = ReverseGFK(Tag, 'obj_type', 'obj_id')
 
     class Meta:
         db_table = 'users'

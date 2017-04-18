@@ -27,6 +27,7 @@ Vue.use(VueRouter)
 var routes = [
     { path: '/', component: Index },
     { path: '/p/:page(\\d+)', component: Index },
+    { path: '/timeline', component: Timeline },
     { path: '/timeline/:page(\\d+)', component: Timeline },
     { path: '/new', component: TopicNew},
     { path: '/t/:id(\\d+)', name: 'topic1', component: TopicPage },

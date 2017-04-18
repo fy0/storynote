@@ -3,8 +3,10 @@ import time
 import config
 from peewee import *
 from model import db, BaseModel
+from model.tag import Tag
 from model.user import User
 from lib.state_obj import StateObject
+from playhouse.gfk import ReverseGFK
 
 
 class TOPIC_STATE(StateObject):
@@ -29,6 +31,7 @@ class Topic(BaseModel):
     view_count = IntegerField(default=0)
     brief = CharField(max_length=500)
     content = CharField(max_length=50000)
+    tags = ReverseGFK(Tag, 'obj_type', 'obj_id')
 
     sticky_weight = IntegerField(index=True, default=0)  # 置顶权重
     weight = IntegerField(index=True, default=0) # 排序权值，越大越靠前，默认权重与id相同
