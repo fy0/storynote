@@ -28,7 +28,14 @@ class TagDefine(BaseModel):
 
     @classmethod
     def new(cls, name, desc):
-        return cls.create(name=name, desc=desc, time=int(time.time()), state=TAG_DEFINE_STATE.NORMAL)
+        try:
+            return cls.create(name=name, desc=desc, time=int(time.time()), state=TAG_DEFINE_STATE.NORMAL)
+        except IntegrityError:
+            pass
+
+    @classmethod
+    def get_list(cls):
+        return TagDefine.select().where(cls.state > TAG_DEFINE_STATE.NORMAL)
 
 
 class Tag(BaseModel):
@@ -51,4 +58,11 @@ class Tag(BaseModel):
         except IntegrityError:
             # 违反唯一性约束
             # 使用异常而不是先行 exists 检查是因为原子性上的优势
+            pass
+
+    @classmethod
+    def get_by_topic_and_tag_define(cls, topic, tag_define):
+        try:
+            return cls.get(cls.object == topic, cls.tag == tag_define)
+        except DoesNotExist:
             pass

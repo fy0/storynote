@@ -1,4 +1,4 @@
-from config import ERRCODE
+from config import RETCODE
 from model.user import USER_LEVEL
 from view import AjaxLoginView
 
@@ -8,9 +8,9 @@ class _AjaxPermissionView(AjaxLoginView):
 
     def prepare(self):
         if not self.current_user():
-            return self.finish({'code': ERRCODE.NOT_USER})
-        elif self.current_user().level != self._level:
-            return self.finish({'code': ERRCODE.PERMISSION_DENIED})
+            return self.finish({'code': RETCODE.NOT_USER})
+        elif self.current_user().level < self._level:
+            return self.finish({'code': RETCODE.PERMISSION_DENIED})
         super(_AjaxPermissionView, self).prepare()
 
 
@@ -24,3 +24,4 @@ class AjaxWriterView(_AjaxPermissionView):
 
 class AjaxAdminView(_AjaxPermissionView):
     _level = USER_LEVEL.ADMIN
+
