@@ -18,6 +18,12 @@ COMMENT_PAGE_SIZE = 5  # 每页评论数量
 
 TOPIC_BRIEF_LENGTH = 500  # 文章短介绍
 
+
+class ERRCODE:
+    NOT_USER = -255
+    PERMISSION_DENIED = -254
+
+
 try:
     from private import *
 except:

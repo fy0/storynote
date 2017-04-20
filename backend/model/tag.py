@@ -3,20 +3,32 @@
 import time
 from peewee import *
 from model import BaseModel
+from lib.state_obj import StateObject
 from playhouse.gfk import GFKField
+
+
+class TAG_DEFINE_STATE(StateObject):
+    DEL = 0
+    HIDE = 10
+    NORMAL = 50
+
+    txt = {DEL: "删除", HIDE: "隐藏", NORMAL:"正常"}
+
+TAG_DEFINE_STATE.init()
 
 
 class TagDefine(BaseModel):
     name = CharField(index=True, unique=True, max_length=40)
     time = BigIntegerField(index=True)
     desc = CharField(max_length=4096)
+    state = IntegerField(default=TAG_DEFINE_STATE.NORMAL, index=True)
 
     class Meta:
         db_table = 'tag_define'
 
     @classmethod
     def new(cls, name, desc):
-        return cls.create(name=name, desc=desc, time=int(time.time()))
+        return cls.create(name=name, desc=desc, time=int(time.time()), state=TAG_DEFINE_STATE.NORMAL)
 
 
 class Tag(BaseModel):
