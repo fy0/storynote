@@ -31,13 +31,20 @@ class Topic(BaseModel):
     view_count = IntegerField(default=0)
     brief = CharField(max_length=500)
     content = CharField(max_length=50000)
-    tags = ReverseGFK(Tag, 'obj_type', 'obj_id')
+    _tags = ReverseGFK(Tag, 'obj_type', 'obj_id')
 
     sticky_weight = IntegerField(index=True, default=0)  # 置顶权重
     weight = IntegerField(index=True, default=0) # 排序权值，越大越靠前，默认权重与id相同
 
     class Meta:
         db_table = 'topics'
+        to_dict = {
+            'extra_attrs': ['tags'],
+        }
+
+    @property
+    def tags(self):
+        return list(self._tags)
 
     def can_edit(self, user):
         if self.user == user:

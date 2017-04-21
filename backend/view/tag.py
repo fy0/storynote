@@ -5,9 +5,9 @@ from model.tag import TagDefine, Tag
 from view.authview import AjaxWriterView
 
 
-@route('/api/tag/define', name='tag_define')
+@route('/api/tag/define')
 class TagDefineView(AjaxWriterView):
-    def get(self):
+    def post(self):
         name = self.get_argument('name')
         desc = self.get_argument('desc', '').strip()
         td = TagDefine.new(name, desc)
@@ -62,7 +62,27 @@ class TagRemoveFrom(AjaxWriterView):
 
         tag = Tag.get_by_topic_and_tag_define(topic, td)
         if tag:
-            code = RETCODE.SUCCESS if tag.delete_instance() else RETCODE.NOT_FOUND
-            self.finish({'code': code})
+            tag.delete_instance()
+            self.finish({'code': RETCODE.SUCCESS})
         else:
             self.finish({'code': RETCODE.NOT_FOUND})
+
+
+@route('/api/tag/remove_by_id')
+class TagRemoveById(AjaxWriterView):
+    def post(self):
+        tid = self.get_argument('id')
+        tag = Tag.get_by_pk(tid)
+
+        if tag:
+            if type(tag.object) == Topic:
+                if tag.object.can_edit(self.current_user()):
+                    tag.delete_instance()
+                    self.finish({'code': RETCODE.SUCCESS})
+                else:
+                    return self.finish({'code': RETCODE.PERMISSION_DENIED})
+            else:
+                self.finish({'code': RETCODE.PERMISSION_DENIED})
+        else:
+            self.finish({'code': RETCODE.NOT_FOUND})
+

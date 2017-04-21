@@ -102,6 +102,31 @@ export default {
         return await npost(`${remote.API_SERVER}/api/topic/del/${topic_id}`);
     },
 
+    /** 标签 - 定义 */
+    tagDefine: async function (name, desc) {
+        return await npost(`${remote.API_SERVER}/api/tag/define`, {name, desc});
+    },
+
+    /** 标签 - 获取 */
+    tagList: async function () {
+        return await nget(`${remote.API_SERVER}/api/tag/list`);
+    },
+
+    /** 标签 - 添加至主题 */
+    tagAddToTopic: async function (tag_id, topic_id) {
+        return await npost(`${remote.API_SERVER}/api/tag/add_to_topic`, {tag_id, topic_id});
+    },
+
+    /** 标签 - 从主题移除 */
+    tagRemoveFromTopic: async function (tag_id, topic_id) {
+        return await npost(`${remote.API_SERVER}/api/tag/remove_from_topic`, {tag_id, topic_id});
+    },
+
+    /** 标签 - 根据记录ID移除标签 */
+    tagRemoveById: async function (id) {
+        return await npost(`${remote.API_SERVER}/api/tag/remove_by_id`, {id});
+    },
+
     /** 用户 - 注册 */
     userSignup: async function (username, password) {
         return await npost(`${remote.API_SERVER}/api/user/signup`, {username, password});

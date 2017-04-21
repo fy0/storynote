@@ -17,10 +17,10 @@
             </div>
         </div>
     </div>
-    <span v-if="info.data.prev_page">
+    <span v-if="info.data && info.data.prev_page">
         <router-link :to="{ path: `/timeline/${info.data.prev_page}` }">上一页</router-link>
     </span>
-    <span v-if="info.data.next_page">
+    <span v-if="info.data && info.data.next_page">
         <router-link :to="{ path: `/timeline/${info.data.next_page}` }">下一页</router-link>
     </span>
 </div>
