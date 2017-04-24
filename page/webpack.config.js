@@ -34,14 +34,19 @@ module.exports = {
                 }
             },
             {
-                test: /\.(eot|svg|ttf|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
+                test: /\.(eot|svg|ttf|woff|woff2)(\?.*)?$/,
                 loader: 'url-loader?limit=65000&name=fonts/[name]_[hash].[ext]'
             },
         ]
     },
     babel: {
         presets: ['es2015', 'stage-2'],
-        plugins: ['transform-runtime'],
+        plugins: ['transform-runtime', ["component", [
+            {
+                "libraryName": "element-ui",
+                "styleLibraryName": "theme-default"
+            }
+        ]]],
         compact: false,
         cacheDirectory: true, //important for performance
     },

@@ -39,14 +39,15 @@
                     <textarea name="content" rows="5" placeholder="" style="width:100%;border-color:#d9d9d9" v-model="user_comment_text"></textarea>
                 </div>
                 <div>
-                    <span class="pure-button" @click="commentPost">发表</span>
+                    <el-button @click="commentPost">发表</el-button>
                     <span style="margin-left:10px" id="reply_msg"></span>
                 </div>
             </form>
         </div>
         <div style="padding: 20px" v-else>
             需要 <router-link :to="{ path: `/signin` }">登录</router-link> 后方可回复, 如果你还没有账号你可以 <router-link :to="{ path: `/signup` }">注册</router-link> 一个帐号。
-        </div>        
+        </div>
+ 
     </div>
     <loading v-else></loading>
 </div>
@@ -73,7 +74,7 @@
 import marked from 'marked'
 import api from "../netapi.js"
 import state from "../state.js"
-import Loading from "./loading.vue"
+import Loading from "./utils/loading.vue"
 
 export default {
     data () {

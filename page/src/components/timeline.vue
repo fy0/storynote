@@ -68,7 +68,7 @@ import Vue from 'vue'
 import marked from 'marked'
 import api from "../netapi.js"
 import state from "../state.js"
-import Loading from "./loading.vue"
+import Loading from "./utils/loading.vue"
 
 export default {
     data () {

@@ -22,7 +22,7 @@
 </style>
 
 <script>
-import state from "../state.js"
+import state from "../../state.js"
 
 export default {
     data () {

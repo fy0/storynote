@@ -9,18 +9,25 @@ import 'simplemde/dist/simplemde.min.css'
 import './assets/css/base.css'
 import tools from './tools.js'
 import state from './state.js'
+import api from "./netapi.js"
 
 import App from './app.vue'
 import Index from './components/index.vue'
 import Timeline from './components/timeline.vue'
 import TopicNew from './components/new.vue'
 import TopicPage from './components/topic.vue'
-import SignIn from './components/signin.vue'
-import SignUp from './components/signup.vue'
-import SignOut from './components/signout.vue'
-import Loading from './components/loading.vue'
+import SignIn from './components/user/signin.vue'
+import SignUp from './components/user/signup.vue'
+import SignOut from './components/user/signout.vue'
+import Loading from './components/utils/loading.vue'
 import About from './components/about.vue'
-import './components/msgbox.vue'
+
+import { Button, Select, Input, Form, FormItem } from 'element-ui'
+Vue.use(Button)
+Vue.use(Select)
+Vue.use(Input)
+Vue.use(Form)
+Vue.use(FormItem)
 
 Vue.use(VueRouter)
 
@@ -43,6 +50,19 @@ var routes = [
 var router = new VueRouter({
     routes: routes
 })
+
+router.beforeEach(async function (to, from, next)  {
+    if (!state.data.misc) {
+        let ret = await api.misc();
+        Vue.set(state.data, 'misc', ret.data);
+
+        ret = await api.userInfo();
+        if (ret.code == 0) {
+            Vue.set(state.data, 'user', ret.data);
+        }
+    }
+    next();
+});
 
 new Vue({
     el: '#app',

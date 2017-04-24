@@ -3,14 +3,14 @@
     <h3 class="">新建主题</h3>
     <form class="pure-form" id="form_topic" method="POST" @submit.prevent="send">
         <fieldset>
-            <div class="">
+            <div class="form-item">
                 <input type="text" name="title" placeholder="这里填写标题，最长50个字" style="width: 100%">
             </div>
-            <div class="">
+            <div class="form-item">
                 <textarea style="width:100%" rows="15" id="editor" name="content" placeholder="这里填写内容 ..." autofocus></textarea>
             </div>
-            <div class="">
-                <button class="pure-button pure-button-primary">发布</button>
+            <div class="form-item">
+                <el-button style="float: right" type="primary" @click="send">发布</el-button>
             </div>
         </fieldset>
     </form>
@@ -83,6 +83,8 @@ export default {
     },
     beforeRouteEnter: (to, from, next) => {
         if (!state.data.user) {
+            $.message_error('抱歉，无权访问此页面');
+            next('/');
             return;
         }
         next();
@@ -91,5 +93,7 @@ export default {
 </script>
 
 <style>
-
+.form-item {
+    margin-bottom: 10px;
+}
 </style>

@@ -39,7 +39,8 @@ footer {
 .nav-top { margin-top: -30px; }
 .nav-bar {
     height: 100%;
-    padding-top: 10px;
+    font-size: 1.1em;
+    padding-top: 3px;
     padding-right: 20px;
     margin-right: 20px;
     text-align: right;
@@ -58,9 +59,9 @@ footer {
 import Vue from 'vue'
 import api from "./netapi.js"
 import state from "./state.js"
-import Loading from "./components/loading.vue"
-import MsgBox from './components/msgbox.vue'
-import GoTop from './components/gotop.vue'
+import Loading from "./components/utils/loading.vue"
+import MsgBox from './components/utils/msgbox.vue'
+import GoTop from './components/utils/gotop.vue'
 
 export default {
     data () {
@@ -69,14 +70,6 @@ export default {
         }
     },
     mounted: async function () {
-        let ret = await api.misc();
-        Vue.set(state.data, 'misc', ret.data);
-
-        ret = await api.userInfo();
-        //console.log(ret);
-        if (ret.code == 0) {
-            Vue.set(state.data, 'user', ret.data);
-        }
     },
     components: {
         // <my-component> 将只在父模板可用
