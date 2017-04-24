@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "animate.css": "^3.5.2",
+    "element-ui": "^1.2.9",
     "font-awesome": "^4.7.0",
     "lodash": "^4.17.4",
     "marked": "^0.3.6",

@@ -71,9 +71,9 @@ class Topic(BaseModel):
         return Comment.get_count(self.id)
 
     @classmethod
-    def new(cls, title, user, content=None):
+    def new(cls, title, user, content=None, time=None):
         with db.atomic():
-            ret = cls.create(title=title, user=user, time=int(time.time()), content=content, brief=content[:config.TOPIC_BRIEF_LENGTH])
+            ret = cls.create(title=title, user=user, time=time or int(time.time()), content=content, brief=content[:config.TOPIC_BRIEF_LENGTH])
             ret.weight = ret.id
             ret.save()
         return ret
