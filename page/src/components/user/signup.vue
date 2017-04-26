@@ -1,8 +1,7 @@
 <template>
 <div class="">
     <h3>注册</h3>
-
-    <el-form :model="form" :label-position="left" ref="form" label-width="40px" style="width:50%">
+    <el-form :model="form" :label-position="left" ref="form" label-width="60px" :rules="form_rules" style="width:50%;margin-left:-15px">
         <el-form-item label="账号" prop="username">
             <el-input type="text" v-model.trim="form.username" auto-complete="off"></el-input>
         </el-form-item>
@@ -33,6 +32,38 @@ export default {
                 password: '',
                 password_again: '',
             },
+            form_rules: {
+                username: [
+                    { required: true, message: '必须输入账号', trigger: 'blur' },
+                    {
+                        min: state.data.misc.USERNAME_REG_MIN, max: state.data.misc.USERNAME_REG_MAX, 
+                        message: `账号长度应 ${state.data.misc.USERNAME_REG_MIN} 到 ${state.data.misc.USERNAME_REG_MAX} 之间`,
+                        trigger: 'blur' 
+                    }
+                ],
+                password: [
+                    { required: true, message: '必须输入密码', trigger: 'blur' },
+                    {
+                        min: state.data.misc.PASSWORD_REG_MIN, max: state.data.misc.PASSWORD_REG_MAX,
+                        message: `密码长度必须在 ${state.data.misc.PASSWORD_REG_MIN} 到 ${state.data.misc.PASSWORD_REG_MAX} 之间`, 
+                        trigger: 'blur' 
+                    }
+                ],
+                password_again: [
+                    {
+                        validator: (rule, value, callback) => {
+                            if (value === '') {
+                                callback(new Error('请再次输入密码'));
+                            } else if (value !== this.form.password) {
+                                callback(new Error('两次输入密码不一致!'));
+                            } else {
+                                callback();
+                            }
+                        },
+                        trigger: 'blur'
+                    }
+                ]
+            }
         }
     },
     methods: {

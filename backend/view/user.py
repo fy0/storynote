@@ -67,10 +67,10 @@ class SignUp(AjaxView):
             return self.finish({'code': -2, 'error_msgs': ['注册已关闭']})
 
         error_info = []
-        if not (2 <= len(username) <= 15):
-            error_info.append("用户名长度必须在 2-15 之间")
-        if len(password) < 3:
-            error_info.append("密码长度必须大于等于3")
+        if not (config.USERNAME_REG_MIN <= len(username) <= config.USERNAME_REG_MAX):
+            error_info.append("用户名长度必须在 %d-%d 之间" % (config.USERNAME_REG_MIN, config.USERNAME_REG_MAX))
+        if len(password) < config.PASSWORD_MIN:
+            error_info.append("密码长度必须大于等于 %d" % config.PASSWORD_MIN)
         if not re.match('^[a-zA-Z][a-zA-Z0-9]+$', username):
             error_info.append("用户名应为英文与数字的组合，同时首字为英文")
         if User.exist(username):

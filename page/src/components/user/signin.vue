@@ -4,26 +4,22 @@
     <router-link :to="{ path: '/signout' }">注销</router-link>
 </div>
 <div v-else>
-    <form method="post" class="pure-form" @submit.prevent="send">
-        <fieldset>
-            <h3>登录</h3>
-            <div class="ic-form-row">
-                <label for="username">帐号:</label>
-                <input type="text" name="username" id="username" value="">
-            </div>
-            <div class="ic-form-row">
-                <label for="password">密码:</label>
-                <input type="password" name="password" id="password" value="">
-            </div>
-            <div class="ic-form-row">
-                <label><input name="remember" type="checkbox" checked> 记住密码</label>
-            </div>
-
-            <div class="ic-form-row">
-                <input class="pure-button pure-button-primary" type="submit" value="登 录">
-            </div>
-        </fieldset>
-    </form>
+    <h3>登录</h3>
+    <el-form :model="form" :label-position="left" ref="form" label-width="60px" :rules="form_rules" style="width:50%;margin-left:-15px">
+        <el-form-item label="账号" prop="username">
+            <el-input type="text" v-model.trim="form.username" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+            <el-input type="password" v-model="form.password" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="" prop="remember">
+            <el-checkbox v-model="form.remember">记住登录</el-checkbox>
+        </el-form-item>
+        <el-form-item>
+            <el-button type="primary" @click="submitForm('form')">提交</el-button>
+            <el-button @click="resetForm('form')">重置</el-button>
+        </el-form-item>
+    </el-form>
 </div>
 </template>
 
@@ -36,27 +32,56 @@ export default {
     data () {
         return {
             state: state,
+            form: {
+                username: '',
+                password: '',
+                remember: false,
+            },
+            form_rules: {
+                username: [
+                    { required: true, message: '必须输入账号', trigger: 'blur' },
+                    {
+                        min: state.data.misc.USERNAME_MIN, max: state.data.misc.USERNAME_MAX, 
+                        message: `用户名不合法`,
+                        trigger: 'blur' 
+                    }
+                ],
+                password: [
+                    { required: true, message: '必须输入密码', trigger: 'blur' },
+                    {
+                        min: state.data.misc.PASSWORD_MIN, max: state.data.misc.PASSWORD_MAX,
+                        message: `密码长度必须在 ${state.data.misc.PASSWORD_MIN} 到 ${state.data.misc.PASSWORD_MAX} 之间`, 
+                        trigger: 'blur' 
+                    }
+                ]
+            }
         }
     },
     methods: {
-        send: async function (e) {
-            let formdata = new FormData(e.target);
-            let username = (formdata.get("username") || "").trim();
-            let password = (formdata.get("password") || "").trim();
-            let ret = await api.userSignin(username, password);
-            if (ret.code == 0) {
-                ret = await api.userInfo();
-                if (ret.code == 0) {
-                    Vue.set(state.data, 'user', ret.data);
-                    $.message_success(`欢迎回来，${ret.data.name}！`);
+        resetForm (formName) {
+            this.$refs[formName].resetFields();
+        },
+        submitForm (formName) {
+            this.$refs[formName].validate(async (valid) => {
+                if (valid) {
+                    let ret = await api.userSignin(this.form.username, this.form.password);
+                    if (ret.code == 0) {
+                        ret = await api.userInfo();
+                        if (ret.code == 0) {
+                            Vue.set(state.data, 'user', ret.data);
+                            $.message_success(`欢迎回来，${ret.data.name}！`);
+                        }
+                        this.$router.replace({ path: '/'})
+                    } else {
+                        for (let i of ret.error_msgs) {
+                            $.message_error(i);
+                        }
+                    }
+                } else {
+                    return false;
                 }
-                this.$router.replace({ path: '/'})
-            } else {
-                for (let i of ret.error_msgs) {
-                    $.message_error(i);
-                }
-            }
-        }
+            });
+        },
     },
 }
 </script>
