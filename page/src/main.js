@@ -22,10 +22,12 @@ import SignOut from './components/user/signout.vue'
 import Loading from './components/utils/loading.vue'
 import About from './components/about.vue'
 
-import { Button, Checkbox, Select, Input, Form, FormItem } from 'element-ui'
+import { Button, Checkbox, DatePicker, Select, Tag, Input, Form, FormItem } from 'element-ui'
 Vue.use(Button)
 Vue.use(Checkbox)
+Vue.use(DatePicker)
 Vue.use(Select)
+Vue.use(Tag)
 Vue.use(Input)
 Vue.use(Form)
 Vue.use(FormItem)

@@ -4,7 +4,17 @@
     <form class="pure-form" id="form_topic" method="POST" @submit.prevent="send">
         <fieldset>
             <div class="form-item">
-                <input type="text" name="title" placeholder="这里填写标题，最长50个字" style="width: 100%">
+                <input type="text" name="title" placeholder="这里填写标题，最长50个字" style="width: 72%; font-size: 15px; font-weight: bolder;">
+                <el-date-picker
+                    style="width: 27%; margin-top: -0.3px;"
+                    v-model="date"
+                    type="datetime"
+                    placeholder="选择日期时间"
+                    align="left"
+                    :picker-options="pickerOptions">
+                </el-date-picker>
+            </div>
+            <div class="form-item">
             </div>
             <div class="form-item">
                 <textarea style="width:100%" rows="15" id="editor" name="content" placeholder="这里填写内容 ..." autofocus></textarea>
@@ -26,6 +36,29 @@ import Prism from "prismjs"
 export default {
     data () {
         return {
+            date: new Date(),
+            pickerOptions: {
+                shortcuts: [{
+                    text: '当前',
+                    onClick(picker) {
+                        picker.$emit('pick', new Date());
+                    }
+                }, {
+                    text: '昨天',
+                    onClick(picker) {
+                        const date = new Date();
+                        date.setTime(date.getTime() - 3600 * 1000 * 24);
+                        picker.$emit('pick', date);
+                    }
+                }, {
+                    text: '一周前',
+                    onClick(picker) {
+                        const date = new Date();
+                        date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+                        picker.$emit('pick', date);
+                    }
+                }]
+            },
         }
     },
     methods: {
@@ -35,22 +68,24 @@ export default {
             let content = this.editor.value();
 
             if (!title) {
-                 $.message_error('请至少输入一个标题！');
+                 $.message_error('请输入一个标题！');
                 return false;
             }
 
-            if (title.length < 5) {
-                $.message_error('标题应不少于 5 个字！');
+            if (title.length < state.data.misc.TITLE_LENGTH_MIN) {
+                $.message_error(`标题应不少于 ${state.data.misc.TITLE_LENGTH_MIN} 个字！`);
                 return false;
             }
 
-            if (title.length > 30) {
-                $.message_error('标题应不多于 30 个字！');
+            if (title.length > state.data.misc.TITLE_LENGTH_MAX) {
+                $.message_error(`标题应不多于 ${TITLE_LENGTH_MAX} 个字！`);
                 return false;
             }
+
+            let postTime = parseInt(this.date.getTime() / 1000);
 
             if (!content) return;
-            let ret = await api.topicNew(title, content);
+            let ret = await api.topicNew(title, content, postTime);
             if (ret.code == 0) {
                 this.$router.push({ name: 'topic1', params: { id: ret.data.id }})
                 $.message_success('发表成功！已自动跳转至文章页面。');

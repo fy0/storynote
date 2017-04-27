@@ -88,8 +88,8 @@ export default {
     },
 
     /** 主题 - 发表 */
-    topicNew: async function (title, content) {
-        return await npost(`${remote.API_SERVER}/api/topic/new`, {title, content});
+    topicNew: async function (title, content, time) {
+        return await npost(`${remote.API_SERVER}/api/topic/new`, {title, content, time});
     },
 
     /** 主题 - 编辑 */
@@ -133,8 +133,8 @@ export default {
     },
 
     /** 用户 - 登陆 */
-    userSignin: async function (username, password) {
-        return await npost(`${remote.API_SERVER}/api/user/signin`, {username, password});
+    userSignin: async function (username, password, remember) {
+        return await npost(`${remote.API_SERVER}/api/user/signin`, {username, password, remember});
     },
 
     /** 用户 - 注销 */

@@ -13,7 +13,7 @@
             <el-input type="password" v-model="form.password" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="" prop="remember">
-            <el-checkbox v-model="form.remember">记住登录</el-checkbox>
+            <el-checkbox v-model="form.remember">30天内记住登录</el-checkbox>
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="submitForm('form')">提交</el-button>
@@ -35,7 +35,7 @@ export default {
             form: {
                 username: '',
                 password: '',
-                remember: false,
+                remember: true,
             },
             form_rules: {
                 username: [
@@ -64,7 +64,7 @@ export default {
         submitForm (formName) {
             this.$refs[formName].validate(async (valid) => {
                 if (valid) {
-                    let ret = await api.userSignin(this.form.username, this.form.password);
+                    let ret = await api.userSignin(this.form.username, this.form.password, this.form.remember);
                     if (ret.code == 0) {
                         ret = await api.userInfo();
                         if (ret.code == 0) {

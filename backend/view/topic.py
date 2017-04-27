@@ -11,11 +11,12 @@ class TopicNew(AjaxLoginView):
     def post(self):
         title = self.get_argument('title', '').strip()
         content = self.get_argument('content', '').strip()
+        time = self.get_argument('time', '')
 
         if not (title and config.TITLE_LENGTH_MIN <= len(title) <= config.TITLE_LENGTH_MAX):
             self.finish({'code': -1, 'msg': '标题长度必须在 %d 到 %d 之间' % (config.TITLE_LENGTH_MIN, config.TITLE_LENGTH_MAX)})
         else:
-            t = Topic.new(title, self.current_user(), content)
+            t = Topic.new(title, self.current_user(), content, time)
             self.finish({'code': 0, 'data': {'id': t.id}})
 
 

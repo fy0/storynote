@@ -2,11 +2,37 @@
 <div class="topic-content entry">
     <div class="content" v-if="topic">
         <h1 class="post-title"><router-link :to="{ path: '/t/' + topic.id }">{{topic.title}}</router-link></h1>
+        
         <div class="post-info">
             <span>{{topic.user.name}}</span>
             <span>{{getTime(topic.time)}}</span>
         </div>
+
+        
         <div v-html="marked(topic.content)"></div>
+
+        <div class="tags">
+            <el-tag
+                :key="tag"
+                v-for="tag in dynamicTags"
+                :closable="true"
+                :close-transition="false"
+                @close="handleClose(tag)"
+            >
+            {{tag}}
+            </el-tag>
+            <el-input
+                class="input-new-tag"
+                v-if="inputVisible"
+                v-model="inputValue"
+                ref="saveTagInput"
+                size="mini"
+                @keyup.enter.native="handleInputConfirm"
+                @blur="handleInputConfirm"
+            >
+            </el-input>
+            <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+        </div>
 
         <div class="comment-info">
             <span class="comment-info-title">{{comments_length}} 条评论</span>
@@ -54,6 +80,15 @@
 </template>
 
 <style>
+
+.tags {
+    margin-bottom: 20px;
+}
+
+.tags > div {
+    margin-right: 5px;
+}
+
 .post-title {
     word-wrap: break-word;
     margin: 0.3em 0 0;
@@ -86,6 +121,9 @@ export default {
             comments_page: 1,
             user_comment_text: '',
             time_to_text: $.time_to_text,
+            dynamicTags: ['标签一', '标签二', '标签三'],
+            inputVisible: false,
+            inputValue: ''
         }
     },
     methods: {
@@ -93,6 +131,26 @@ export default {
         getTime: (timestamp) => {
             return $.get_time(timestamp);
         },
+        handleClose(tag) {
+            this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
+        },
+
+        showInput() {
+            this.inputVisible = true;
+            this.$nextTick(_ => {
+                this.$refs.saveTagInput.$refs.input.focus();
+            });
+        },
+
+        handleInputConfirm() {
+            let inputValue = this.inputValue;
+            if (inputValue) {
+                this.dynamicTags.push(inputValue);
+            }
+            this.inputVisible = false;
+            this.inputValue = '';
+        },
+    
         commentFetch: async function (page=1) {
             let ret = await api.commentGet(this.topic.id, page);
             if (ret.code == 0) {
