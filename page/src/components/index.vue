@@ -1,5 +1,5 @@
 <template>
-<div class="tmp" v-if="page_info.items">
+<div v-if="page_info.items">
     <div class="topic-item" v-for="item in page_info.items">
         <h3 class="title">
             <router-link :to="{ path: '/t/' + item.id }">{{item.title}}</router-link>
@@ -9,12 +9,29 @@
         <p class="info">由 {{item.user.name}} 发表于 {{time_to_text(item.time)}}</p>
         <div class="divider-line"></div>
     </div>
-    <span v-if="page_info.prev_page">
-        <router-link :to="{ path: `/p/${page_info.prev_page}` }">上一页</router-link>
-    </span>
-    <span v-if="page_info.next_page">
-        <router-link :to="{ path: `/p/${page_info.next_page}` }">下一页</router-link>
-    </span>
+    <ul class="ic-pages">
+        <li v-if="page_info.first_page">
+            <router-link :to="{ path: `/p/${page_info.first_page}` }" class="slim">«</router-link>
+        </li>
+
+        <li v-if="page_info.prev_page">
+            <router-link :to="{ path: `/p/${page_info.prev_page}` }" class="slim">‹</router-link>
+        </li>
+        <li v-else><a href="javascript:void(0);" class="disable slim">‹</a></li>
+
+        <li v-for="i in page_info.page_numbers">
+            <router-link :to="{ path: `/p/${i}` }" :class="(page_info.cur_page == i) ? 'active' : ''">{{i}}</router-link>
+        </li>
+
+        <li v-if="page_info.next_page">
+            <router-link :to="{ path: `/p/${page_info.next_page}` }" class="slim">›</router-link>
+        </li>
+        <li v-else><a href="javascript:void(0);" class="disable slim">›</a></li>
+        
+        <li v-if="page_info.last_page">
+            <router-link :to="{ path: `/p/${page_info.last_page}` }" class="slim">»</router-link>
+        </li>
+    </ul>
 </div>
 <loading v-else></loading>
 </template>
@@ -61,7 +78,7 @@ export default {
         time_to_text: $.time_to_text,
         fetchData: async function (page) {
             let ret = await api.recent(page);
-            //console.log(ret);
+            // console.log(ret);
             this.$set(this, "page_info", ret.data);
         }
     },

@@ -17,7 +17,7 @@
             </div>
         </div>
     </div>
-    <span v-if="info.data && info.data.prev_page">
+    <span  v-if="info.data && info.data.prev_page">
         <router-link :to="{ path: `/timeline/${info.data.prev_page}` }">上一页</router-link>
     </span>
     <span v-if="info.data && info.data.next_page">
@@ -73,8 +73,9 @@ import Loading from "./utils/loading.vue"
 export default {
     data () {
         return {
+            state,
             info: {},
-            state: state,
+            page_info: {},
         }
     },
     methods: {
@@ -83,6 +84,7 @@ export default {
         fetchData: async function (page) {
             let ret = await api.timeline(page);
             this.$set(this, "info", ret);
+            this.$set(this, "page_info", ret.data);
         }
     },
     mounted: async function () {

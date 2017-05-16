@@ -6,9 +6,10 @@ let config = {
         ERR_TIMEOUT: -254,
         ERR_REUQEST_FAIL: -253,
     },
+    title: 'Single Note',
 }
 
-
+ 
 try {
     let pri = require("../private.js")
     config.remote.API_SERVER = pri.default.remote.API_SERVER || config.remote.API_SERVER;

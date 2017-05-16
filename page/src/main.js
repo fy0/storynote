@@ -32,6 +32,15 @@ Vue.use(Input)
 Vue.use(Form)
 Vue.use(FormItem)
 
+Vue.component('my-title', {
+    props: ['size', 'text', 'aaa'],
+    render: function (createElement) {
+        document.title = this.text;
+    },
+    mounted: function () {
+    }
+})
+
 Vue.use(VueRouter)
 
 var routes = [

@@ -1,5 +1,6 @@
 <template>
 <div id="app">
+    <my-title :text='config.title'></my-title>
     <div class="ic-container">
         <!-- header -->
         <div class="page-header">
@@ -59,14 +60,16 @@ footer {
 import Vue from 'vue'
 import api from "./netapi.js"
 import state from "./state.js"
-import Loading from "./components/utils/loading.vue"
+import config from "./config.js"
+    import Loading from "./components/utils/loading.vue"
 import MsgBox from './components/utils/msgbox.vue'
 import GoTop from './components/utils/gotop.vue'
 
 export default {
     data () {
         return {
-            state: state,
+            state,
+            config,
         }
     },
     mounted: async function () {

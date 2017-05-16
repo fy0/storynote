@@ -75,6 +75,34 @@ a:hover {
     width: 50%;
 }
 
+/* 分页 */
+.ic-pages {
+    display: flex;
+    padding-left: 0px;
+    list-style-type: none;
+}
+
+.ic-pages > li > a {
+    margin: 0.1em 0.1em 0 0;
+    border: 1px solid #eee;
+    padding: 0.4em 0.65em 0.4em 0.65em;
+}
+
+.ic-pages > li > a.active {
+    background-color: #0078e7;
+    color: #fff;
+}
+
+.ic-pages > li > a.slim {
+    padding-left: 0.4em;
+    padding-right: 0.4em;
+    font-weight: bold;
+}
+
+.ic-pages > li > a.disable {
+    color: #aaa;
+}
+
 /* ==========================================================================
    Component: Close
  ============================================================================ */
