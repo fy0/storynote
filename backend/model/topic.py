@@ -44,7 +44,8 @@ class Topic(BaseModel):
 
     @property
     def tags(self):
-        return list(self._tags)
+        from .tag import Tag
+        return list(map(Tag.to_dict, self._tags))
 
     def can_edit(self, user):
         if self.user == user:

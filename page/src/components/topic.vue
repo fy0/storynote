@@ -14,12 +14,12 @@
         <div class="tags">
             <el-tag
                 :key="tag"
-                v-for="tag in dynamicTags"
+                v-for="tag in topic_tags"
                 :closable="true"
                 :close-transition="false"
                 @close="handleClose(tag)"
             >
-            {{tag}}
+            {{tag.tag.name}}
             </el-tag>
             <el-input
                 class="input-new-tag"
@@ -121,7 +121,7 @@ export default {
             comments_page: 1,
             user_comment_text: '',
             time_to_text: $.time_to_text,
-            dynamicTags: ['标签一', '标签二', '标签三'],
+            topic_tags: [],
             inputVisible: false,
             inputValue: ''
         }
@@ -131,8 +131,9 @@ export default {
         getTime: (timestamp) => {
             return $.get_time(timestamp);
         },
+
         handleClose(tag) {
-            this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
+            this.topic_tags.splice(this.topic_tags.indexOf(tag), 1);
         },
 
         showInput() {
@@ -142,10 +143,19 @@ export default {
             });
         },
 
-        handleInputConfirm() {
+        handleInputConfirm: async function () {
             let inputValue = this.inputValue;
             if (inputValue) {
-                this.dynamicTags.push(inputValue);
+                let ret = await api.tagAddToTopic(inputValue, this.topic.id, true);
+                if (ret.code == api.retcode.SUCCESS) {
+                    this.topic_tags.push(ret.data);
+                } else if (ret.code == api.retcode.PERMISSION_DENIED) {
+                    // 无权限
+                    // $.message_error(i);
+                } else if (ret.code == api.retcode.ALREADY_EXISTS) {
+                    // 已存在
+                }
+                console.log(ret);
             }
             this.inputVisible = false;
             this.inputValue = '';
@@ -172,8 +182,10 @@ export default {
         let ret = await api.topicGet(this.$route.params.id);
         if (ret.code == 0) {
             this.$set(this, "topic", ret.data);
+            this.$set(this, "topic_tags", ret.data.tags);
             this.commentFetch(this.$route.params.cmtpage || 1);
         }
+        console.log(ret, this.topic_tags);
     },
     watch: {
         '$route' (to, from) {

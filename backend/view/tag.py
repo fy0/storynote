@@ -26,13 +26,23 @@ class TagListView(AjaxWriterView):
 @route('/api/tag/add_to_topic')
 class TagAddTo(AjaxWriterView):
     def post(self):
-        tag_id = self.get_argument('tag_id')
+        tag_name = self.get_argument('tag_name')
         topic_id = self.get_argument('topic_id')
+        add_tag_if_not_exist = self.get_argument('add_tag_if_not_exist', False)
 
-        td = TagDefine.get_by_pk(tag_id)
+        td = TagDefine.get_by_pk(tag_name)
         topic = Topic.get_by_pk(topic_id)
 
-        if not td or not topic:
+        # 文章存在检测
+        if not topic:
+            return self.finish({'code': RETCODE.NOT_FOUND})
+
+        # 自动创建标签的一种情况
+        if not td and add_tag_if_not_exist:
+            td = TagDefine.new(tag_name, '')
+
+        # 标签不存在
+        if not td:
             return self.finish({'code': RETCODE.NOT_FOUND})
 
         if not topic.can_edit(self.current_user()):
@@ -40,7 +50,7 @@ class TagAddTo(AjaxWriterView):
 
         tag = Tag.new_by_topic(topic, td)
         if tag:
-            self.finish({'code': RETCODE.SUCCESS, 'data': {'id': tag.id}})
+            self.finish({'code': RETCODE.SUCCESS, 'data': tag.to_dict()})
         else:
             self.finish({'code': RETCODE.ALREADY_EXISTS})
 
@@ -48,10 +58,10 @@ class TagAddTo(AjaxWriterView):
 @route('/api/tag/remove_from_topic')
 class TagRemoveFrom(AjaxWriterView):
     def post(self):
-        tag_id = self.get_argument('tag_id')
+        tag_name = self.get_argument('tag_name')
         topic_id = self.get_argument('topic_id')
 
-        td = TagDefine.get_by_pk(tag_id)
+        td = TagDefine.get_by_pk(tag_name)
         topic = Topic.get_by_pk(topic_id)
 
         if not td or not topic:
@@ -68,7 +78,7 @@ class TagRemoveFrom(AjaxWriterView):
             self.finish({'code': RETCODE.NOT_FOUND})
 
 
-@route('/api/tag/remove_by_id')
+@route('/api/tag/remove_from_post_by_id')
 class TagRemoveById(AjaxWriterView):
     def post(self):
         tid = self.get_argument('id')

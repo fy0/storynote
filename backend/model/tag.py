@@ -18,7 +18,7 @@ TAG_DEFINE_STATE.init()
 
 
 class TagDefine(BaseModel):
-    name = CharField(index=True, unique=True, max_length=40)
+    name = CharField(max_length=40, primary_key=True)
     time = BigIntegerField(index=True)
     desc = CharField(max_length=4096)
     state = IntegerField(default=TAG_DEFINE_STATE.NORMAL, index=True)
@@ -32,6 +32,10 @@ class TagDefine(BaseModel):
             return cls.create(name=name, desc=desc, time=int(time.time()), state=TAG_DEFINE_STATE.NORMAL)
         except IntegrityError:
             pass
+
+    @classmethod
+    def get_by_name(cls, name):
+        return cls.get_by_pk(name)
 
     @classmethod
     def get_list(cls):
@@ -48,7 +52,7 @@ class Tag(BaseModel):
     class Meta:
         db_table = 'tag'
         indexes = (
-            (('obj_type', 'obj_id'), True),
+            (('obj_type', 'obj_id', 'tag'), True),
         )
 
     @classmethod

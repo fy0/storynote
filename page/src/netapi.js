@@ -51,7 +51,23 @@ async function npost(url, info) {
     }
 }
 
+let retcode = {
+    SUCCESS: 0,
+    ALREADY_EXISTS: -251,
+    NOT_FOUND: -252,
+    UNKNOWN: -253,
+    NOT_USER: -255,
+    PERMISSION_DENIED: -254
+}
+
+let retinfo = {
+    //retcode.SUCCESS: '成功',
+}
+
 export default {
+    retcode,
+    retinfo,
+
     /** 获取综合信息 */
     misc: async function (page=1) {
         return await nget(`${remote.API_SERVER}/api/misc`);
@@ -113,18 +129,18 @@ export default {
     },
 
     /** 标签 - 添加至主题 */
-    tagAddToTopic: async function (tag_id, topic_id) {
-        return await npost(`${remote.API_SERVER}/api/tag/add_to_topic`, {tag_id, topic_id});
+    tagAddToTopic: async function (tag_name, topic_id, add_tag_if_not_exist=false) {
+        return await npost(`${remote.API_SERVER}/api/tag/add_to_topic`, {tag_name, topic_id, add_tag_if_not_exist});
     },
 
     /** 标签 - 从主题移除 */
-    tagRemoveFromTopic: async function (tag_id, topic_id) {
-        return await npost(`${remote.API_SERVER}/api/tag/remove_from_topic`, {tag_id, topic_id});
+    tagRemoveFromTopic: async function (tag_name, topic_id) {
+        return await npost(`${remote.API_SERVER}/api/tag/remove_from_topic`, {tag_name, topic_id});
     },
 
     /** 标签 - 根据记录ID移除标签 */
-    tagRemoveById: async function (id) {
-        return await npost(`${remote.API_SERVER}/api/tag/remove_by_id`, {id});
+    tagRemoveFromPostById: async function (id) {
+        return await npost(`${remote.API_SERVER}/api/tag/remove_from_post_by_id`, {id});
     },
 
     /** 用户 - 注册 */
