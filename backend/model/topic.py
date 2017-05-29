@@ -2,7 +2,7 @@
 import time
 import config
 from peewee import *
-from model import db, BaseModel
+from model import db, GFKBaseModel
 from model.tag import Tag
 from model.user import User
 from lib.state_obj import StateObject
@@ -20,7 +20,7 @@ class TOPIC_STATE(StateObject):
 TOPIC_STATE.init()
 
 
-class Topic(BaseModel):
+class Topic(GFKBaseModel):
     title = CharField(index=True, max_length=255)
     user = ForeignKeyField(User, index=True)
     time = BigIntegerField(index=True)

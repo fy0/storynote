@@ -61,7 +61,12 @@ let retcode = {
 }
 
 let retinfo = {
-    //retcode.SUCCESS: '成功',
+    [retcode.SUCCESS]: '操作已成功完成',
+    [retcode.ALREADY_EXISTS]: '已存在',
+    [retcode.NOT_FOUND]: '不存在的对象',
+    [retcode.UNKNOWN]: '未知错误',
+    [retcode.NOT_USER]: '未登录',
+    [retcode.PERMISSION_DENIED]: '无权限',
 }
 
 export default {

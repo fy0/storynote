@@ -8,7 +8,6 @@
             <span>{{getTime(topic.time)}}</span>
         </div>
 
-        
         <div v-html="marked(topic.content)"></div>
 
         <div class="tags">
@@ -18,17 +17,16 @@
                 :closable="true"
                 :close-transition="false"
                 @close="handleClose(tag)"
-            >
-            {{tag.tag.name}}
-            </el-tag>
+            > {{tag.tag.name}} </el-tag>
             <el-input
-                class="input-new-tag"
+                class="tag-new-container"
                 v-if="inputVisible"
                 v-model="inputValue"
                 ref="saveTagInput"
+                icon="circle-close"
                 size="mini"
+                :on-icon-click="tagInputClose"
                 @keyup.enter.native="handleInputConfirm"
-                @blur="handleInputConfirm"
             >
             </el-input>
             <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
@@ -80,7 +78,6 @@
 </template>
 
 <style>
-
 .tags {
     margin-bottom: 20px;
 }
@@ -132,15 +129,21 @@ export default {
             return $.get_time(timestamp);
         },
 
-        handleClose(tag) {
+        handleClose: async function (tag) {
+            let ret = await api.tagRemoveFromPostById(tag.id);
             this.topic_tags.splice(this.topic_tags.indexOf(tag), 1);
         },
 
-        showInput() {
+        showInput: function () {
             this.inputVisible = true;
             this.$nextTick(_ => {
                 this.$refs.saveTagInput.$refs.input.focus();
             });
+        },
+
+        tagInputClose: function () {
+            this.inputValue = '';
+            this.inputVisible = false;
         },
 
         handleInputConfirm: async function () {
@@ -149,11 +152,8 @@ export default {
                 let ret = await api.tagAddToTopic(inputValue, this.topic.id, true);
                 if (ret.code == api.retcode.SUCCESS) {
                     this.topic_tags.push(ret.data);
-                } else if (ret.code == api.retcode.PERMISSION_DENIED) {
-                    // 无权限
-                    // $.message_error(i);
-                } else if (ret.code == api.retcode.ALREADY_EXISTS) {
-                    // 已存在
+                } else {
+                    $.message_error(api.retinfo[ret.code])
                 }
                 console.log(ret);
             }
@@ -200,6 +200,19 @@ export default {
 }
 </script>
 
-<style>
 
+<style>
+.tag-new-container {
+    width: 150px;
+}
+
+.tag-new-container > input {
+    min-height: 25px;
+}
+</style>
+
+<style scoped>
+.el-tag:not(:last-of-type) {
+    margin-right: 5px;
+}
 </style>
