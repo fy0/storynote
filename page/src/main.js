@@ -16,6 +16,7 @@ import Index from './components/index.vue'
 import Timeline from './components/timeline.vue'
 import TopicNew from './components/new.vue'
 import TopicPage from './components/topic.vue'
+import TagPage from './components/tag.vue'
 import SignIn from './components/user/signin.vue'
 import SignUp from './components/user/signup.vue'
 import SignOut from './components/user/signout.vue'
@@ -47,10 +48,11 @@ var routes = [
     { path: '/', component: Index },
     { path: '/p/:page(\\d+)', component: Index },
     { path: '/timeline', component: Timeline },
-    { path: '/timeline/:page(\\d+)', component: Timeline },
+    { path: '/timeline/:page(\\S+)', component: Timeline },
     { path: '/new', component: TopicNew},
     { path: '/t/:id(\\d+)', name: 'topic1', component: TopicPage },
     { path: '/t/:id(\\d+)/:cmtpage(\\d+)', name: 'topic', component: TopicPage },
+    { path: '/tag/:name(\\d+)', name: 'tag', component: TagPage },
     { path: '/new', component: TopicNew },
     { path: '/signin', component: SignIn },
     { path: '/signup', component: SignUp },

@@ -1,4 +1,6 @@
+import config
 from config import RETCODE
+from model import pagination
 from model.topic import Topic
 from view import route, AjaxView, AjaxLoginView
 from model.tag import TagDefine, Tag
@@ -21,6 +23,17 @@ class TagDefineView(AjaxWriterView):
 class TagListView(AjaxWriterView):
     def get(self):
         self.finish({'code': RETCODE.SUCCESS, 'data': list(TagDefine.get_list())})
+
+
+@route('/api/tag/get_topics_by_tag')
+class TagListView(AjaxWriterView):
+    def get(self):
+        tag_name = self.get_argument('tag_name')
+        count, query = Tag.get_topics_by_tagname(tag_name)
+
+        pg = pagination(count, query, config.TOPIC_PAGE_SIZE, 1)
+        pg["items"] = list(map(Tag.to_dict, pg["items"]))
+        self.finish({'code': RETCODE.SUCCESS, 'data': pg})
 
 
 @route('/api/tag/add_to_topic')

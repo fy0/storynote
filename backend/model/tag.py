@@ -65,6 +65,14 @@ class Tag(BaseModel):
             pass
 
     @classmethod
+    def get_topics_by_tagname(cls, tag_name):
+        td = TagDefine.get_by_pk(tag_name)
+        if td:
+            q = cls.select().where(cls.tag == td)
+            return q.count(), q
+        return 0, None
+
+    @classmethod
     def get_by_topic_and_tag_define(cls, topic, tag_define):
         try:
             return cls.get(cls.object == topic, cls.tag == tag_define)

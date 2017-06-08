@@ -133,6 +133,11 @@ export default {
         return await nget(`${remote.API_SERVER}/api/tag/list`);
     },
 
+    /** 标签 - 获取 */
+    tagGetTopics: async function (tag_name) {
+        return await nget(`${remote.API_SERVER}/api/tag/get_topics_by_tag`, {tag_name});
+    },
+
     /** 标签 - 添加至主题 */
     tagAddToTopic: async function (tag_name, topic_id, add_tag_if_not_exist=false) {
         return await npost(`${remote.API_SERVER}/api/tag/add_to_topic`, {tag_name, topic_id, add_tag_if_not_exist});

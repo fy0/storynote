@@ -105,7 +105,7 @@ def pagination(count_all, query, page_size, cur_page=1, nearby=2):
         'first_page': first_page,
         'last_page': last_page,
 
-        'page_numbers': items,
+        'page_numbers': list(items),
         'page_count': page_count,
 
         'items': query.paginate(cur_page, page_size),
