@@ -31,8 +31,18 @@ class TagListView(AjaxWriterView):
         tag_name = self.get_argument('tag_name')
         count, query = Tag.get_topics_by_tagname(tag_name)
 
+        if not query:
+            return self.finish({'code': RETCODE.NOT_FOUND})
+
         pg = pagination(count, query, config.TOPIC_PAGE_SIZE, 1)
-        pg["items"] = list(map(Tag.to_dict, pg["items"]))
+        items = []
+        for i in pg["items"]:
+            items.append({
+                'time': i.time,
+                'data': i.object.to_dict()
+            })
+
+        pg["items"] = items
         self.finish({'code': RETCODE.SUCCESS, 'data': pg})
 
 

@@ -1,46 +1,50 @@
 <template>
-<div v-if="page_info.items">
-    <div class="topic-item" v-for="item in page_info.items">
-        <h3 class="title">
-            <router-link :to="{ path: '/t/' + item.id }">{{item.title}}</router-link>
-        </h3>
-        <div class="brief" v-html="marked(item.brief)"></div>
-        <small><router-link :to="{ path: '/t/' + item.id }">阅读原文</router-link></small>
-        <p class="info">由 {{item.user.name}} 发表于 {{time_to_text(item.time)}}</p>
-        <div class="divider-line"></div>
+<div v-if="page_info">
+    <div class="tagtitle">标签：<span>{{tagname}}</span></div>
+    <div v-if="page_info.items">
+        <div class="topic-item" v-for="item in page_info.items">
+            <h3 class="title">
+                <router-link :to="{ path: '/t/' + item.data.id }">{{item.data.title}}</router-link>
+            </h3>
+            <div class="brief" v-html="marked(item.data.brief)"></div>
+            <small><router-link :to="{ path: '/t/' + item.data.id }">阅读原文</router-link></small>
+            <p class="info">由 {{item.data.user.name}} 发表于 {{time_to_text(item.data.time)}}</p>
+            <div class="divider-line"></div>
+        </div>
+        <ul class="ic-pages">
+            <li v-if="page_info.first_page">
+                <router-link :to="{ path: `/p/${page_info.first_page}` }" class="slim">«</router-link>
+            </li>
+
+            <li v-if="page_info.prev_page">
+                <router-link :to="{ path: `/p/${page_info.prev_page}` }" class="slim">‹</router-link>
+            </li>
+            <li v-else><a href="javascript:void(0);" class="disable slim">‹</a></li>
+
+            <li v-for="i in page_info.page_numbers">
+                <router-link :to="{ path: `/p/${i}` }" :class="(page_info.cur_page == i) ? 'active' : ''">{{i}}</router-link>
+            </li>
+
+            <li v-if="page_info.next_page">
+                <router-link :to="{ path: `/p/${page_info.next_page}` }" class="slim">›</router-link>
+            </li>
+            <li v-else><a href="javascript:void(0);" class="disable slim">›</a></li>
+            
+            <li v-if="page_info.last_page">
+                <router-link :to="{ path: `/p/${page_info.last_page}` }" class="slim">»</router-link>
+            </li>
+        </ul>
     </div>
-    <ul class="ic-pages">
-        <li v-if="page_info.first_page">
-            <router-link :to="{ path: `/p/${page_info.first_page}` }" class="slim">«</router-link>
-        </li>
-
-        <li v-if="page_info.prev_page">
-            <router-link :to="{ path: `/p/${page_info.prev_page}` }" class="slim">‹</router-link>
-        </li>
-        <li v-else><a href="javascript:void(0);" class="disable slim">‹</a></li>
-
-        <li v-for="i in page_info.page_numbers">
-            <router-link :to="{ path: `/p/${i}` }" :class="(page_info.cur_page == i) ? 'active' : ''">{{i}}</router-link>
-        </li>
-
-        <li v-if="page_info.next_page">
-            <router-link :to="{ path: `/p/${page_info.next_page}` }" class="slim">›</router-link>
-        </li>
-        <li v-else><a href="javascript:void(0);" class="disable slim">›</a></li>
-        
-        <li v-if="page_info.last_page">
-            <router-link :to="{ path: `/p/${page_info.last_page}` }" class="slim">»</router-link>
-        </li>
-    </ul>
+    <div v-else>无此标签数据</div>
 </div>
 <loading v-else></loading>
 </template>
 
-<style>
-/*.tmp {
-    max-height: 70vh;
-    overflow-y: scroll;
-}*/
+<style scoped>
+.tagtitle {
+    margin-top: 20px;
+}
+
 .topic-item {}
 
 .topic-item > .title {
@@ -69,7 +73,8 @@ import Loading from "./utils/loading.vue"
 export default {
     data () {
         return {
-            page_info: {},
+            exists: false,
+            page_info: null,
             state: state,
         }
     },
@@ -78,8 +83,16 @@ export default {
         time_to_text: $.time_to_text,
         fetchData: async function (name) {
             let ret = await api.tagGetTopics(name);
-            console.log(ret);
-            this.$set(this, "page_info", ret.data);
+            if (ret.code == api.retcode.NOT_FOUND) {
+                this.$set(this, "page_info", {});
+            } else {
+                this.$set(this, "page_info", ret.data);
+            }
+        }
+    },
+    computed: {
+        tagname: function () {
+            return this.$route.params.name;
         }
     },
     mounted: async function () {

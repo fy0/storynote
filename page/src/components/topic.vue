@@ -11,13 +11,11 @@
         <div v-html="marked(topic.content)"></div>
 
         <div class="tags">
-            <el-tag
-                :key="tag"
-                v-for="tag in topic_tags"
-                :closable="true"
-                :close-transition="false"
-                @close="handleClose(tag)"
-            > {{tag.tag.name}} </el-tag>
+            <el-tag v-for="tag in topic_tags" :key="tag" :closable="true" :close-transition="false" @close="handleClose(tag)">
+                <!-- 这里真是坑 -->
+                <router-link :to="{ name: 'tag', params: {name: tag.tag.name}}">{{tag.tag.name}}</router-link>
+            </el-tag>
+
             <el-input
                 class="tag-new-container"
                 v-if="inputVisible"
@@ -77,13 +75,17 @@
 </div>
 </template>
 
-<style>
+<style scoped>
 .tags {
     margin-bottom: 20px;
 }
 
 .tags > div {
     margin-right: 5px;
+}
+
+.el-tag > a {
+    color: #fff;
 }
 
 .post-title {

@@ -4,7 +4,7 @@
     <form class="pure-form" id="form_topic" method="POST" @submit.prevent="send">
         <fieldset>
             <div class="form-item">
-                <input type="text" name="title" placeholder="这里填写标题，最长50个字" style="width: 72%; font-size: 15px; font-weight: bolder;">
+                <input type="text" name="title" v-model="title" placeholder="这里填写标题，最长50个字" style="width: 72%; font-size: 15px; font-weight: bolder;">
                 <el-date-picker
                     style="width: 27%; margin-top: -0.3px;"
                     v-model="date"
@@ -36,6 +36,7 @@ import Prism from "prismjs"
 export default {
     data () {
         return {
+            title: '',
             date: new Date(),
             pickerOptions: {
                 shortcuts: [{
@@ -87,21 +88,32 @@ export default {
             if (!content) return;
             let ret = await api.topicNew(title, content, postTime);
             if (ret.code == 0) {
+                this.editor.toTextArea();
+                this.editor = null;
+                localStorage.setItem('topic-post-cache-clear', 1);
                 this.$router.push({ name: 'topic1', params: { id: ret.data.id }})
                 $.message_success('发表成功！已自动跳转至文章页面。');
             } else {
-                $.message_error('发表失败！');                
+                $.message_error('发表失败！');
             }
         }
     },
     mounted: function () {
+        if (localStorage.getItem('topic-post-cache-clear')) {
+            // 我不知道为什么，在地址跳转前进行 storage 的清除工作，
+            // 并不会实质上起效，因此这是一个替代手段，效果比较理想。
+            localStorage.removeItem('topic-post-title');
+            localStorage.removeItem('smde_topic-post-content');
+            localStorage.removeItem('topic-post-cache-clear');
+        }
+
         this.editor = new SimpleMDE({
             element: document.getElementById("editor"),
             spellChecker: false,
             autoDownloadFontAwesome: false,
             autosave: {
                 enabled: true,
-                unique_id: "editor",
+                uniqueId: "topic-post-content",
             },
             renderingConfig: {
                 singleLineBreaks: false,
@@ -115,6 +127,12 @@ export default {
                 return "Loading...";
             },
         });
+        this.title = localStorage.getItem('topic-post-title') || '';
+    },
+    watch: {
+        title: _.debounce(function (val, oldVal) {
+            localStorage.setItem('topic-post-title', val);
+        }, 5000),
     },
     beforeRouteEnter: (to, from, next) => {
         if (!state.data.user) {
