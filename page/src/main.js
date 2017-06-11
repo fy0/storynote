@@ -14,20 +14,24 @@ import api from "./netapi.js"
 import App from './app.vue'
 import Index from './components/index.vue'
 import Timeline from './components/timeline.vue'
-import TopicNew from './components/new.vue'
 import TopicPage from './components/topic.vue'
+import TopicNew from './components/topic_new.vue'
 import TagPage from './components/tag.vue'
 import SignIn from './components/user/signin.vue'
 import SignUp from './components/user/signup.vue'
 import SignOut from './components/user/signout.vue'
 import Loading from './components/utils/loading.vue'
+import Manage from './components/manage.vue'
 import About from './components/about.vue'
 
-import { Button, Checkbox, DatePicker, Select, Tag, Input, Form, FormItem } from 'element-ui'
+import { Button, Card, Checkbox, DatePicker, Select, TabPane, Tabs, Tag, Input, Form, FormItem } from 'element-ui'
 Vue.use(Button)
+Vue.use(Card)
 Vue.use(Checkbox)
 Vue.use(DatePicker)
 Vue.use(Select)
+Vue.use(TabPane)
+Vue.use(Tabs)
 Vue.use(Tag)
 Vue.use(Input)
 Vue.use(Form)
@@ -57,6 +61,7 @@ var routes = [
     { path: '/signin', component: SignIn },
     { path: '/signup', component: SignUp },
     { path: '/signout', component: SignOut },
+    { path: '/manage', name: 'manage', component: Manage },
     { path: '/about', component: About },
     { path: '/loading', component: Loading },
 ]

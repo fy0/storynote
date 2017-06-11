@@ -134,3 +134,18 @@ class User(BaseModel):
     @property
     def name(self):
         return self.nickname or self.username
+
+    @classmethod
+    def get_list(cls):
+        q = cls.select().order_by(cls.reg_time.desc())
+        return q.count(), q
+
+    @classmethod
+    def get_list_search(cls, keyword):
+        if keyword.isdigit():
+            q = cls.select().where(cls.id == keyword)
+        else:
+            q = cls.select().where(cls.username.startswith(keyword))
+
+        q = q.order_by(cls.reg_time.desc())
+        return q.count(), q

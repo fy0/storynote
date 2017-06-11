@@ -53,6 +53,9 @@ async function npost(url, info) {
 
 let retcode = {
     SUCCESS: 0,
+    TOO_LONG: -248,
+    TOO_SHORT: -249,
+    INVALID_PARAMS: -250,
     ALREADY_EXISTS: -251,
     NOT_FOUND: -252,
     UNKNOWN: -253,
@@ -62,6 +65,7 @@ let retcode = {
 
 let retinfo = {
     [retcode.SUCCESS]: '操作已成功完成',
+    [retcode.INVALID_PARAMS]: '参数缺失或值非法',
     [retcode.ALREADY_EXISTS]: '已存在',
     [retcode.NOT_FOUND]: '不存在的对象',
     [retcode.UNKNOWN]: '未知错误',
@@ -177,4 +181,46 @@ export default {
     userPWChange: async function (password, new_password) {
         return await npost(`${remote.API_SERVER}/api/user/password_change`, {password, new_password});
     },
+
+    /** 管理 - 用户 - 列表 */
+    manageUserList: async function (keyword='', p=1) {
+        return await nget(`${remote.API_SERVER}/api/manage/user`, {keyword, p});
+    },
+
+    /** 管理 - 用户 - 重置密码 */
+    manageUserPasswordReset: async function (user_id, new_password) {
+        return await npost(`${remote.API_SERVER}/api/manage/user/password_reset`, {user_id, new_password});
+    },
+
+    /** 管理 - 用户 - 重置key */
+    manageUserKeyReset: async function (user_id) {
+        return await npost(`${remote.API_SERVER}/api/manage/user/key_reset`, {user_id});
+    },
+
+    /** 管理 - 用户 - 删除用户 */
+    manageUserChangeLevelDel: async function (user_id) {
+        return await npost(`${remote.API_SERVER}/api/manage/user/change_level/del`, {user_id});
+    },
+
+
+    /** 管理 - 用户 - 封禁用户 */
+    manageUserChangeLevelBan: async function (user_id) {
+        return await npost(`${remote.API_SERVER}/api/manage/user/change_level/ban`, {user_id});
+    },
+
+    /** 管理 - 用户 - 用户正常化 */
+    manageUserChangeLevelNormal: async function (user_id) {
+        return await npost(`${remote.API_SERVER}/api/manage/user/change_level/normal`, {user_id});
+    },
+
+    /** 管理 - 用户 - 作者权限 */
+    manageUserChangeLevelWriter: async function (user_id) {
+        return await npost(`${remote.API_SERVER}/api/manage/user/change_level/writer`, {user_id});
+    },
+
+    /** 管理 - 用户 - 管理员权限 */
+    manageUserChangeLevelAdmin: async function (user_id) {
+        return await npost(`${remote.API_SERVER}/api/manage/user/change_level/admin`, {user_id});
+    },
+
 }

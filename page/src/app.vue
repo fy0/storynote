@@ -14,6 +14,7 @@
                     <li><router-link :to="{ path: '/timeline' }">时光</router-link></li>
                     <li><router-link :to="{ path: '/signin' }">用户</router-link></li>
                     <li v-if="state.data.user"><router-link :to="{ path: '/new' }">撰文</router-link></li>
+                    <li v-if="state.data.user"><router-link :to="{ name: 'manage' }">管理</router-link></li>
                     <li><router-link :to="{ path: '/about' }">关于</router-link></li>
                 </ul>
             </div>
