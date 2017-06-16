@@ -29,7 +29,6 @@ class USER_LEVEL(StateObject):
 
     txt = {DEL: '删除', BAN: '封禁', NORMAL: '正常', WRITER: '作者', ADMIN: '管理'}
 
-
 USER_LEVEL.init()
 
 

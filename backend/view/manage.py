@@ -48,7 +48,6 @@ class UserPasswordReset(UserUtil):
             return RETCODE.TOO_SHORT
         else:
             user.set_password(password)
-            self.clear_cookie('u')
         return RETCODE.SUCCESS
 
 
@@ -59,42 +58,13 @@ class UserPasswordReset(UserUtil):
         return RETCODE.SUCCESS
 
 
-@route('/api/manage/user/change_level/del')
-class UserDel(UserUtil):
+@route('/api/manage/user/change_level')
+class UserChangeLevel(UserUtil):
     def work_with_user(self, user):
-        user.level = USER_LEVEL.DEL
-        user.save()
-        return RETCODE.SUCCESS
-
-
-@route('/api/manage/user/change_level/ban')
-class UserBan(UserUtil):
-    def work_with_user(self, user):
-        user.level = USER_LEVEL.BAN
-        user.save()
-        return RETCODE.SUCCESS
-
-
-@route('/api/manage/user/change_level/normal')
-class UserNormal(UserUtil):
-    def work_with_user(self, user):
-        user.level = USER_LEVEL.NORMAL
-        user.save()
-        return RETCODE.SUCCESS
-
-
-@route('/api/manage/user/change_level/writer')
-class UserWriter(UserUtil):
-    def work_with_user(self, user):
-        user.level = USER_LEVEL.WRITER
-        user.save()
-        return RETCODE.SUCCESS
-
-
-@route('/api/manage/user/change_level/admin')
-class UserAdmin(UserUtil):
-    def work_with_user(self, user):
-        user.level = USER_LEVEL.ADMIN
-        user.save()
-        return RETCODE.SUCCESS
-
+        level = int(self.get_argument('level', 0))
+        if level in USER_LEVEL.values():
+            user.level = level
+            user.save()
+            return RETCODE.SUCCESS
+        else:
+            return RETCODE.INVALID_PARAMS

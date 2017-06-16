@@ -197,30 +197,9 @@ export default {
         return await npost(`${remote.API_SERVER}/api/manage/user/key_reset`, {user_id});
     },
 
-    /** 管理 - 用户 - 删除用户 */
-    manageUserChangeLevelDel: async function (user_id) {
-        return await npost(`${remote.API_SERVER}/api/manage/user/change_level/del`, {user_id});
-    },
-
-
-    /** 管理 - 用户 - 封禁用户 */
-    manageUserChangeLevelBan: async function (user_id) {
-        return await npost(`${remote.API_SERVER}/api/manage/user/change_level/ban`, {user_id});
-    },
-
-    /** 管理 - 用户 - 用户正常化 */
-    manageUserChangeLevelNormal: async function (user_id) {
-        return await npost(`${remote.API_SERVER}/api/manage/user/change_level/normal`, {user_id});
-    },
-
-    /** 管理 - 用户 - 作者权限 */
-    manageUserChangeLevelWriter: async function (user_id) {
-        return await npost(`${remote.API_SERVER}/api/manage/user/change_level/writer`, {user_id});
-    },
-
-    /** 管理 - 用户 - 管理员权限 */
-    manageUserChangeLevelAdmin: async function (user_id) {
-        return await npost(`${remote.API_SERVER}/api/manage/user/change_level/admin`, {user_id});
+    /** 管理 - 用户 - 修改用户组 */
+    manageUserChangeLevel: async function (user_id, level) {
+        return await npost(`${remote.API_SERVER}/api/manage/user/change_level`, {user_id, level});
     },
 
 }

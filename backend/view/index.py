@@ -1,6 +1,7 @@
 # coding:utf-8
 
 import config
+from model.user import USER_LEVEL
 from view import route, url_for, AjaxView
 
 
@@ -32,5 +33,6 @@ class MiscView(AjaxView):
                 'PASSWORD_MAX': config.PASSWORD_MAX,
                 'PASSWORD_REG_MIN': config.PASSWORD_REG_MIN,
                 'PASSWORD_REG_MAX': config.PASSWORD_REG_MAX,
+                'USER_LEVEL': USER_LEVEL.txt,
             }
         })
