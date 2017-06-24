@@ -24,7 +24,7 @@ import Loading from './components/utils/loading.vue'
 import Manage from './components/manage.vue'
 import About from './components/about.vue'
 
-import { Button, Card, Checkbox, DatePicker, Dialog, Select, TabPane, Tabs, Tag, Input, Form, FormItem } from 'element-ui'
+import { Button, Card, Checkbox, DatePicker, Dialog, Select, TabPane, Tabs, Tag, Input, Form, FormItem, MessageBox } from 'element-ui'
 Vue.use(Button)
 Vue.use(Card)
 Vue.use(Checkbox)
@@ -37,6 +37,13 @@ Vue.use(Tag)
 Vue.use(Input)
 Vue.use(Form)
 Vue.use(FormItem)
+
+// MessageBox 处理
+Vue.prototype.$msgbox = MessageBox;
+Vue.prototype.$alert = MessageBox.alert;
+Vue.prototype.$confirm = MessageBox.confirm;
+Vue.prototype.$prompt = MessageBox.prompt;
+
 
 Vue.component('my-title', {
     props: ['size', 'text', 'aaa'],

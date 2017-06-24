@@ -65,6 +65,8 @@ let retcode = {
 
 let retinfo = {
     [retcode.SUCCESS]: '操作已成功完成',
+    [retcode.TOO_LONG]: '参数过长',
+    [retcode.TOO_SHORT]: '参数过短',
     [retcode.INVALID_PARAMS]: '参数缺失或值非法',
     [retcode.ALREADY_EXISTS]: '已存在',
     [retcode.NOT_FOUND]: '不存在的对象',
