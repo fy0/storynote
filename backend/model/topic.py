@@ -80,8 +80,8 @@ class Topic(GFKBaseModel):
         return ret
 
     @classmethod
-    def get_list(cls):
-        q = cls.select().where(cls.state>TOPIC_STATE.HIDE).order_by(cls.weight.desc(), cls.time.desc())
+    def get_list(cls, state_min=TOPIC_STATE.CLOSE):
+        q = cls.select().where(cls.state>=state_min).order_by(cls.weight.desc(), cls.time.desc())
         return q.count(), q
 
     @classmethod

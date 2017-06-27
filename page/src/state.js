@@ -8,7 +8,8 @@ let data = {
         USER_LEVEL: {
             0: '删除',
             50: '正常'
-        }
+        },
+        TOPIC_STATE: { ... }
     },*/
 }
 

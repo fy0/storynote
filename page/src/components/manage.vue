@@ -4,7 +4,9 @@
         <el-tab-pane label="用户管理" name="user">
             <user-manage></user-manage>
         </el-tab-pane>
-        <el-tab-pane label="文章管理" name="topic">文章管理</el-tab-pane>
+        <el-tab-pane label="文章管理" name="topic">
+            <topic-manage></topic-manage>
+        </el-tab-pane>
         <el-tab-pane label="评论管理" name="comment">评论管理</el-tab-pane>
         <!-- <el-tab-pane label="投稿审批" name="fourth">投稿审批</el-tab-pane> -->
     </el-tabs>
@@ -16,6 +18,7 @@
 
 <script>
 import UserManage from "./manage/user.vue"
+import TopicManage from "./manage/topic.vue"
 
 export default {
     data () {
@@ -25,6 +28,7 @@ export default {
     },
     components: {
         UserManage,
+        TopicManage,
     },
     methods: {
         handleClick (tab, event) {

@@ -3,6 +3,7 @@ import json
 import config
 from config import RETCODE
 from model import pagination
+from model.topic import Topic, TOPIC_STATE
 from view import route, AjaxView, AjaxLoginView
 from model.user import User, USER_LEVEL
 from view.authview import AjaxAdminView
@@ -68,3 +69,32 @@ class UserChangeLevel(UserUtil):
             return RETCODE.SUCCESS
         else:
             return RETCODE.INVALID_PARAMS
+
+
+@route('/api/manage/topic')
+class TopicAdminView(AjaxAdminView):
+    def get(self):
+        page = self.get_argument('p', '1')
+        count, query = Topic.get_list()
+        pg = pagination(count, query, config.TOPIC_PAGE_SIZE, page)
+        pg["items"] = list(map(Topic.to_dict, pg["items"]))
+        pg['page_numbers'] = list(pg['page_numbers'])
+        self.finish({'code': 0, 'data': pg})
+
+
+@route('/api/manage/topic/change_state')
+class UserChangeLevel(AjaxAdminView):
+    def post(self):
+        topic_id = self.get_argument('topic_id', None)
+        topic = Topic.get_by_pk(topic_id)
+        if topic:
+            state = int(self.get_argument('state', 0))
+            if state in TOPIC_STATE.values():
+                topic.state = state
+                topic.save()
+                code = RETCODE.SUCCESS
+            else:
+                code = RETCODE.INVALID_PARAMS
+        else:
+            code = RETCODE.NOT_FOUND
+        self.finish(json.dumps({'code': code}))

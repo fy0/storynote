@@ -204,4 +204,13 @@ export default {
         return await npost(`${remote.API_SERVER}/api/manage/user/change_level`, {user_id, level});
     },
 
+    /** 管理 - 主题 - 列表 */
+    manageTopicList: async function (keyword='', p=1) {
+        return await nget(`${remote.API_SERVER}/api/manage/topic`, {keyword, p});
+    },
+
+    /** 管理 - 主题 - 修改状态 */
+    manageUserChangeState: async function (topic_id, state) {
+        return await npost(`${remote.API_SERVER}/api/manage/topic/change_state`, {topic_id, state});
+    },
 }
