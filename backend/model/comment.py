@@ -30,9 +30,13 @@ class Comment(BaseModel):
         db_table = 'comments'
 
     @classmethod
-    def get_list(cls, related_id, offset=0):
-        q = cls.select().where(cls.state > COMMENT_STATE.HIDE, cls.related_id == related_id)
-        return q.count(), q.offset(offset).limit(config.COMMENT_PAGE_SIZE)
+    def get_list(cls, related_id=0, offset=0):
+        if related_id:
+            q = cls.select().where(cls.state > COMMENT_STATE.HIDE, cls.related_id == related_id)
+            return q.count(), q.offset(offset).limit(config.COMMENT_PAGE_SIZE)
+        else:
+            q = cls.select().where(cls.state > COMMENT_STATE.HIDE)
+            return q.count(), q.offset(offset).limit(config.COMMENT_PAGE_SIZE)
 
     @classmethod
     def get_list_by_user(cls, user, offset=0, limit=config.COMMENT_PAGE_SIZE):

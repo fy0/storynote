@@ -3,6 +3,7 @@ import json
 import config
 from config import RETCODE
 from model import pagination
+from model.comment import Comment
 from model.topic import Topic, TOPIC_STATE
 from view import route, AjaxView, AjaxLoginView
 from model.user import User, USER_LEVEL
@@ -83,7 +84,7 @@ class TopicAdminView(AjaxAdminView):
 
 
 @route('/api/manage/topic/change_state')
-class UserChangeLevel(AjaxAdminView):
+class TopicChangeLevel(AjaxAdminView):
     def post(self):
         topic_id = self.get_argument('topic_id', None)
         topic = Topic.get_by_pk(topic_id)
@@ -98,3 +99,26 @@ class UserChangeLevel(AjaxAdminView):
         else:
             code = RETCODE.NOT_FOUND
         self.finish(json.dumps({'code': code}))
+
+
+@route('/api/manage/comment')
+class CommentView(AjaxAdminView):
+    def get(self):
+        page = self.get_argument('p', '1')
+        count, query = Comment.get_list()
+        pg = pagination(count, query, config.COMMENT_PAGE_SIZE, page)
+        pg["items"] = list(map(Comment.to_dict, pg["items"]))
+        pg['page_numbers'] = list(pg['page_numbers'])
+        self.finish({'code': 0, 'data': pg})
+
+
+@route('/api/manage/change_state')
+class CommentView(AjaxAdminView):
+    def get(self):
+        page = self.get_argument('p', '1')
+        count, query = Comment.get_list()
+        pg = pagination(count, query, config.COMMENT_PAGE_SIZE, page)
+        pg["items"] = list(map(Comment.to_dict, pg["items"]))
+        pg['page_numbers'] = list(pg['page_numbers'])
+        self.finish({'code': 0, 'data': pg})
+

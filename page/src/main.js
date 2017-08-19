@@ -56,15 +56,17 @@ Vue.component('my-title', {
 Vue.use(VueRouter)
 
 var routes = [
-    { path: '/', component: Index },
-    { path: '/p/:page(\\d+)', component: Index },
-    { path: '/timeline', component: Timeline },
-    { path: '/timeline/:page(\\d+)', component: Timeline },
+    // 注意：router的exact针对的是path而不是对象本身，因此虽然模板中指定的
+    // 是 name: index 但意味着“主页”链接永远带有 router-link-active
+    // { path: '/', component: Index },
+    // { path: '/:p(p)?/:page(\\d+)?', name: 'index', component: Index },
+    { path: '/:p(p)?/:page(\\d+)?', name: 'index', component: Index },
+    { path: '/timeline/:page(\\d+)?', name: 'timeline', component: Timeline },
     { path: '/new', component: TopicNew},
-    { path: '/t/:id(\\d+)', name: 'topic1', component: TopicPage },
-    { path: '/t/:id(\\d+)/:cmtpage(\\d+)', name: 'topic', component: TopicPage },
+    { path: '/t/:id(\\d+)/:cmtpage(\\d+)?', name: 'topic', component: TopicPage },
     { path: '/tag/:name(\\S+)', name: 'tag', component: TagPage },
     { path: '/new', component: TopicNew },
+    { path: '/edit/t/:id(\\d+)', component: TopicNew },
     { path: '/signin', component: SignIn },
     { path: '/signup', component: SignUp },
     { path: '/signout', component: SignOut },
@@ -74,6 +76,7 @@ var routes = [
 ]
 
 var router = new VueRouter({
+    mode: 'hash',
     routes: routes
 })
 

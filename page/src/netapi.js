@@ -205,8 +205,8 @@ export default {
     },
 
     /** 管理 - 主题 - 列表 */
-    manageTopicList: async function (keyword='', p=1) {
-        return await nget(`${remote.API_SERVER}/api/manage/topic`, {keyword, p});
+    manageTopicList: async function (p=1) {
+        return await nget(`${remote.API_SERVER}/api/manage/topic`, {p});
     },
 
     /** 管理 - 主题 - 修改状态 */

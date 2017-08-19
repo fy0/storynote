@@ -91,7 +91,7 @@ export default {
                 this.editor.toTextArea();
                 this.editor = null;
                 localStorage.setItem('topic-post-cache-clear', 1);
-                this.$router.push({ name: 'topic1', params: { id: ret.data.id }})
+                this.$router.push({ name: 'topic', params: { id: ret.data.id }})
                 $.message_success('发表成功！已自动跳转至文章页面。');
             } else {
                 $.message_error('发表失败！');

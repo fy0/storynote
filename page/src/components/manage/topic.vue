@@ -4,7 +4,9 @@
     <el-card v-else class="box-card" v-for="i in data_lst.items" :key="i.id">
         <div>
             <h3 class="topic-title">{{i.title}}</h3>
-            <span v-if="i.id == state.data.user.id">[当前用户]</span>
+            <span>作者： <b>{{i.user.username}}</b>
+                <span v-if="i.user.id == state.data.user.id">[当前用户]</span>
+            </span>
         </div>
         <div>
             <span>权限：</span>
@@ -14,6 +16,13 @@
             </span>
         </div>
     </el-card>
+    
+    <span v-if="data_lst && data_lst.prev_page">
+        <a href="javascript:void(0)" @click="loadData(data_lst.prev_page)">上一页</a>
+    </span>
+    <span v-if="data_lst && data_lst.next_page">
+        <a href="javascript:void(0)" @click="loadData(data_lst.next_page)">下一页</a>
+    </span>
 </div>
 </template>
 
@@ -41,7 +50,6 @@ export default {
         return {
             state,
             data_lst: {},
-            curitem: null,
             new_password: '',
             noteText: '加载中 ...',
             passwordResetDialogVisible: false,
@@ -53,9 +61,10 @@ export default {
         this.noteText = '';
     },
     methods: {
-        showPasswordReset: function (item) {
-            this.curitem = item;
-            this.passwordResetDialogVisible = true;
+        loadData: async function (page) {
+            let ret = await api.manageTopicList(page);
+            this.$set(this, "data_lst", ret.data);
+            this.noteText = '';
         },
         stateChange: async function (item, state) {
             let ret = await api.manageUserChangeState(item.id, state);

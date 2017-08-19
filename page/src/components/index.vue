@@ -1,6 +1,6 @@
 <template>
 <div v-if="page_info.items">
-    <div class="topic-item" v-for="item in page_info.items">
+    <div class="topic-item" v-for="item in page_info.items" :key="item.id">
         <h3 class="title">
             <router-link :to="{ path: '/t/' + item.id }">{{item.title}}</router-link>
         </h3>
