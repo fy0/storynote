@@ -4,7 +4,7 @@
     <div class="ic-container">
         <!-- header -->
         <div class="page-header">
-            <h1><router-link :to="{ path: '/' }">SINGLE NOTE</router-link></h1>
+            <h1><router-link :to="{ path: '/' }">{{config.title.toUpperCase()}}</router-link></h1>
         </div>
         <!-- 正文 -->
         <div class="pure-g main-box">
@@ -23,7 +23,7 @@
             </div>
         </div>
         <!-- footer -->
-        <footer><p>Copyright © 2017 <a href="">Single Note</a></p></footer>
+        <footer><p>Copyright © 2017 <a href="">{{config.powered_by}}</a></p></footer>
     </div>
     <msg-box></msg-box>
     <go-top></go-top>

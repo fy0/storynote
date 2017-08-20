@@ -6,7 +6,8 @@ let config = {
         ERR_TIMEOUT: -254,
         ERR_REUQEST_FAIL: -253,
     },
-    title: 'Single Note',
+    title: 'Story Note',
+    powered_by: 'Story Note',
 }
 
  

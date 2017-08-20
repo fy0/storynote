@@ -1,4 +1,4 @@
-# single
+# storynote
 
 > simple personal blog
 
