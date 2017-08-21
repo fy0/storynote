@@ -59,7 +59,7 @@ var routes = [
     // 注意：router的exact针对的是path而不是对象本身，因此虽然模板中指定的
     // 是 name: index 但意味着“主页”链接永远带有 router-link-active
     // { path: '/', component: Index },
-    // { path: '/:p(p)?/:page(\\d+)?', name: 'index', component: Index },
+    // { path: '/p/:page(\\d+)?', name: 'index', component: Index },
     { path: '/:p(p)?/:page(\\d+)?', name: 'index', component: Index },
     { path: '/timeline/:page(\\d+)?', name: 'timeline', component: Timeline },
     { path: '/new', component: TopicNew},

@@ -30,11 +30,13 @@ class Topic(GFKBaseModel):
     last_edit_user = ForeignKeyField(User, related_name="last_edit_user_id", null=True)
     view_count = IntegerField(default=0)
     brief = CharField(max_length=500)
-    content = CharField(max_length=50000)
+    content = TextField()
     _tags = ReverseGFK(Tag, 'obj_type', 'obj_id')
 
     sticky_weight = IntegerField(index=True, default=0)  # 置顶权重
     weight = IntegerField(index=True, default=0) # 排序权值，越大越靠前，默认权重与id相同
+
+    link_to = TextField(null=True, default=None)  # 如果 link_to 存在值，那么这是一篇外链文章
 
     class Meta:
         db_table = 'topics'

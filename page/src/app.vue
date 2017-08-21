@@ -10,7 +10,7 @@
         <div class="pure-g main-box">
             <div class="pure-u-6-24 left-bar">
                 <ul class="nav-bar">
-                    <router-link tag="li" :to="{ name: 'index' }" :class="is_index"><a>故事</a></router-link>
+                    <router-link tag="li" :to="{ name: 'index' }" :class="navActiveClass('index', 'topic')"><a>故事</a></router-link>
                     <router-link tag="li" :to="{ name: 'timeline' }" ><a>时光</a></router-link>
                     <router-link tag="li" :to="{ path: '/signin' }" ><a>用户</a></router-link>
                     <router-link v-if="state.data.user" tag="li" :to="{ path: '/new' }" ><a>撰文</a></router-link>
@@ -56,14 +56,11 @@ footer {
 .page-header { text-align: center; }
 .page-header > h2 { margin: 0; }
 
-.nav-bar > li.router-link-active:not(.index-flag) > a {
+.nav-bar > li.router-link-active:not(.flag) > a {
     text-decoration-line: underline;
     text-underline-position: under;
 }
 
-.nav-bar > li.nav-active > a {
-
-}
 </style>
 
 <script>
@@ -82,14 +79,14 @@ export default {
             config,
         }
     },
-    computed: {
-        is_index: function () {
-            if (this.$route.name != 'index') {
-                return 'index-flag';
+    methods: {
+        navActiveClass: function (...names) {
+            for (let name of names) {
+                if (name == this.$route.name) {
+                    return 'link-active';
+                }
             }
-            if (this.$route.name == 'topic') {
-                return 'nav-active';
-            }
+            return 'flag'
         }
     },
     mounted: async function () {
