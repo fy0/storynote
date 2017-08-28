@@ -22,7 +22,7 @@ class TagDefineView(AjaxWriterView):
 @route('/api/tag/list')
 class TagListView(AjaxWriterView):
     def get(self):
-        self.finish({'code': RETCODE.SUCCESS, 'data': list(TagDefine.get_list())})
+        self.finish({'code': RETCODE.SUCCESS, 'data': list(map(TagDefine.to_dict, TagDefine.get_list()))})
 
 
 @route('/api/tag/get_topics_by_tag')

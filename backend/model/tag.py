@@ -39,7 +39,7 @@ class TagDefine(BaseModel):
 
     @classmethod
     def get_list(cls):
-        return TagDefine.select().where(cls.state > TAG_DEFINE_STATE.NORMAL)
+        return TagDefine.select().where(cls.state >= TAG_DEFINE_STATE.NORMAL)
 
 
 class Tag(BaseModel):
