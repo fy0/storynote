@@ -19,7 +19,7 @@
         </li>
         <li v-else><a href="javascript:void(0);" class="disable slim">‹</a></li>
 
-        <li v-for="i in page_info.page_numbers">
+        <li v-for="i in page_info.page_numbers" :key="i">
             <router-link :to="{ path: `/p/${i}` }" :class="(page_info.cur_page == i) ? 'active' : ''">{{i}}</router-link>
         </li>
 

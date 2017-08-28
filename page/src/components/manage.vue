@@ -8,6 +8,7 @@
             <topic-manage></topic-manage>
         </el-tab-pane>
         <el-tab-pane label="评论管理" name="comment">评论管理</el-tab-pane>
+        <el-tab-pane label="标签管理" name="tag">标签管理</el-tab-pane>
         <!-- <el-tab-pane label="投稿审批" name="fourth">投稿审批</el-tab-pane> -->
     </el-tabs>
 </div>

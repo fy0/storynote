@@ -11,23 +11,25 @@
         <div v-html="marked(topic.content)"></div>
 
         <div class="tags">
-            <el-tag v-for="tag in topic_tags" :key="tag" :closable="true" :close-transition="false" @close="handleClose(tag)">
+            <el-tag v-for="tag in topic_tags" :key="tag" :closable="state.data.user" :close-transition="true" @close="handleClose(tag)">
                 <!-- 这里真是坑 -->
                 <router-link :to="{ name: 'tag', params: {name: tag.tag.name}}">{{tag.tag.name}}</router-link>
             </el-tag>
 
-            <el-input
-                class="tag-new-container"
-                v-if="inputVisible"
-                v-model="inputValue"
-                ref="saveTagInput"
-                icon="circle-close"
-                size="mini"
-                :on-icon-click="tagInputClose"
-                @keyup.enter.native="handleInputConfirm"
-            >
-            </el-input>
-            <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+            <span v-if="state.data.user">
+                <el-input
+                    class="tag-new-container"
+                    v-if="inputVisible"
+                    v-model="inputValue"
+                    ref="saveTagInput"
+                    icon="circle-close"
+                    size="mini"
+                    :on-icon-click="tagInputClose"
+                    @keyup.enter.native="handleInputConfirm"
+                >
+                </el-input>
+                <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+            </span>
         </div>
 
         <div class="comment-info">

@@ -10,7 +10,7 @@ let config = {
     powered_by: 'Story Note',
 }
 
- 
+
 try {
     let pri = require("../private.js")
     config.remote.API_SERVER = pri.default.remote.API_SERVER || config.remote.API_SERVER;
