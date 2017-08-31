@@ -120,8 +120,8 @@ export default {
     },
 
     /** 主题 - 编辑 */
-    topicEdit: async function (topic_id, title, content) {
-        return await npost(`${remote.API_SERVER}/api/topic/edit/${topic_id}`, {title, content});
+    topicEdit: async function (topic_id, data) {
+        return await npost(`${remote.API_SERVER}/api/topic/edit/${topic_id}`, data);
     },
 
     /** 主题 - 删除 */

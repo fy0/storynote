@@ -76,7 +76,7 @@ class UserChangeLevel(UserUtil):
 class TopicAdminView(AjaxAdminView):
     def get(self):
         page = self.get_argument('p', '1')
-        count, query = Topic.get_list()
+        count, query = Topic.get_list(TOPIC_STATE.DEL)
         pg = pagination(count, query, config.TOPIC_PAGE_SIZE, page)
         pg["items"] = list(map(Topic.to_dict, pg["items"]))
         pg['page_numbers'] = list(pg['page_numbers'])

@@ -1,6 +1,7 @@
 <template>
 <div class="">
-    <h3 class="">新建主题</h3>
+    <h3 class="" v-if="!is_edit">新建主题</h3>
+    <h3 class="" v-else>编辑主题</h3>
     <form class="pure-form" id="form_topic" method="POST" @submit.prevent="send">
         <fieldset>
             <div class="form-item">
@@ -38,6 +39,7 @@ export default {
         return {
             title: '',
             date: new Date(),
+            editing_data: null,
             pickerOptions: {
                 shortcuts: [{
                     text: '当前',
@@ -61,6 +63,11 @@ export default {
                 }]
             },
         }
+    },
+    computed: {
+        is_edit () {
+            return this.$route.name == 'topic_edit'
+        },
     },
     methods: {
         send: async function (e) {
@@ -86,19 +93,35 @@ export default {
             let postTime = parseInt(this.date.getTime() / 1000);
 
             if (!content) return;
-            let ret = await api.topicNew(title, content, postTime);
+
+            let ret;
+            let success_text;
+            let failed_text;
+
+
+            if (this.is_edit) {
+                ret = await api.topicEdit(this.$route.params.id, {title, content, time: postTime});
+                success_text = '编辑成功！已自动跳转至文章页面。';
+                failed_text = '编辑失败！';
+            } else {
+                ret = await api.topicNew(title, content, postTime);
+                success_text = '发表成功！已自动跳转至文章页面。';
+                failed_text = '发表失败！';
+            }
+    
             if (ret.code == 0) {
                 this.editor.toTextArea();
                 this.editor = null;
                 localStorage.setItem('topic-post-cache-clear', 1);
                 this.$router.push({ name: 'topic', params: { id: ret.data.id }})
-                $.message_success('发表成功！已自动跳转至文章页面。');
+                $.message_success(success_text);
             } else {
-                $.message_error('发表失败！');
+                $.message_error(failed_text);
             }
+            
         }
     },
-    mounted: function () {
+    mounted: async function () {
         if (localStorage.getItem('topic-post-cache-clear')) {
             // 我不知道为什么，在地址跳转前进行 storage 的清除工作，
             // 并不会实质上起效，因此这是一个替代手段，效果比较理想。
@@ -127,18 +150,37 @@ export default {
                 return "Loading...";
             },
         });
-        this.title = localStorage.getItem('topic-post-title') || '';
+
+        if (this.is_edit) {
+            this.editing_data = this.$route.params.editing_data;
+
+            let date = new Date();
+            date.setTime(this.editing_data.time * 1000);    
+            this.title = this.editing_data.title;
+            this.date = date;
+            this.editor.value(this.editing_data.content);
+        } else {
+            this.title = localStorage.getItem('topic-post-title') || '';
+        }
     },
     watch: {
         title: _.debounce(function (val, oldVal) {
             localStorage.setItem('topic-post-title', val);
         }, 5000),
     },
-    beforeRouteEnter: (to, from, next) => {
+    beforeRouteEnter: async (to, from, next) => {
         if (!state.data.user) {
             $.message_error('抱歉，无权访问此页面');
-            next('/');
-            return;
+            return next('/');
+        }
+
+        if (to.name == 'topic_edit') {
+            let ret = await api.topicGet(to.params.id);
+            if (ret.code) {
+                $.message_error('抱歉，发生了错误');
+                return next('/');
+            }
+            to.params.editing_data = ret.data;
         }
         next();
     }

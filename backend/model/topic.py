@@ -59,6 +59,8 @@ class Topic(GFKBaseModel):
         if 'content' in data:
             self.content = data['content']
             self.brief = data['content'][:config.TOPIC_BRIEF_LENGTH]
+        if 'time' in data:
+            self.time = int(data['time'])
         self.last_edit_user = user
         self.edit_time = int(time.time())
         self.save()

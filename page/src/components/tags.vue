@@ -1,7 +1,7 @@
 <template>
 <div>
     <h4>标签列表</h4>
-    <p v-for="tag in page_info">
+    <p v-for="tag in page_info" :key="tag.id">
         <router-link :to="{ name: 'tag', params: {name: tag.name}}">{{tag.name}}</router-link>    
     </p>
 </div>

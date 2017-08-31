@@ -68,7 +68,7 @@ var routes = [
     { path: '/tags', name: 'tags', component: Tags },
     { path: '/tag/:name(\\S+)', name: 'tag', component: TagPage },
     { path: '/new', component: TopicNew },
-    { path: '/edit/t/:id(\\d+)', component: TopicNew },
+    { path: '/edit/t/:id(\\d+)', name: "topic_edit", component: TopicNew },
     { path: '/signin', component: SignIn },
     { path: '/signup', component: SignUp },
     { path: '/signout', component: SignOut },

@@ -26,6 +26,7 @@ class TopicEdit(AjaxLoginView):
         title = self.get_argument('title', '').strip()
         content = self.get_argument('content', '').strip()
         topic = Topic.get_by_pk(topic_id)
+        time = self.get_argument('time', None)
 
         if not topic:
             return self.finish({'code': -1, 'msg': '找不到指定的主题'})
@@ -36,7 +37,7 @@ class TopicEdit(AjaxLoginView):
         if not (title and config.TITLE_LENGTH_MIN <= len(title) <= config.TITLE_LENGTH_MAX):
             self.finish({'code': -1, 'msg': '标题长度必须在 %d 到 %d 之间' % (config.TITLE_LENGTH_MIN, config.TITLE_LENGTH_MAX)})
         else:
-            t = topic.edit({"title":title, "content":content}, self.current_user())
+            t = topic.edit({"title":title, "content":content, "time": time}, self.current_user())
             self.finish({'code': 0, 'data': {'id': t.id}})
 
 

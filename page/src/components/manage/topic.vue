@@ -3,7 +3,10 @@
     <div style="margin-top: 15px;" v-if="noteText">{{noteText}}</div>
     <el-card v-else class="box-card" v-for="i in data_lst.items" :key="i.id">
         <div>
-            <h3 class="topic-title">{{i.title}}</h3>
+            <div>
+                <h3 class="topic-title">{{i.title}}</h3>
+                <router-link :to="{ name: 'topic_edit', params: {id: i.id}}">编辑</router-link>    
+            </div>
             <span>作者： <b>{{i.user.username}}</b>
                 <span v-if="i.user.id == state.data.user.id">[当前用户]</span>
             </span>
@@ -38,6 +41,7 @@
 .topic-title {    
     margin: 0;
     font-size: 2em;
+    display: inline;
 }
 </style>
 

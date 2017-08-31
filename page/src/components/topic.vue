@@ -6,17 +6,18 @@
         <div class="post-info">
             <span>{{topic.user.name}}</span>
             <span>{{getTime(topic.time)}}</span>
+            <router-link v-if="canEdit" :to="{ name: 'topic_edit', params: {id: topic.id}}">编辑</router-link>    
         </div>
 
         <div v-html="marked(topic.content)"></div>
 
         <div class="tags">
-            <el-tag v-for="tag in topic_tags" :key="tag" :closable="state.data.user" :close-transition="true" @close="handleClose(tag)">
+            <el-tag v-for="tag in topic_tags" :key="tag" :closable="canEdit" :close-transition="true" @close="handleClose(tag)">
                 <!-- 这里真是坑 -->
                 <router-link :to="{ name: 'tag', params: {name: tag.tag.name}}">{{tag.tag.name}}</router-link>
             </el-tag>
 
-            <span v-if="state.data.user">
+            <span v-if="canEdit">
                 <el-input
                     class="tag-new-container"
                     v-if="inputVisible"
@@ -51,7 +52,7 @@
         </div>
 
         <div v-if="comments_page > 1">
-            <span v-for="index in comments_page">
+            <span v-for="index in comments_page" :key="index">
                 <span class="comment-page-btn" v-if="$route.params.cmtpage == index">{{index}}</span>
                 <router-link class="comment-page-btn" v-else :to="{ name: 'topic', params: {id: topic.id, cmtpage: index}}" replace>{{index}}</router-link>
             </span>
@@ -127,6 +128,12 @@ export default {
             inputValue: ''
         }
     },
+    computed: {
+        canEdit: function () {
+            if (!state.data.user) return;
+            return (state.data.user.level == 100) || (state.data.user.id == this.topic.user.id);
+        }
+    },
     methods: {
         marked,
         getTime: (timestamp) => {
@@ -159,7 +166,6 @@ export default {
                 } else {
                     $.message_error(api.retinfo[ret.code])
                 }
-                console.log(ret);
             }
             this.inputVisible = false;
             this.inputValue = '';
@@ -179,7 +185,6 @@ export default {
                 this.user_comment_text = '';
                 this.commentFetch(this.comments_page);
             }
-            console.log(ret);
         }
     },
     mounted: async function () {
@@ -189,12 +194,11 @@ export default {
             this.$set(this, "topic_tags", ret.data.tags);
             this.commentFetch(this.$route.params.cmtpage || 1);
         }
-        console.log(ret, this.topic_tags);
     },
     watch: {
         '$route' (to, from) {
             if (to.params.cmtpage) {
-                this.commentFetch(to.params.cmtpage);
+                // this.commentFetch(to.params.cmtpage);
             }
         }
     },
