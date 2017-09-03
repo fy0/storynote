@@ -81,14 +81,6 @@ export default {
     methods: {
         marked,
         time_to_text: $.time_to_text,
-        fetchData: async function (name) {
-            let ret = await api.tagGetTopics(name);
-            if (ret.code == api.retcode.NOT_FOUND) {
-                this.$set(this, "page_info", {});
-            } else {
-                this.$set(this, "page_info", ret.data);
-            }
-        }
     },
     computed: {
         tagname: function () {
@@ -96,12 +88,23 @@ export default {
         }
     },
     mounted: async function () {
-        this.fetchData(this.$route.params.name);
     },
-    watch: {
-        '$route' (to, from) {
-            this.fetchData(to.params.page);
+    beforeRouteEnter: async (to, from, next) => {
+        let name = to.params.name;
+        let ret = await api.tagGetTopics(name);
+
+        if (ret.code == api.retcode.SUCCESS) {
+            return next(vm => {
+                vm.page_info = ret.data;
+            });
+        } else if (ret.code == api.retcode.NOT_FOUND) {
+            return next(vm => {
+                vm.page_info = {}
+            });
         }
+
+        $.message_error(`错误：${api.retinfo[ret.code]}`);
+        return next('/');
     },
     components: {
         Loading,

@@ -38,7 +38,7 @@
             <span class="comment-info-line"></span>
         </div>
 
-        <div class="comment" v-for="(i, index) in comments">
+        <div class="comment" v-for="(i, index) in comments" :key="index">
             <div class="ic-comment-body">
                 <div class="ic-comment-content" v-html="marked(i.content)"></div>
                 <div class="ic-comment-meta">
@@ -188,12 +188,6 @@ export default {
         }
     },
     mounted: async function () {
-        let ret = await api.topicGet(this.$route.params.id);
-        if (ret.code == 0) {
-            this.$set(this, "topic", ret.data);
-            this.$set(this, "topic_tags", ret.data.tags);
-            this.commentFetch(this.$route.params.cmtpage || 1);
-        }
     },
     watch: {
         '$route' (to, from) {
@@ -201,6 +195,29 @@ export default {
                 // this.commentFetch(to.params.cmtpage);
             }
         }
+    },
+    beforeRouteEnter: async (to, from, next) => {
+        // 获取文章内容
+        let topic = await api.topicGet(to.params.id);
+
+        if (topic.code == api.retcode.SUCCESS) {
+            // 获取评论
+            let comment = await api.commentGet(topic.data.id, to.params.cmtpage || 1);
+
+            if (comment.code == api.retcode.SUCCESS) {
+                return next(vm => {
+                    vm.topic = topic.data;
+                    vm.topic_tags = topic.data.tags;
+
+                    vm.comments_length = comment.data.count;
+                    vm.comments = comment.data.items;
+                    vm.comments_page = Math.ceil(vm.comments_length / comment.data.page_size);
+                });
+            }
+        }
+
+        $.message_error(`错误：${api.retinfo[ret.code]}`);
+        return next('/');
     },
     components: {
         Loading,

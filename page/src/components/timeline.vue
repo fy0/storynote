@@ -1,12 +1,12 @@
 <template>
 <div class="tmp" v-if="info">
-    <div class="pure-g" v-for="key in info.key_order">
+    <div class="pure-g" v-for="key in info.key_order" :key="key">
         <div class="pure-u-2-24 timeline-tag">
             <span>{{key}}</span>
             <!--<span class="vline"></span>-->
         </div>
         <div class="pure-u-22-24">
-            <div class="topic-item" v-for="item in info.timeline[key]">
+            <div class="topic-item" v-for="item in info.timeline[key]" :key="item.id">
                 <h3 class="title">
                     <router-link :to="{ path: '/t/' + item.id }">{{item.title}}</router-link>
                 </h3>
@@ -75,25 +75,27 @@ export default {
         return {
             state,
             info: {},
-            page_info: {},
         }
     },
     methods: {
         marked,
         time_to_text: $.time_to_text,
-        fetchData: async function (page) {
-            let ret = await api.timeline(page);
-            this.$set(this, "info", ret);
-            this.$set(this, "page_info", ret.data);
-        }
     },
     mounted: async function () {
-        this.fetchData(this.$route.params.page);
+        // this.fetchData(this.$route.params.page);
     },
-    watch: {
-        '$route' (to, from) {
-            this.fetchData(to.params.page);
+    beforeRouteEnter: async (to, from, next) => {
+        let page = to.params.page;
+        let ret = await api.timeline(page);
+
+        if (ret.code == api.retcode.SUCCESS) {
+            return next(vm => {
+                vm.info = ret;
+            });
         }
+
+        $.message_error(`错误：${api.retinfo[ret.code]}`);
+        return next('/');
     },
     components: {
         Loading,

@@ -20,8 +20,18 @@ export default {
         }
     },
     mounted: async function () {
+    },
+    beforeRouteEnter: async (to, from, next) => {
         let ret = await api.tagList();
-        this.$set(this, "page_info", ret.data);
+
+        if (ret.code == api.retcode.SUCCESS) {
+            return next(vm => {
+                vm.page_info = ret.data;
+            });
+        }
+
+        $.message_error(`错误：${api.retinfo[ret.code]}`);
+        return next('/');
     },
 }
 </script>

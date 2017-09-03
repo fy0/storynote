@@ -1,11 +1,14 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import nprogress from 'nprogress/nprogress.js'
 
 import 'lodash'
 import 'purecss'
 import 'animate.css'
 import 'font-awesome/css/font-awesome.css'
 import 'simplemde/dist/simplemde.min.css'
+import 'nprogress/nprogress.css'
+
 import './assets/css/base.css'
 import tools from './tools.js'
 import state from './state.js'
@@ -45,15 +48,6 @@ Vue.prototype.$alert = MessageBox.alert;
 Vue.prototype.$confirm = MessageBox.confirm;
 Vue.prototype.$prompt  = MessageBox.prompt;
 
-Vue.component('my-title', {
-    props: ['size', 'text', 'aaa'],
-    render: function (createElement) {
-        document.title = this.text;
-    },
-    mounted: function () {
-    }
-})
-
 Vue.use(VueRouter)
 
 var routes = [
@@ -63,7 +57,7 @@ var routes = [
     // { path: '/p/:page(\\d+)?', name: 'index', component: Index },
     { path: '/:p(p)?/:page(\\d+)?', name: 'index', component: Index },
     { path: '/timeline/:page(\\d+)?', name: 'timeline', component: Timeline },
-    { path: '/new', component: TopicNew},
+    { path: '/new', name: 'topic_new', component: TopicNew},
     { path: '/t/:id(\\d+)/:cmtpage(\\d+)?', name: 'topic', component: TopicPage },
     { path: '/tags', name: 'tags', component: Tags },
     { path: '/tag/:name(\\S+)', name: 'tag', component: TagPage },
@@ -83,6 +77,8 @@ var router = new VueRouter({
 })
 
 router.beforeEach(async function (to, from, next)  {
+    nprogress.start();
+
     if (!state.data.misc) {
         let ret = await api.misc();
         Vue.set(state.data, 'misc', ret.data);
@@ -92,7 +88,12 @@ router.beforeEach(async function (to, from, next)  {
             Vue.set(state.data, 'user', ret.data);
         }
     }
+
     next();
+});
+
+router.afterEach(async function (to, from, next) {
+    nprogress.done();
 });
 
 new Vue({

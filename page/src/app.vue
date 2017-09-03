@@ -1,10 +1,9 @@
 <template>
 <div id="app">
-    <my-title :text='config.title'></my-title>
     <div class="ic-container">
         <!-- header -->
         <div class="page-header">
-            <h1><router-link :to="{ path: '/' }">{{config.title.toUpperCase()}}</router-link></h1>
+            <h1><router-link style="outline: none;" :to="{ path: '/' }">{{config.title.toUpperCase()}}</router-link></h1>
         </div>
         <!-- 正文 -->
         <div class="pure-g main-box">
@@ -14,7 +13,7 @@
                     <router-link tag="li" :to="{ name: 'tags' }" :class="navActiveClass('tag', 'tags')"><a>印记</a></router-link>
                     <router-link tag="li" :to="{ name: 'timeline' }" ><a>时光</a></router-link>
                     <router-link tag="li" :to="{ path: '/signin' }" ><a>用户</a></router-link>
-                    <router-link v-if="state.data.user" tag="li" :to="{ path: '/new' }" ><a>撰文</a></router-link>
+                    <router-link v-if="state.data.user" tag="li" :to="{ path: '/new' }" :class="navActiveClass('topic_new', 'topic_edit')"><a>撰文</a></router-link>
                     <router-link v-if="state.data.user" tag="li" :to="{ path: '/manage' }" ><a>管理</a></router-link>
                     <router-link tag="li" :to="{ path: '/about' }" ><a>关于</a></router-link>
                 </ul>

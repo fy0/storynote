@@ -76,19 +76,21 @@ export default {
     methods: {
         marked,
         time_to_text: $.time_to_text,
-        fetchData: async function (page) {
-            let ret = await api.recent(page);
-            // console.log(ret);
-            this.$set(this, "page_info", ret.data);
-        }
     },
     mounted: async function () {
-        this.fetchData(this.$route.params.page);
     },
-    watch: {
-        '$route' (to, from) {
-            this.fetchData(to.params.page);
+    beforeRouteEnter: async (to, from, next) => {
+        let page = to.params.page;
+        let ret = await api.recent(page);
+
+        if (ret.code == api.retcode.SUCCESS) {
+            return next(vm => {
+                vm.page_info = ret.data;
+            });
         }
+
+        $.message_error(`错误：${api.retinfo[ret.code]}`);
+        return next('/');
     },
     components: {
         Loading,

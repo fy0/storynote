@@ -234,3 +234,12 @@ a.am-close:hover {
     border-color: #d83832;
     color: #fff;
 }
+
+#nprogress .bar {
+    display: none;
+}
+
+#nprogress .spinner-icon {
+    width: 28px;
+    height: 28px;
+}
