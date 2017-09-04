@@ -33,19 +33,21 @@ export default {
     },
     mounted: async function () {
         var timer = setInterval(() => {
-            this.showGoTop = document.body.scrollTop > 1;
+            let el = document.documentElement;
+            this.showGoTop = el.scrollTop > 0;
         }, 100);
     },
     methods: {
         gotop: function () {
-            var top = document.body.scrollTop;
-            var timer = setInterval(() => {
+            let el = document.documentElement;
+            let top = el.scrollTop;
+            let timer = setInterval(() => {
                 top -= Math.abs(top * 0.1);
                 if (top <= 1) {
                     top = 0;
                     clearInterval(timer);
                 }
-                document.body.scrollTop = top;
+                el.scrollTop = top;
             }, 20);
         }
     }
