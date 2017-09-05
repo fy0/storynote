@@ -23,7 +23,7 @@
             </div>
         </div>
         <!-- footer -->
-        <footer><p>Copyright © 2017 <a href="">{{config.powered_by}}</a></p></footer>
+        <footer><p>Copyright © 2017 <a target="_blank" href="http://github.com/fy0/storynote">Story Note</a></p></footer>
     </div>
     <msg-box></msg-box>
     <go-top></go-top>

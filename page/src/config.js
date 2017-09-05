@@ -7,7 +7,6 @@ let config = {
         ERR_REUQEST_FAIL: -253,
     },
     title: 'Story Note',
-    powered_by: 'Story Note',
 }
 
 
