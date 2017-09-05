@@ -1,13 +1,13 @@
 
 let config = {
     remote: {
-        API_SERVER: 'http://127.0.0.1:9000',
+        // API_SERVER: 'http://api.fy0.me',
+        API_SERVER: 'http://localhost:9000',
         REQUEST_TIMEOUT: 3000,
         ERR_TIMEOUT: -254,
         ERR_REUQEST_FAIL: -253,
     },
-    title: 'Story Note',
-    powered_by: 'Story Note',
+    title: '世界边缘，fy 的摸鱼之地',
 }
 
 
