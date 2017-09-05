@@ -1,7 +1,6 @@
 
 let config = {
     remote: {
-        // API_SERVER: 'http://api.fy0.me',
         API_SERVER: 'http://localhost:9000',
         REQUEST_TIMEOUT: 3000,
         ERR_TIMEOUT: -254,

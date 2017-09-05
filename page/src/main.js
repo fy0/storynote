@@ -146,5 +146,4 @@ marked.setOptions({
     }
 })
 
-
 document.title = config.title;
