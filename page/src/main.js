@@ -13,6 +13,7 @@ import './assets/css/base.css'
 import tools from './tools.js'
 import state from './state.js'
 import api from "./netapi.js"
+import config from './config.js'
 
 import App from './app.vue'
 import Index from './components/index.vue'
@@ -72,7 +73,8 @@ var routes = [
 ]
 
 var router = new VueRouter({
-    mode: 'hash',
+    //mode: 'hash',
+    mode: 'history',
     routes: routes
 })
 
@@ -143,3 +145,6 @@ marked.setOptions({
         }
     }
 })
+
+
+document.title = config.title;

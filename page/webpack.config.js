@@ -1,11 +1,12 @@
 var path = require('path')
 var webpack = require('webpack')
+var HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
     entry: './src/main.js',
     output: {
         path: path.resolve(__dirname, './dist'),
-        publicPath: '/dist/',
+        publicPath: '',
         filename: 'build.js'
     },
     resolveLoader: {
@@ -60,6 +61,11 @@ module.exports = {
         modulesDirectories: ["node_modules"],
     },
     plugins: [
+        new HtmlWebpackPlugin({
+            filename: 'index.html',
+            template: './index.ejs',
+            title: 'Once upon a time',
+        }),
         new webpack.ProvidePlugin({
             $: "cash",
         }),
