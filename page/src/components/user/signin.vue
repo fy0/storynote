@@ -5,7 +5,7 @@
 </div>
 <div v-else>
     <h3>登录</h3>
-    <el-form :model="form" :label-position="left" ref="form" label-width="60px" :rules="form_rules" style="width:50%;margin-left:-15px">
+    <el-form :model="form" ref="form" label-width="60px" :rules="form_rules" style="width:50%;margin-left:-15px">
         <el-form-item label="账号" prop="username">
             <el-input type="text" v-model.trim="form.username" auto-complete="off"></el-input>
         </el-form-item>
@@ -70,6 +70,8 @@ export default {
                         if (ret.code == 0) {
                             Vue.set(state.data, 'user', ret.data);
                             $.message_success(`欢迎回来，${ret.data.name}！`);
+                        } else {
+                            $.message_error(`错误：${api.retinfo[ret.code]}`);
                         }
                         this.$router.replace({ path: '/'})
                     } else {

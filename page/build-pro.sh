@@ -1,1 +1,1 @@
-cross-env NODE_ENV=production webpack
+npm run build

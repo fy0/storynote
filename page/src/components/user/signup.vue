@@ -1,7 +1,7 @@
 <template>
 <div class="">
     <h3>注册</h3>
-    <el-form :model="form" :label-position="left" ref="form" label-width="60px" :rules="form_rules" style="width:50%;margin-left:-15px">
+    <el-form :model="form" ref="form" label-width="60px" :rules="form_rules" style="width:50%;margin-left:-15px">
         <el-form-item label="账号" prop="username">
             <el-input type="text" v-model.trim="form.username" auto-complete="off"></el-input>
         </el-form-item>
@@ -75,7 +75,14 @@ export default {
                 if (valid) {
                     let ret = await api.userSignup(this.form.username, this.form.password);
                     if (ret.code == 0) {
-                        $.message_success(`注册成功！现以新的身份跳转首页。`);
+                        ret = await api.userInfo();                        
+                        Vue.set(state.data, 'user', ret.data);
+                        if (ret.code == 0) {
+                            Vue.set(state.data, 'user', ret.data);
+                            $.message_success(`注册成功！现以新的身份跳转首页。`);
+                        } else {
+                            $.message_error(`错误：${api.retinfo[ret.code]}`);
+                        }
                         this.$router.replace({ path: '/'})
                     } else {
                         for (let i of ret.error_msgs) {
