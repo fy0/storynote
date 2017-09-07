@@ -18,14 +18,7 @@
         </div>
     </div>
 
-    <div class="ic-pages" v-if="info.data.last_page == info.data.first_page">
-        <span v-if="info.data && info.data.prev_page">
-            <router-link :to="{ path: `/timeline/${info.data.prev_page}` }">上一页</router-link>
-        </span>
-        <span v-if="info.data && info.data.next_page">
-            <router-link :to="{ path: `/timeline/${info.data.next_page}` }">下一页</router-link>
-        </span>
-    </div>
+    <paginator :page-info='info.data' :route-name='"timeline"'></paginator>
 </div>
 </template>
 
@@ -71,6 +64,7 @@ import marked from 'marked'
 import api from "../netapi.js"
 import state from "../state.js"
 import Loading from "./utils/loading.vue"
+import Paginator from "./utils/paginator.vue"
 
 export default {
     data () {
@@ -99,8 +93,21 @@ export default {
         $.message_error(`错误：${api.retinfo[ret.code]}`);
         return next('/');
     },
+    beforeRouteUpdate: async function (to, from, next) {
+        let page = to.params.page;
+        let ret = await api.timeline(page);
+
+        if (ret.code == api.retcode.SUCCESS) {
+            this.info = ret;
+            return next();
+        }
+
+        $.message_error(`错误：${api.retinfo[ret.code]}`);
+        return next('/');
+    },
     components: {
         Loading,
+        Paginator,
     }
 }
 </script>

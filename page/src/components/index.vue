@@ -9,29 +9,7 @@
         <p class="info">由 {{item.user.name}} 发表于 {{time_to_text(item.time)}}</p>
         <div class="divider-line"></div>
     </div>
-    <ul class="ic-pages" v-if="page_info.last_page == page_info.first_page">
-        <li v-if="page_info.first_page">
-            <router-link :to="{ path: `/p/${page_info.first_page}` }" class="slim">«</router-link>
-        </li>
-
-        <li v-if="page_info.prev_page">
-            <router-link :to="{ path: `/p/${page_info.prev_page}` }" class="slim">‹</router-link>
-        </li>
-        <li v-else><a href="javascript:void(0);" class="disable slim">‹</a></li>
-
-        <li v-for="i in page_info.page_numbers" :key="i">
-            <router-link :to="{ path: `/p/${i}` }" :class="(page_info.cur_page == i) ? 'active' : ''">{{i}}</router-link>
-        </li>
-
-        <li v-if="page_info.next_page">
-            <router-link :to="{ path: `/p/${page_info.next_page}` }" class="slim">›</router-link>
-        </li>
-        <li v-else><a href="javascript:void(0);" class="disable slim">›</a></li>
-        
-        <li v-if="page_info.last_page">
-            <router-link :to="{ path: `/p/${page_info.last_page}` }" class="slim">»</router-link>
-        </li>
-    </ul>
+    <paginator :page-info='page_info' :route-name='"index"'></paginator>
 </div>
 </template>
 
@@ -63,7 +41,7 @@ import Vue from 'vue'
 import marked from 'marked'
 import api from "../netapi.js"
 import state from "../state.js"
-import Loading from "./utils/loading.vue"
+import Paginator from "./utils/paginator.vue"
 
 export default {
     data () {
@@ -79,6 +57,7 @@ export default {
     mounted: async function () {
     },
     beforeRouteEnter: async (to, from, next) => {
+        console.log('enter');
         let page = to.params.page;
         let ret = await api.recent(page);
 
@@ -91,8 +70,20 @@ export default {
         $.message_error(`错误：${api.retinfo[ret.code]}`);
         return next('/');
     },
+    beforeRouteUpdate: async function (to, from, next) {
+        let page = to.params.page;
+        let ret = await api.recent(page);
+
+        if (ret.code == api.retcode.SUCCESS) {
+            this.page_info = ret.data;
+            return next();
+        }
+
+        $.message_error(`错误：${api.retinfo[ret.code]}`);
+        return next('/');
+    },
     components: {
-        Loading,
+        Paginator
     }
 }
 </script>
