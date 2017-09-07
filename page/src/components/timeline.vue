@@ -1,5 +1,5 @@
 <template>
-<div class="tmp" v-if="info">
+<div class="tmp">
     <div class="pure-g" v-for="key in info.key_order" :key="key">
         <div class="pure-u-2-24 timeline-tag">
             <span>{{key}}</span>
@@ -17,14 +17,16 @@
             </div>
         </div>
     </div>
-    <span v-if="info.data && info.data.prev_page">
-        <router-link :to="{ path: `/timeline/${info.data.prev_page}` }">上一页</router-link>
-    </span>
-    <span v-if="info.data && info.data.next_page">
-        <router-link :to="{ path: `/timeline/${info.data.next_page}` }">下一页</router-link>
-    </span>
+
+    <div class="ic-pages" v-if="info.data.last_page == info.data.first_page">
+        <span v-if="info.data && info.data.prev_page">
+            <router-link :to="{ path: `/timeline/${info.data.prev_page}` }">上一页</router-link>
+        </span>
+        <span v-if="info.data && info.data.next_page">
+            <router-link :to="{ path: `/timeline/${info.data.next_page}` }">下一页</router-link>
+        </span>
+    </div>
 </div>
-<loading v-else></loading>
 </template>
 
 <style>

@@ -1,5 +1,5 @@
 <template>
-<div v-if="page_info.items">
+<div>
     <div class="topic-item" v-for="item in page_info.items" :key="item.id">
         <h3 class="title">
             <router-link :to="{ path: '/t/' + item.id }">{{item.title}}</router-link>
@@ -9,7 +9,7 @@
         <p class="info">由 {{item.user.name}} 发表于 {{time_to_text(item.time)}}</p>
         <div class="divider-line"></div>
     </div>
-    <ul class="ic-pages">
+    <ul class="ic-pages" v-if="page_info.last_page == page_info.first_page">
         <li v-if="page_info.first_page">
             <router-link :to="{ path: `/p/${page_info.first_page}` }" class="slim">«</router-link>
         </li>
@@ -33,7 +33,6 @@
         </li>
     </ul>
 </div>
-<loading v-else></loading>
 </template>
 
 <style>

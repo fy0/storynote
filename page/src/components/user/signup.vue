@@ -12,8 +12,8 @@
             <el-input type="password" v-model="form.password_again" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item>
-            <el-button type="primary" @click="submitForm('form')">提交</el-button>
-            <el-button @click="resetForm('form')">重置</el-button>
+            <el-button :disabled="loading" type="primary" @click="submitForm('form')">提交</el-button>
+            <el-button :disabled="loading" @click="resetForm('form')">重置</el-button>
         </el-form-item>
     </el-form>
 </div>
@@ -23,6 +23,7 @@
 import Vue from 'vue'
 import api from "../../netapi.js"
 import state from "../../state.js"
+import nprogress from 'nprogress/nprogress.js'
 
 export default {
     data () {
@@ -32,6 +33,7 @@ export default {
                 password: '',
                 password_again: '',
             },
+            loading: false,
             form_rules: {
                 username: [
                     { required: true, message: '必须输入账号', trigger: 'blur' },
@@ -70,9 +72,15 @@ export default {
         resetForm (formName) {
             this.$refs[formName].resetFields();
         },
+        setLoading (val) {
+            this.loading = val;
+            if (val) nprogress.start();
+            else nprogress.done();
+        },
         submitForm (formName) {
             this.$refs[formName].validate(async (valid) => {
                 if (valid) {
+                    this.setLoading(true);
                     let ret = await api.userSignup(this.form.username, this.form.password);
                     if (ret.code == 0) {
                         ret = await api.userInfo();                        
@@ -89,6 +97,7 @@ export default {
                             $.message_error(i);
                         }
                     }
+                    this.setLoading(false);
                 } else {
                     return false;
                 }

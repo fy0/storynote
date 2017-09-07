@@ -20,11 +20,13 @@
         </div>
     </el-card>
     
-    <span v-if="data_lst && data_lst.prev_page">
-        <a href="javascript:void(0)" @click="loadData(data_lst.prev_page)">上一页</a>
-    </span>
-    <span v-if="data_lst && data_lst.next_page">
-        <a href="javascript:void(0)" @click="loadData(data_lst.next_page)">下一页</a>
+    <span v-if="data_lst.last_page == data_lst.first_page">
+        <span v-if="data_lst && data_lst.prev_page">
+            <a href="javascript:void(0)" @click="loadData(data_lst.prev_page)">上一页</a>
+        </span>
+        <span v-if="data_lst && data_lst.next_page">
+            <a href="javascript:void(0)" @click="loadData(data_lst.next_page)">下一页</a>
+        </span>
     </span>
 </div>
 </template>

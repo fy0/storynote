@@ -15,9 +15,9 @@
         <el-form-item label="" prop="remember">
             <el-checkbox v-model="form.remember">30天内记住登录</el-checkbox>
         </el-form-item>
-        <el-form-item>
-            <el-button type="primary" @click="submitForm('form')">提交</el-button>
-            <el-button @click="resetForm('form')">重置</el-button>
+        <el-form-item >
+            <el-button :disabled="loading" type="primary" @click="submitForm('form')">提交</el-button>
+            <el-button :disabled="loading" @click="resetForm('form')">重置</el-button>
         </el-form-item>
     </el-form>
 </div>
@@ -27,11 +27,13 @@
 import Vue from 'vue'
 import api from "../../netapi.js"
 import state from "../../state.js"
+import nprogress from 'nprogress/nprogress.js'
 
 export default {
     data () {
         return {
             state: state,
+            loading: false,
             form: {
                 username: '',
                 password: '',
@@ -61,9 +63,15 @@ export default {
         resetForm (formName) {
             this.$refs[formName].resetFields();
         },
+        setLoading (val) {
+            this.loading = val;
+            if (val) nprogress.start();
+            else nprogress.done();
+        },
         submitForm (formName) {
             this.$refs[formName].validate(async (valid) => {
                 if (valid) {
+                    this.setLoading(true);
                     let ret = await api.userSignin(this.form.username, this.form.password, this.form.remember);
                     if (ret.code == 0) {
                         ret = await api.userInfo();
@@ -79,6 +87,7 @@ export default {
                             $.message_error(i);
                         }
                     }
+                    this.setLoading(false);
                 } else {
                     return false;
                 }
