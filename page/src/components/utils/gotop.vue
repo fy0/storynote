@@ -6,8 +6,9 @@
 
 <style>
 .gotop {
+    z-index: 9999;
     position: fixed;
-    right: 5%;
+    right: 3%;
     bottom: 5%;
     height: 40px;
     width: 40px;

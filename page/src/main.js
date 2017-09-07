@@ -62,7 +62,6 @@ var routes = [
     { path: '/t/:id(\\d+)/:cmtpage(\\d+)?', name: 'topic', component: TopicPage },
     { path: '/tags', name: 'tags', component: Tags },
     { path: '/tag/:name(\\S+)', name: 'tag', component: TagPage },
-    { path: '/new', component: TopicNew },
     { path: '/edit/t/:id(\\d+)', name: "topic_edit", component: TopicNew },
     { path: '/signin', component: SignIn },
     { path: '/signup', component: SignUp },
@@ -95,6 +94,9 @@ router.beforeEach(async function (to, from, next)  {
 });
 
 router.afterEach(async function (to, from, next) {
+    // 我日，当组件被复用时，居然会调用 beforeEach 而不会调用 afterEach
+    // 也不知道几个意思
+    // reuse 坑人不浅，貌似还禁用不掉……
     nprogress.done();
 });
 
