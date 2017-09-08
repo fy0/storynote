@@ -19,6 +19,7 @@ import App from './app.vue'
 import Index from './components/index.vue'
 import Timeline from './components/timeline.vue'
 import TopicPage from './components/topic.vue'
+// const TopicNew = () => import('./components/topic_new.vue')
 import TopicNew from './components/topic_new.vue'
 import Tags from './components/tags.vue'
 import TagPage from './components/tag.vue'

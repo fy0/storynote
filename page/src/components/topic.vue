@@ -2,7 +2,7 @@
 <div class="topic-content entry">
     <div class="content" v-if="topic">
         <h1 class="post-title"><router-link :to="{ path: '/t/' + topic.id }">{{topic.title}}</router-link></h1>
-        
+
         <div class="post-info">
             <span>{{topic.user.name}}</span>
             <span>{{getTime(topic.time)}}</span>

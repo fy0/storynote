@@ -7,58 +7,48 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, './dist'),
         publicPath: '/',
-        filename: 'build.js'
-    },
-    resolveLoader: {
-        root: path.join(__dirname, 'node_modules'),
+        filename: 'build.js?[hash]'
     },
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.vue$/,
-                loader: 'vue'
+                loader: 'vue-loader'
             },
             {
                 test: /\.js$/,
-                loader: 'babel',
+                loader: 'babel-loader',
                 exclude: /node_modules/
             },
             {
                 test: /\.css$/,
-                loader: 'style!css!postcss',
+                loader: [
+                    'style-loader',
+                    'css-loader'
+                ]
             },
             {
-                test: /\.(png|jpg|gif|svg)$/,
-                loader: 'url-loader?limit=8192',
-                query: {
-                    name: '[name].[ext]?[hash]'
+                test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+                loader: 'url-loader',
+                options: {
+                    limit: 10000,
+                    name: '[name].[ext]?[hash:7]'
                 }
             },
             {
-                test: /\.(eot|svg|ttf|woff|woff2)(\?.*)?$/,
-                loader: 'url-loader?limit=65000&name=fonts/[name]_[hash].[ext]'
+                test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+                loader: 'url-loader',
+                options: {
+                    limit: 10000,
+                    name: 'fonts/[name].[hash:7].[ext]'
+                }
             },
         ]
-    },
-    babel: {
-        presets: ['es2015', 'stage-2'],
-        plugins: ['transform-runtime', ["component", [
-            {
-                "libraryName": "element-ui",
-                "styleLibraryName": "theme-default"
-            }
-        ]]],
-        compact: false,
-        cacheDirectory: true, //important for performance
-    },
-    postcss: function () {
-        return [require('autoprefixer'), require('precss')];
     },
     resolve: {
         alias: {
             cash: path.join(__dirname, 'node_modules/cash-dom/dist/cash.js'),
         },
-        modulesDirectories: ["node_modules"],
     },
     plugins: [
         new HtmlWebpackPlugin({

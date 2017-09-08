@@ -1,5 +1,5 @@
 <template>
-<ul class="ic-pages" v-if="pageInfo && pageInfo.last_page == pageInfo.first_page">
+<ul class="ic-pages" v-if="pageInfo && pageInfo.last_page != pageInfo.first_page">
    <li v-if="pageInfo.first_page">
         <router-link :to="toInfo(pageInfo.first_page)" class="slim">«</router-link>
     </li>
