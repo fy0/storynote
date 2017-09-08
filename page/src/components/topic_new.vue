@@ -32,6 +32,7 @@
 import api from "../netapi.js"
 import state from "../state.js"
 import SimpleMDE from "simplemde"
+import 'simplemde/dist/simplemde.min.css'
 import Prism from "prismjs"
 
 export default {

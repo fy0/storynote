@@ -57,7 +57,6 @@ export default {
     mounted: async function () {
     },
     beforeRouteEnter: async (to, from, next) => {
-        console.log('enter');
         let page = to.params.page;
         let ret = await api.recent(page);
 
