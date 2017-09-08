@@ -1,6 +1,7 @@
 var path = require('path')
 var webpack = require('webpack')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
+// 备注一下，警告来自 core-js（应该是cash带来的）
 
 module.exports = {
     entry: './src/main.js',

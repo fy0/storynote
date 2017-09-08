@@ -13,8 +13,8 @@
                     <router-link tag="li" :to="{ name: 'tags' }" :class="navActiveClass('tag', 'tags')"><a>印记</a></router-link>
                     <router-link tag="li" :to="{ name: 'timeline' }" ><a>时光</a></router-link>
                     <router-link tag="li" :to="{ path: '/signin' }" ><a>用户</a></router-link>
-                    <router-link v-if="state.data.user" tag="li" :to="{ path: '/new' }" :class="navActiveClass('topic_new', 'topic_edit')"><a>撰文</a></router-link>
-                    <router-link v-if="state.data.user" tag="li" :to="{ path: '/manage' }" ><a>管理</a></router-link>
+                    <router-link v-if="user && user.level >= 80" tag="li" :to="{ path: '/new' }" :class="navActiveClass('topic_new', 'topic_edit')"><a>撰文</a></router-link>
+                    <router-link v-if="user && user.level >= 100" tag="li" :to="{ path: '/manage' }" ><a>管理</a></router-link>
                     <router-link tag="li" :to="{ path: '/about' }" ><a>关于</a></router-link>
                 </ul>
             </div>
@@ -82,6 +82,11 @@ export default {
         return {
             state,
             config,
+        }
+    },
+    computed: {
+        user: function () {
+            return this.state.data.user;
         }
     },
     methods: {
