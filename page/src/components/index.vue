@@ -6,7 +6,7 @@
         </h3>
         <div class="brief" v-html="marked(item.brief)"></div>
         <small><router-link :to="{ path: '/t/' + item.id }">阅读原文</router-link></small>
-        <p class="info">由 {{item.user.name}} 发表于 {{time_to_text(item.time)}}</p>
+        <p class="info">由 {{item.user.name}} 发表于 {{time_to_text(item.time)}} / 翻阅 {{item.view_count}}</p>
         <div class="divider-line"></div>
     </div>
     <paginator :page-info='page_info' :route-name='"index"'></paginator>

@@ -6,6 +6,7 @@
         <div class="post-info">
             <span>{{topic.user.name}}</span>
             <span>{{getTime(topic.time)}}</span>
+            <span>翻阅 {{topic.view_count}}</span>
             <router-link v-if="canEdit" :to="{ name: 'topic_edit', params: {id: topic.id}}">编辑</router-link>    
         </div>
 

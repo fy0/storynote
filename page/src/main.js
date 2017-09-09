@@ -141,7 +141,10 @@ let renderer = new marked.Renderer();
 renderer.code = function(code, lang, escaped) {
     if (this.options.highlight) {
         var out = this.options.highlight(code, lang);
-        if (out != null && out !== code) {
+        // 这里存在问题，对部分简单代码来说 out == code 是完全可能的
+        // 但是 escape 之后代价就是例如空格转换成%20，用户看来是成了乱码
+        //if (out != null && out !== code) {
+        if (out != null) {
             escaped = true;
             code = out;
         }
