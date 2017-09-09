@@ -148,8 +148,9 @@ renderer.code = function(code, lang, escaped) {
     }
   
     if (!lang) {
-        return `<pre><code class="${this.options.langPrefix}-markup">`
-            + (escaped ? code : escape(code, true))
+        return `<pre class="${this.options.langPrefix}PLACEHOLDER"><code>`
+            // + (escaped ? code : escape(code, true))
+            + code
             + '\n</code></pre>';
     }
 
