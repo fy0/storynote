@@ -109,7 +109,9 @@ new Vue({
 // markdown 渲染和代码高亮
 import marked from 'marked'
 import Prism from 'prismjs'
-import "prismjs/themes/prism.css"
+// import "prismjs/themes/prism-okaidia.css" ..备选1
+import "prismjs/themes/prism-tomorrow.css" //备选2
+// import './assets/css/prism-atom-dark.css'
 // prism 默认包含高亮：
 // ["extend", "insertBefore", "DFS", "markup", "xml", "html", "mathml", "svg", "css", "clike", "javascript", "js"]
 import 'prismjs/components/prism-autohotkey.js'
@@ -132,11 +134,36 @@ import 'prismjs/components/prism-lua.js'
 import 'prismjs/components/prism-markdown.js'
 import 'prismjs/components/prism-python.js'
 import 'prismjs/components/prism-sql.js'
+import 'prismjs/components/prism-nginx.js'
+
+let renderer = new marked.Renderer();
+
+renderer.code = function(code, lang, escaped) {
+    if (this.options.highlight) {
+        var out = this.options.highlight(code, lang);
+        if (out != null && out !== code) {
+            escaped = true;
+            code = out;
+        }
+    }
+  
+    if (!lang) {
+        return `<pre><code class="${this.options.langPrefix}-markup">`
+            + (escaped ? code : escape(code, true))
+            + '\n</code></pre>';
+    }
+
+    let langText = this.options.langPrefix + escape(lang, true);
+    return `<pre class="${langText}"><code class="${langText}">`
+        + (escaped ? code : escape(code, true))
+        + '\n</code></pre>\n';
+};
 
 
 marked.setOptions({
-    renderer: new marked.Renderer(),
+    renderer: renderer,
     sanitize: true,
+    langPrefix: 'language-',
     highlight: function (code, lang) {
         if (lang) {
             let stdlang = lang.toLowerCase();

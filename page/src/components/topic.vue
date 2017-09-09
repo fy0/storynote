@@ -184,6 +184,8 @@ export default {
             if (ret.code == 0) {
                 this.user_comment_text = '';
                 this.commentFetch(this.comments_page);
+            } else {
+                $.message_error(ret.msg);
             }
         }
     },
