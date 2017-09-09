@@ -24,7 +24,7 @@ class Comment(BaseModel):
     user = ForeignKeyField(User)  # 发布用户
     time = BigIntegerField(index=True)  # 发布时间
     state = IntegerField(default=COMMENT_STATE.NORMAL)  # 当前状态
-    content = CharField(max_length=4096)  # 文本，varchar(4096)
+    content = CharField(max_length=65536)  # 文本，varchar(65536)
 
     class Meta:
         db_table = 'comments'
