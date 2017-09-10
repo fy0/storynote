@@ -1,5 +1,22 @@
 
 import state from "./state.js"
+import marked from 'marked'
+
+let marked_brief_renderer = function () {
+    let r = new marked.Renderer();
+    r.blockquote = r.html = r.heading = r.hr = r.list = r.listitem = r.paragraph 
+    = r.table = r.tablerow = r.tablecell = r.codespan = r.br =
+    function (text) {
+        return (text) ? '<p>' + text + '</p>' : '';
+    }
+    r.image = function () { return ''; }
+    // 未处理：strong em del link text
+    return r;
+}();
+
+$.marked_brief = function (docstr, options = null, callback = null) {
+    return marked(docstr, { renderer: marked_brief_renderer }, callback);
+}
 
 $.get_time = function (timestamp) {
     var date;

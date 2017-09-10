@@ -2,13 +2,13 @@
 <div v-if="page_info">
     <div class="tagtitle">标签：<span>{{tagname}}</span></div>
     <div v-if="page_info.items">
-        <div class="topic-item" v-for="item in page_info.items">
+        <div class="topic-item" v-for="item in page_info.items" :key="item.data.id">
             <h3 class="title">
                 <router-link :to="{ path: '/t/' + item.data.id }">{{item.data.title}}</router-link>
             </h3>
-            <div class="brief" v-html="marked(item.data.brief)"></div>
-            <small><router-link :to="{ path: '/t/' + item.data.id }">阅读原文</router-link></small>
-            <p class="info">由 {{item.data.user.name}} 发表于 {{time_to_text(item.data.time)}}</p>
+            <div class="brief" v-html="marked_brief(item.data.brief)"></div>
+            <span class="topic-link"><router-link :to="{ path: '/t/' + item.data.id }">阅读全文</router-link></span>
+            <p class="info">由 {{item.data.user.name}} 发表于 {{time_to_text(item.data.time)}} / 翻阅 {{item.data.view_count}}</p>
             <div class="divider-line"></div>
         </div>
         <ul class="ic-pages">
@@ -21,7 +21,7 @@
             </li>
             <li v-else><a href="javascript:void(0);" class="disable slim">‹</a></li>
 
-            <li v-for="i in page_info.page_numbers">
+            <li v-for="i in page_info.page_numbers" :key="i">
                 <router-link :to="{ path: `/p/${i}` }" :class="(page_info.cur_page == i) ? 'active' : ''">{{i}}</router-link>
             </li>
 
@@ -44,28 +44,10 @@
 .tagtitle {
     margin-top: 20px;
 }
-
-.topic-item {}
-
-.topic-item > .title {
-    font-weight: normal;
-    margin-bottom: 0;
-}
-
-.topic-item > .info {
-    color: rgb(153, 153, 153);
-    font-size: small;
-}
-
-.topic-item > .brief {
-    max-height: 200px;
-    overflow: hidden;
-}
 </style>
 
 <script>
 import Vue from 'vue'
-import marked from 'marked'
 import api from "../netapi.js"
 import state from "../state.js"
 import Loading from "./utils/loading.vue"
@@ -79,7 +61,7 @@ export default {
         }
     },
     methods: {
-        marked,
+        marked_brief: $.marked_brief,
         time_to_text: $.time_to_text,
     },
     computed: {

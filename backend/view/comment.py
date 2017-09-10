@@ -55,9 +55,9 @@ class CommentView(AjaxView):
         if not content:
             return -3, '请输入内容'
 
-        # 4. 正文不能超过 4096 字
-        if len(content) > 4096:
-            return -4, '评论不能超过4096字'
+        # 4. 正文不能超过 65535 字
+        if len(content) > config.COMMENT_MAX_LENGTH:
+            return -4, '评论不能超过65535字'
 
         # TODO: 未来允许评论评论（楼中楼）
         # 6. relate_id 存在检查
