@@ -97,6 +97,9 @@ router.afterEach(async function (to, from, next) {
     // 也不知道几个意思
     // reuse 坑人不浅，貌似还禁用不掉……
     nprogress.done();
+
+    ga('set', 'page', location.pathname + location.hash)    
+    ga('send', 'pageview');
 });
 
 new Vue({
