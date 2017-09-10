@@ -243,3 +243,40 @@ a.am-close:hover {
     width: 28px;
     height: 28px;
 }
+
+.topic-item {}
+
+.topic-item > .title {
+    font-weight: normal;
+    margin-bottom: 0;
+}
+
+.topic-item > .info {
+    color: rgb(153, 153, 153);
+    font-size: small;
+}
+
+.topic-item > .topic-link {
+    float: right;
+    font-size: small;
+}
+
+.brief {
+    max-height: 14.4em;
+    overflow: hidden;
+}
+
+.brief > * {
+    margin-top: 0.9em;
+    margin-bottom: 0.9em;
+    /* 用以对抗： */
+    /* -webkit-margin-before: 1em; */
+    /* -webkit-margin-after: 1em; */
+}
+
+.topic-content code {
+    background-color: rgba(27,31,35,0.15);
+    border-radius: 3px;
+    font-size: 85%;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}

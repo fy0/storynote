@@ -21,10 +21,17 @@ class Comment(BaseModel):
     related_id = BigIntegerField(index=True)  # 被评论文章
     related_type = IntegerField(index=True, default=0)  # 被评论文章的类型
     extra_id = BigIntegerField(index=True, null=True)  # 关联ID
-    user = ForeignKeyField(User)  # 发布用户
+    user = ForeignKeyField(User, null=True)  # 发布用户
     time = BigIntegerField(index=True)  # 发布时间
     state = IntegerField(default=COMMENT_STATE.NORMAL)  # 当前状态
-    content = CharField(max_length=65536)  # 文本，varchar(65536)
+    content = TextField()  # 内容文本
+
+    is_visitor = BooleanField(index=True, default=False)  # 是否游客评论
+    visitor_name = TextField(null=True, default=None)  # 评论者名字，注意限长，必选
+    visitor_ip = BlobField(null=True, default=None)  # 评论者 IP，自动
+    visitor_website = TextField(null=True, default=None)  # 评论者网站，注意限长，可选
+    visitor_email = TextField(null=True, default=None)  # 评论者邮箱，注意限长，可选
+    visitor_useragent = TextField(null=True, default=None)  # 评论者UA，注意限长，自动
 
     class Meta:
         db_table = 'comments'
