@@ -34,7 +34,9 @@ class MiscView(AjaxView):
                 'PASSWORD_MAX': config.PASSWORD_MAX,
                 'PASSWORD_REG_MIN': config.PASSWORD_REG_MIN,
                 'PASSWORD_REG_MAX': config.PASSWORD_REG_MAX,
-                'USER_LEVEL': USER_LEVEL.txt,
-                'TOPIC_STATE': TOPIC_STATE.txt,
+                'USER_LEVEL': dict(USER_LEVEL.items()),
+                'USER_LEVEL_TXT': USER_LEVEL.txt,
+                'TOPIC_STATE': dict(TOPIC_STATE.items()),
+                'TOPIC_STATE_TXT': TOPIC_STATE.txt,
             }
         })

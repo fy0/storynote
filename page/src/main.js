@@ -28,13 +28,14 @@ import Loading from './components/utils/loading.vue'
 import Manage from './components/manage.vue'
 import About from './components/about.vue'
 
-import { Button, Card, Checkbox, DatePicker, Dialog, Select, TabPane, Tabs, Tag, Input, Form, FormItem, MessageBox } from 'element-ui'
+import { Button, Card, Checkbox, DatePicker, Dialog, Select, Option, TabPane, Tabs, Tag, Input, Form, FormItem, MessageBox } from 'element-ui'
 Vue.use(Button)
 Vue.use(Card)
 Vue.use(Checkbox)
 Vue.use(DatePicker)
 Vue.use(Dialog)
 Vue.use(Select)
+Vue.use(Option)
 Vue.use(TabPane)
 Vue.use(Tabs)
 Vue.use(Tag)
