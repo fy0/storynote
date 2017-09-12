@@ -16,6 +16,10 @@
                 </el-date-picker>
             </div>
             <div class="form-item">
+                <input type="text" name="title" v-model="link_to" placeholder="填写外站引用链地址 (可选)" style="width: 72%; font-size: 15px; font-weight: bolder;">
+                <el-select v-model="topicState" placeholder="请选择" style="width: 27%; font-size: 15px; font-weight: bolder;">
+                    <el-option v-for="[v, k] in topicStateOptions" :key="parseInt(v)" :label="`状态：${k}`" :value="parseInt(v)"></el-option>
+                </el-select>
             </div>
             <div class="form-item">
                 <textarea style="width:100%" rows="15" id="editor" name="content" placeholder="这里填写内容 ..." autofocus></textarea>
@@ -39,7 +43,9 @@ export default {
     data () {
         return {
             title: '',
+            link_to: '',
             date: new Date(),
+            topicState: state.data.misc.TOPIC_STATE.NORMAL,
             editing_data: null,
             pickerOptions: {
                 shortcuts: [{
@@ -66,6 +72,9 @@ export default {
         }
     },
     computed: {
+        topicStateOptions: function () {
+            return Object.entries(state.data.misc.TOPIC_STATE_TXT);
+        },
         is_edit () {
             return this.$route.name == 'topic_edit'
         },
@@ -98,7 +107,6 @@ export default {
             let ret;
             let success_text;
             let failed_text;
-
 
             if (this.is_edit) {
                 ret = await api.topicEdit(this.$route.params.id, {title, content, time: postTime});
@@ -192,4 +200,10 @@ export default {
 .form-item {
     margin-bottom: 10px;
 }
+
+.el-select > .el-input > input[readonly] {
+    background-color: #fff;
+    color: #1f2d3d;    
+}
+
 </style>

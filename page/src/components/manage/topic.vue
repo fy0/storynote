@@ -13,7 +13,7 @@
         </div>
         <div>
             <span>权限：</span>
-            <span v-for="v,k in state.data.misc.TOPIC_STATE" :key="k">
+            <span v-for="v,k in state.data.misc.TOPIC_STATE_TXT" :key="k">
                 <span class="level-btn" v-if="k == i.state">{{v}}</span>
                 <a class="level-btn" v-else href="javascript:void(0)" @click="stateChange(i, k)">{{v}}</a>
             </span>
