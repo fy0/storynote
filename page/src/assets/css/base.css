@@ -248,7 +248,7 @@ a.am-close:hover {
 
 .topic-item > .title {
     font-weight: normal;
-    margin-bottom: 0;
+    margin-bottom: 0em;
 }
 
 .topic-item > .info {
@@ -262,8 +262,30 @@ a.am-close:hover {
 }
 
 .brief {
-    max-height: 14.4em;
+    max-height: 15em;
     overflow: hidden;
+}
+
+/* 经后续比对发现，仍然会有文本被截断的情况出现。
+   究其原因，显示内容的高度是 line-height 的倍
+   数这没问题，然而当单一元素占据多行时，元素高
+   度就不是 line-height 而是 单行高度 * n +
+   margin-top + margin-bottom。
+   于是选择统一 line-height，取消两个 margin ，
+   同时与标题之间隔出间隔。
+   我觉得这不算是最好的一个解决方式。
+*/
+.brief > * {
+    line-height: 2em;
+    margin-top: 0em;
+    margin-bottom: 0em;
+}
+
+/* 在第一个元素下设置 margin-top 而不是标题下面设置 margin-bottm，
+   没有什么特别的原因。
+*/
+.brief > *:first-child {
+    margin-top: 1em;
 }
 
 .topic-content code {
