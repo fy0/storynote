@@ -115,8 +115,8 @@ export default {
     },
 
     /** 主题 - 发表 */
-    topicNew: async function (title, content, time) {
-        return await npost(`${remote.API_SERVER}/api/topic/new`, {title, content, time});
+    topicNew: async function (data) {
+        return await npost(`${remote.API_SERVER}/api/topic/new`, data);
     },
 
     /** 主题 - 编辑 */

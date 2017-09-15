@@ -139,7 +139,8 @@ export default {
 
             let postTime = parseInt(this.date.getTime() / 1000);
 
-            if (!content) return;
+            // 允许页面内容为空
+            // if (!content) return;
 
             let ret;
             let success_text;
@@ -149,11 +150,11 @@ export default {
             if (this.is_edit) {
                 ret = await api.topicEdit(this.$route.params.id, {title, content, time: postTime, link_to, state: topicState});
                 success_text = '编辑成功！已自动跳转至文章页面。';
-                failed_text = '编辑失败！';
+                failed_text = ret.msg || '编辑失败！';
             } else {
-                ret = await api.topicNew(title, content, postTime);
+                ret = await api.topicNew({title, content, time: postTime, link_to, state: topicState});
                 success_text = '发表成功！已自动跳转至文章页面。';
-                failed_text = '发表失败！';
+                failed_text = ret.msg || '编辑失败！';
             }
     
             if (ret.code == 0) {
