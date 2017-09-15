@@ -299,6 +299,10 @@ a.am-close:hover {
     font-size: 100%;
 }
 
-hr.white {
-    border: none;
+hr.white {           
+    border: none;    
+}
+
+h3 {
+    font-size: 1.17em;
 }

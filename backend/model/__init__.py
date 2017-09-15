@@ -50,6 +50,13 @@ class GFKBaseModel(playhouse.gfk.Model):
     def exists_by_pk(cls, value):
         return cls.select().where(cls._meta.primary_key == value).exists()
 
+    @classmethod
+    def get_by(cls, *exprs):
+        try:
+            return cls.get(*exprs)
+        except cls.DoesNotExist:
+            return
+
 
 def pagination(count_all, query, page_size, cur_page=1, nearby=2):
     """

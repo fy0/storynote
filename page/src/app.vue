@@ -42,7 +42,7 @@ footer {
 .nav-top { margin-top: -30px; }
 .nav-bar {
     height: 100%;
-    font-size: 1.1em;
+    font-size: 1.10em;
     padding-top: 3px;
     padding-right: 20px;
     margin-right: 20px;

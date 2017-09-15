@@ -4,7 +4,7 @@ import config
 from peewee import *
 from model import db, GFKBaseModel
 from model.tag import Tag
-from model.user import User
+from model.user import User, USER_LEVEL
 from lib.state_obj import StateObject
 from playhouse.gfk import ReverseGFK
 
@@ -44,6 +44,18 @@ class Topic(GFKBaseModel):
             'extra_attrs': ['tags'],
         }
 
+    @classmethod
+    def get_topic_by_user(cls, topic_id, user):
+        user_level = user.level if user else USER_LEVEL.NORMAL
+        if user_level == USER_LEVEL.NORMAL:
+            return cls.get_by(cls.id == topic_id, cls.state >= TOPIC_STATE.CLOSE)
+        elif user_level == USER_LEVEL.WRITER:
+            return cls.get_by(((cls.state >= TOPIC_STATE.CLOSE) |
+                               ((cls.state >= TOPIC_STATE.HIDE) * cls.user == user )) &
+                              (cls.id == topic_id))
+        elif user_level == USER_LEVEL.ADMIN:
+            return cls.get_by(cls.id == topic_id)
+
     @property
     def tags(self):
         from .tag import Tag
@@ -61,6 +73,10 @@ class Topic(GFKBaseModel):
             self.brief = data['content'][:config.TOPIC_BRIEF_LENGTH]
         if 'time' in data:
             self.time = int(data['time'])
+        if 'link_to' in data:
+            self.link_to = data['link_to']
+        if 'state' in data:
+            self.state = data['state']
         self.last_edit_user = user
         self.edit_time = int(time.time())
         self.save()
@@ -76,9 +92,10 @@ class Topic(GFKBaseModel):
         return Comment.get_count(self.id)
 
     @classmethod
-    def new(cls, title, user, content=None, post_time=None):
+    def new(cls, title, user, content=None, post_time=None, link_to=None, state=TOPIC_STATE.NORMAL):
         with db.atomic():
-            ret = cls.create(title=title, user=user, time=post_time or int(time.time()), content=content, brief=content[:config.TOPIC_BRIEF_LENGTH])
+            ret = cls.create(title=title, user=user, time=post_time or int(time.time()), content=content,
+                             brief=content[:config.TOPIC_BRIEF_LENGTH], link_to=link_to, state=state)
             ret.weight = 0
             ret.save()
         return ret

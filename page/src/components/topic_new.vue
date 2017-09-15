@@ -1,7 +1,11 @@
 <template>
 <div class="">
-    <h3 class="" v-if="!is_edit">新建主题</h3>
-    <h3 class="" v-else>编辑主题</h3>
+    <div class="edit-page-title">
+        <h3 class="" v-if="!is_edit">新建主题</h3>
+        <h3 class="" v-else>编辑主题</h3>
+        <el-button class="right-top-btn" type="primary" :loading="loading" @click="send">{{postButtonText}}</el-button>
+    </div>
+
     <form class="pure-form" id="form_topic" method="POST" @submit.prevent="send">
         <fieldset>
             <div class="form-item">
@@ -25,12 +29,37 @@
                 <textarea style="width:100%" rows="15" id="editor" name="content" placeholder="这里填写内容 ..." autofocus></textarea>
             </div>
             <div class="form-item">
-                <el-button style="float: right" type="primary" @click="send">发布</el-button>
+                <el-button style="float: right" type="primary" :loading="loading" @click="send">{{postButtonText}}</el-button>
             </div>
         </fieldset>
     </form>
 </div>
 </template>
+
+
+<style>
+.edit-page-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.edit-page-title > h3 {
+}
+
+.right-top-btn {
+}
+
+.form-item {
+    margin-bottom: 10px;
+}
+
+.el-select > .el-input > input[readonly] {
+    background-color: #fff;
+    color: #1f2d3d;    
+}
+</style>
+
 
 <script>
 import api from "../netapi.js"
@@ -42,6 +71,8 @@ import Prism from "prismjs"
 export default {
     data () {
         return {
+            loading: false,
+
             title: '',
             link_to: '',
             date: new Date(),
@@ -78,12 +109,18 @@ export default {
         is_edit () {
             return this.$route.name == 'topic_edit'
         },
+        postButtonText: function () {
+            return this.loading ? '请等待' 
+                : (this.is_edit ? '编辑' : '发布');
+        }
     },
     methods: {
         send: async function (e) {
             let formdata = new FormData($("#form_topic")[0]);
             let title = (formdata.get("title") || "").trim();
             let content = this.editor.value();
+            let link_to = this.link_to;
+            let topicState = this.topicState;
 
             if (!title) {
                  $.message_error('请输入一个标题！');
@@ -108,8 +145,9 @@ export default {
             let success_text;
             let failed_text;
 
+            this.loading = true;
             if (this.is_edit) {
-                ret = await api.topicEdit(this.$route.params.id, {title, content, time: postTime});
+                ret = await api.topicEdit(this.$route.params.id, {title, content, time: postTime, link_to, state: topicState});
                 success_text = '编辑成功！已自动跳转至文章页面。';
                 failed_text = '编辑失败！';
             } else {
@@ -126,8 +164,9 @@ export default {
                 $.message_success(success_text);
             } else {
                 $.message_error(failed_text);
+                // 注意：发布成功会跳转，故不做复位，失败则复位
+                this.loading = false;
             }
-            
         }
     },
     mounted: async function () {
@@ -168,6 +207,11 @@ export default {
             this.title = this.editing_data.title;
             this.date = date;
             this.editor.value(this.editing_data.content);
+
+            // 这么搞有点绕，我忘了当初是为什么，大概只是太菜写的不好
+            // 懒得改了
+            this.link_to = this.editing_data.link_to;
+            this.topicState = this.editing_data.state;
         } else {
             this.title = localStorage.getItem('topic-post-title') || '';
         }
@@ -195,15 +239,3 @@ export default {
     }
 }
 </script>
-
-<style>
-.form-item {
-    margin-bottom: 10px;
-}
-
-.el-select > .el-input > input[readonly] {
-    background-color: #fff;
-    color: #1f2d3d;    
-}
-
-</style>

@@ -1,16 +1,8 @@
 <template>
 <div v-if="page_info">
-    <div class="tagtitle">标签：<span>{{tagname}}</span></div>
+    <h3 class="tagtitle">标签：<span>{{tagname}}</span></h3>
     <div v-if="page_info.items">
-        <div class="topic-item" v-for="item in page_info.items" :key="item.data.id">
-            <h3 class="title">
-                <router-link :to="{ path: '/t/' + item.data.id }">{{item.data.title}}</router-link>
-            </h3>
-            <div class="brief" v-html="marked_brief(item.data.brief)"></div>
-            <span class="topic-link"><router-link :to="{ path: '/t/' + item.data.id }">阅读全文</router-link></span>
-            <p class="info">由 {{item.data.user.name}} 发表于 {{time_to_text(item.data.time)}} / 翻阅 {{item.data.view_count}}</p>
-            <div class="divider-line"></div>
-        </div>
+        <TopicItem v-for="item in page_info.items" :item="item.data" :key="item.id"></TopicItem>
         <ul class="ic-pages">
             <li v-if="page_info.first_page">
                 <router-link :to="{ path: `/p/${page_info.first_page}` }" class="slim">«</router-link>
@@ -51,6 +43,7 @@ import Vue from 'vue'
 import api from "../netapi.js"
 import state from "../state.js"
 import Loading from "./utils/loading.vue"
+import TopicItem from "./utils/topic_item.vue"
 
 export default {
     data () {
@@ -90,6 +83,7 @@ export default {
     },
     components: {
         Loading,
+        TopicItem
     }
 }
 </script>
