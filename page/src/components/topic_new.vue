@@ -1,9 +1,9 @@
 <template>
 <div class="">
-    <div>
+    <div class="edit-page-title">
         <h3 class="" v-if="!is_edit">新建主题</h3>
         <h3 class="" v-else>编辑主题</h3>
-        <el-button class="right-top-btn" type="primary" :disabled="loading" @click="send">{{loading ? '...' : '发布'}}</el-button>
+        <el-button class="right-top-btn" type="primary" :loading="loading" @click="send">{{postButtonText}}</el-button>
     </div>
 
     <form class="pure-form" id="form_topic" method="POST" @submit.prevent="send">
@@ -29,7 +29,7 @@
                 <textarea style="width:100%" rows="15" id="editor" name="content" placeholder="这里填写内容 ..." autofocus></textarea>
             </div>
             <div class="form-item">
-                <el-button style="float: right" type="primary" :disabled="loading" @click="send">{{loading ? '...' : '发布'}}</el-button>
+                <el-button style="float: right" type="primary" :loading="loading" @click="send">{{postButtonText}}</el-button>
             </div>
         </fieldset>
     </form>
@@ -38,6 +38,18 @@
 
 
 <style>
+.edit-page-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.edit-page-title > h3 {
+}
+
+.right-top-btn {
+}
+
 .form-item {
     margin-bottom: 10px;
 }
@@ -45,12 +57,6 @@
 .el-select > .el-input > input[readonly] {
     background-color: #fff;
     color: #1f2d3d;    
-}
-
-.right-top-btn {    
-    right: 6.5%;
-    margin-top: -53.5px;
-    position: absolute;
 }
 </style>
 
@@ -103,6 +109,10 @@ export default {
         is_edit () {
             return this.$route.name == 'topic_edit'
         },
+        postButtonText: function () {
+            return this.loading ? '请等待' 
+                : (this.is_edit ? '编辑' : '发布');
+        }
     },
     methods: {
         send: async function (e) {
@@ -154,9 +164,9 @@ export default {
                 $.message_success(success_text);
             } else {
                 $.message_error(failed_text);
+                // 注意：发布成功会跳转，故不做复位，失败则复位
+                this.loading = false;
             }
-            
-            this.loading = false;
         }
     },
     mounted: async function () {
@@ -197,6 +207,11 @@ export default {
             this.title = this.editing_data.title;
             this.date = date;
             this.editor.value(this.editing_data.content);
+
+            // 这么搞有点绕，我忘了当初是为什么，大概只是太菜写的不好
+            // 懒得改了
+            this.link_to = this.editing_data.link_to;
+            this.topicState = this.editing_data.state;
         } else {
             this.title = localStorage.getItem('topic-post-title') || '';
         }

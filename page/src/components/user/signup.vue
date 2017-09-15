@@ -1,6 +1,6 @@
 <template>
 <div class="">
-    <h4>注册</h4>
+    <h3>注册</h3>
     <el-form :model="form" ref="form" label-width="60px" :rules="form_rules" style="width:50%;margin-left:-15px">
         <el-form-item label="账号" prop="username">
             <el-input type="text" v-model.trim="form.username" auto-complete="off"></el-input>

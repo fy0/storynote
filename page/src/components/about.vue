@@ -1,6 +1,6 @@
 <template>
 <div>
-    <h4>关于我</h4>
+    <h3>关于我</h3>
     <p>没什么可说的</p>
 </div>
 </template>

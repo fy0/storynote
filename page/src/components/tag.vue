@@ -1,6 +1,6 @@
 <template>
 <div v-if="page_info">
-    <div class="tagtitle">标签：<span>{{tagname}}</span></div>
+    <h3 class="tagtitle">标签：<span>{{tagname}}</span></h3>
     <div v-if="page_info.items">
         <TopicItem v-for="item in page_info.items" :item="item.data" :key="item.id"></TopicItem>
         <ul class="ic-pages">

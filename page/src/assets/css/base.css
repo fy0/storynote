@@ -302,3 +302,7 @@ a.am-close:hover {
 hr.white {           
     border: none;    
 }
+
+h3 {
+    font-size: 1.17em;
+}
