@@ -6,7 +6,7 @@ let config = {
         ERR_TIMEOUT: -254,
         ERR_REUQEST_FAIL: -253,
     },
-    title: '世界边缘，fy 的摸鱼之地',
+    title: 'fy 的摸鱼之地',
 }
 
 

@@ -15,6 +15,7 @@
                     <router-link tag="li" :to="{ path: '/signin' }" ><a>用户</a></router-link>
                     <router-link v-if="user && user.level >= 80" tag="li" :to="{ path: '/new' }" :class="navActiveClass('topic_new', 'topic_edit')"><a>撰文</a></router-link>
                     <router-link v-if="user && user.level >= 100" tag="li" :to="{ path: '/manage' }" ><a>管理</a></router-link>
+                    <router-link tag="li" :to="{ name: 'links' }" ><a>友链</a></router-link>
                     <router-link tag="li" :to="{ path: '/about' }" ><a>关于</a></router-link>
                 </ul>
             </div>

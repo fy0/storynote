@@ -26,6 +26,7 @@ import SignUp from './components/user/signup.vue'
 import SignOut from './components/user/signout.vue'
 import Loading from './components/utils/loading.vue'
 import Manage from './components/manage.vue'
+import Links from './components/links.vue'
 import About from './components/about.vue'
 
 import { Button, Card, Checkbox, DatePicker, Dialog, Select, Option, TabPane, Tabs, Tag, Input, Form, FormItem, MessageBox } from 'element-ui'
@@ -67,6 +68,7 @@ var routes = [
     { path: '/signup', component: SignUp },
     { path: '/signout', component: SignOut },
     { path: '/manage', name: 'manage', component: Manage },
+    { path: '/links', name: 'links', component: Links },
     { path: '/about', component: About },
     { path: '/loading', component: Loading },
 ]
