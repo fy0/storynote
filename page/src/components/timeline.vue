@@ -37,7 +37,6 @@
 import Vue from 'vue'
 import api from "../netapi.js"
 import state from "../state.js"
-import Loading from "./utils/loading.vue"
 import Paginator from "./utils/paginator.vue"
 import TopicItem from "./utils/topic_item.vue"
 
@@ -81,7 +80,6 @@ export default {
         return next('/');
     },
     components: {
-        Loading,
         Paginator,
         TopicItem
     }

@@ -1,7 +1,11 @@
 <template>
 <div class="">
-    <h3 class="" v-if="!is_edit">新建主题</h3>
-    <h3 class="" v-else>编辑主题</h3>
+    <div>
+        <h3 class="" v-if="!is_edit">新建主题</h3>
+        <h3 class="" v-else>编辑主题</h3>
+        <el-button class="right-top-btn" type="primary" :disabled="loading" @click="send">{{loading ? '...' : '发布'}}</el-button>
+    </div>
+
     <form class="pure-form" id="form_topic" method="POST" @submit.prevent="send">
         <fieldset>
             <div class="form-item">
@@ -25,12 +29,31 @@
                 <textarea style="width:100%" rows="15" id="editor" name="content" placeholder="这里填写内容 ..." autofocus></textarea>
             </div>
             <div class="form-item">
-                <el-button style="float: right" type="primary" @click="send">发布</el-button>
+                <el-button style="float: right" type="primary" :disabled="loading" @click="send">{{loading ? '...' : '发布'}}</el-button>
             </div>
         </fieldset>
     </form>
 </div>
 </template>
+
+
+<style>
+.form-item {
+    margin-bottom: 10px;
+}
+
+.el-select > .el-input > input[readonly] {
+    background-color: #fff;
+    color: #1f2d3d;    
+}
+
+.right-top-btn {    
+    right: 6.5%;
+    margin-top: -53.5px;
+    position: absolute;
+}
+</style>
+
 
 <script>
 import api from "../netapi.js"
@@ -42,6 +65,8 @@ import Prism from "prismjs"
 export default {
     data () {
         return {
+            loading: false,
+
             title: '',
             link_to: '',
             date: new Date(),
@@ -110,6 +135,7 @@ export default {
             let success_text;
             let failed_text;
 
+            this.loading = true;
             if (this.is_edit) {
                 ret = await api.topicEdit(this.$route.params.id, {title, content, time: postTime, link_to, state: topicState});
                 success_text = '编辑成功！已自动跳转至文章页面。';
@@ -130,6 +156,7 @@ export default {
                 $.message_error(failed_text);
             }
             
+            this.loading = false;
         }
     },
     mounted: async function () {
@@ -197,15 +224,3 @@ export default {
     }
 }
 </script>
-
-<style>
-.form-item {
-    margin-bottom: 10px;
-}
-
-.el-select > .el-input > input[readonly] {
-    background-color: #fff;
-    color: #1f2d3d;    
-}
-
-</style>
