@@ -61,6 +61,10 @@ class Topic(GFKBaseModel):
             self.brief = data['content'][:config.TOPIC_BRIEF_LENGTH]
         if 'time' in data:
             self.time = int(data['time'])
+        if 'link_to' in data:
+            self.link_to = data['link_to']
+        if 'state' in data:
+            self.state = data['state']
         self.last_edit_user = user
         self.edit_time = int(time.time())
         self.save()
@@ -76,9 +80,10 @@ class Topic(GFKBaseModel):
         return Comment.get_count(self.id)
 
     @classmethod
-    def new(cls, title, user, content=None, post_time=None):
+    def new(cls, title, user, content=None, post_time=None, link_to=None, state=TOPIC_STATE.NORMAL):
         with db.atomic():
-            ret = cls.create(title=title, user=user, time=post_time or int(time.time()), content=content, brief=content[:config.TOPIC_BRIEF_LENGTH])
+            ret = cls.create(title=title, user=user, time=post_time or int(time.time()), content=content,
+                             brief=content[:config.TOPIC_BRIEF_LENGTH], link_to=link_to, state=state)
             ret.weight = 0
             ret.save()
         return ret

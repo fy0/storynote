@@ -84,6 +84,8 @@ export default {
             let formdata = new FormData($("#form_topic")[0]);
             let title = (formdata.get("title") || "").trim();
             let content = this.editor.value();
+            let link_to = this.link_to;
+            let topicState = this.topicState;
 
             if (!title) {
                  $.message_error('请输入一个标题！');
@@ -109,7 +111,7 @@ export default {
             let failed_text;
 
             if (this.is_edit) {
-                ret = await api.topicEdit(this.$route.params.id, {title, content, time: postTime});
+                ret = await api.topicEdit(this.$route.params.id, {title, content, time: postTime, link_to, state: topicState});
                 success_text = '编辑成功！已自动跳转至文章页面。';
                 failed_text = '编辑失败！';
             } else {

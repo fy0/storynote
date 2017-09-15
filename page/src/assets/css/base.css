@@ -298,3 +298,7 @@ a.am-close:hover {
 .topic-content pre > code {
     font-size: 100%;
 }
+
+hr.white {           
+    border: none;    
+}
