@@ -4,7 +4,7 @@ import config
 from peewee import *
 from model import db, GFKBaseModel
 from model.tag import Tag
-from model.user import User
+from model.user import User, USER_LEVEL
 from lib.state_obj import StateObject
 from playhouse.gfk import ReverseGFK
 
@@ -43,6 +43,18 @@ class Topic(GFKBaseModel):
         to_dict = {
             'extra_attrs': ['tags'],
         }
+
+    @classmethod
+    def get_topic_by_user(cls, topic_id, user):
+        user_level = user.level if user else USER_LEVEL.NORMAL
+        if user_level == USER_LEVEL.NORMAL:
+            return cls.get_by(cls.id == topic_id, cls.state >= TOPIC_STATE.CLOSE)
+        elif user_level == USER_LEVEL.WRITER:
+            return cls.get_by(((cls.state >= TOPIC_STATE.CLOSE) |
+                               ((cls.state >= TOPIC_STATE.HIDE) * cls.user == user )) &
+                              (cls.id == topic_id))
+        elif user_level == USER_LEVEL.ADMIN:
+            return cls.get_by(cls.id == topic_id)
 
     @property
     def tags(self):

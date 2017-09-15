@@ -1,6 +1,7 @@
 <template>
 <div class="topic-item">
     <h3 class="title">
+        <span v-if="item.state != state.data.misc.TOPIC_STATE.NORMAL">[{{state.data.misc.TOPIC_STATE_TXT[item.state]}}]</span>
         <router-link :to="{ path: '/t/' + item.id }">{{item.title}}</router-link>
     </h3>
     <div class="brief" v-html="marked_brief(item.brief)"></div>

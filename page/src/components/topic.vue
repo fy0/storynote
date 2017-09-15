@@ -219,7 +219,7 @@ export default {
             }
         }
 
-        $.message_error(`错误：${api.retinfo[ret.code]}`);
+        $.message_error(`错误：找不到指定的主题`);
         return next('/');
     },
     components: {

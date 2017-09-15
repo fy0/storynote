@@ -50,7 +50,7 @@ class TopicEdit(AjaxLoginView):
 @route('/api/topic/del/(\d+)', name='topic_del')
 class TopicDel(AjaxLoginView):
     def post(self, topic_id):
-        topic = Topic.get_by_pk(topic_id)
+        topic = Topic.get_topic_by_user(topic_id, self.current_user())
         if not topic:
             return self.finish({'code': -1, 'msg': '找不到指定的主题'})
         if not topic.can_edit(self.current_user()):
@@ -62,7 +62,7 @@ class TopicDel(AjaxLoginView):
 @route('/api/topic/(\d+)', name='topic')
 class TopicView(AjaxView):
     def get(self, topic_id):
-        topic = Topic.get_by_pk(topic_id)
+        topic = Topic.get_topic_by_user(topic_id, self.current_user())
         if topic:
             topic.view_count_inc()
             # count, user_topics = Topic.get_list_by_user(topic.user)
@@ -83,7 +83,12 @@ class Recent(AjaxView):
 @route('/api/recent/(\d+)', name='recents')
 class Recent(AjaxView):
     def get(self, page):
-        count, query = Topic.get_list()
+        user = self.current_user()
+        # TODO: 以后再做细分，让作者用户仅能看到自己的隐藏文章，而不是全部的
+        if user and user.level > USER_LEVEL.WRITER:
+            count, query = Topic.get_list(TOPIC_STATE.HIDE)
+        else:
+            count, query = Topic.get_list()
         pg = pagination(count, query, config.TOPIC_PAGE_SIZE, page)
         pg["items"] = list(map(Topic.to_dict, pg["items"]))
         pg['page_numbers'] = list(pg['page_numbers'])
