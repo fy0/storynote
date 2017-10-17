@@ -19,7 +19,7 @@ class TopicNew(AjaxLoginView):
         if not (title and config.TITLE_LENGTH_MIN <= len(title) <= config.TITLE_LENGTH_MAX):
             self.finish({'code': -1, 'msg': '标题长度必须在 %d 到 %d 之间' % (config.TITLE_LENGTH_MIN, config.TITLE_LENGTH_MAX)})
         else:
-            t = Topic.new(title, self.current_user(), content, time, link_to=link_to or None, state=state)
+            t = Topic.new(title, self.current_user(), content, time, link_to=link_to, state=state)
             self.finish({'code': 0, 'data': {'id': t.id}})
 
 

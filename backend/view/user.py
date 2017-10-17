@@ -82,3 +82,4 @@ class SignUp(AjaxView):
             return self.finish({'code': 0, 'msg': '账户创建成功'})
 
         return self.finish({'code': -1, 'error_msgs': error_info})
+
