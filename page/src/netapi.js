@@ -84,6 +84,10 @@ export default {
         return await nget(`${remote.API_SERVER}/api/misc`);
     },
 
+    qn: async function () {
+        return await nget(`${remote.API_SERVER}/api/qn`);
+    },
+
     /** 获取文章 */
     recent: async function (page=1) {
         return await nget(`${remote.API_SERVER}/api/recent/${page}`);

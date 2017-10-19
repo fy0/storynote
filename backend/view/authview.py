@@ -24,4 +24,3 @@ class AjaxWriterView(_AjaxPermissionView):
 
 class AjaxAdminView(_AjaxPermissionView):
     _level = {USER_LEVEL.ADMIN}
-

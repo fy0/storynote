@@ -32,6 +32,11 @@ PASSWORD_MAX = 128
 PASSWORD_REG_MIN = 6
 PASSWORD_REG_MAX = 128
 
+QINIU_ACCESS_KEY = ''
+QINIU_SECRET_KEY = ''
+QINIU_BUCKET = ''
+
+
 class RETCODE:
     SUCCESS = 0
     TOO_LONG = -248
@@ -42,7 +47,6 @@ class RETCODE:
     UNKNOWN = -253
     NOT_USER = -255
     PERMISSION_DENIED = -254
-
 
 try:
     from private import *

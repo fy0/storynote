@@ -12,7 +12,7 @@
                 <input type="text" name="title" v-model="topicInfo.title" placeholder="这里填写标题，最长50个字" style="width: 72%; font-size: 15px; font-weight: bolder;">
                 <el-date-picker
                     style="width: 27%; margin-top: -0.3px;"
-                    v-model="topicInfo.date"
+                    v-model="date"
                     type="datetime"
                     placeholder="选择日期时间"
                     align="left"
@@ -33,6 +33,14 @@
             </div>
         </fieldset>
     </form>
+
+    <form method="post" action="http://upload.qiniu.com/" enctype="multipart/form-data">
+    <input name="token" type="hidden" :value="token">
+    <input name="file" type="file" />
+    <input name="accept" type="hidden" />
+    <input type="submit" />
+    </form>
+
 </div>
 </template>
 
@@ -72,15 +80,17 @@ export default {
     data () {
         return {
             loading: false,
+            date: new Date(),
 
             topicInfo: {
                 title: '',
                 link_to: '',
                 state: state.data.misc.TOPIC_STATE.NORMAL,
-                date: new Date(),
                 board: null,
                 content: ''
             },
+
+            token: '',
             
             mdeConfig: {
                 spellChecker: false,
@@ -155,7 +165,7 @@ export default {
                 return false;
             }
 
-            this.topicInfo.time = parseInt(this.topicInfo.date.getTime() / 1000);
+            this.topicInfo.time = parseInt(this.date.getTime() / 1000);
 
             // 允许页面内容为空
             // if (!content) return;
@@ -187,6 +197,9 @@ export default {
         }
     },
     mounted: async function () {
+        let ret = await api.qn();
+        this.token = ret.data;
+
         if (localStorage.getItem('topic-post-cache-clear')) {
             // 我不知道为什么，在地址跳转前进行 storage 的清除工作，
             // 并不会实质上起效，因此这是一个替代手段，效果比较理想。
@@ -220,7 +233,12 @@ export default {
             editData = ret.data
         }
         next(vm => {
-			if (editData) vm.topicInfo = editData
+            if (editData) {
+                let date = new Date();
+                date.setTime(editData.time * 1000)
+                vm.topicInfo = editData
+                vm.date = date
+            }
         })
     },
     components: {

@@ -4,6 +4,18 @@ import config
 from model.topic import TOPIC_STATE
 from model.user import USER_LEVEL
 from view import route, url_for, AjaxView
+from qiniu_lite import Cow
+
+from view.authview import AjaxWriterView
+
+cow = Cow(config.QINIU_ACCESS_KEY, config.QINIU_SECRET_KEY)
+policy = cow.get_put_policy(config.QINIU_BUCKET)
+
+
+@route('/api/qn', name='upload_key')
+class UploadTokenView(AjaxWriterView):
+    def get(self):
+        self.finish({'code': 0, 'data': policy.token()})
 
 
 @route('/', name='index')
