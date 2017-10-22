@@ -15,6 +15,7 @@ function paramSerialize (obj) {
 async function do_fetch(url, method, data, fix) {
     let fetchParams = {
         method: method,
+        mode: 'cors',
         credentials: 'include',
         headers: {
             'Accept': 'application/json',
@@ -24,6 +25,18 @@ async function do_fetch(url, method, data, fix) {
     if (method == 'GET') if (data) url += `?${paramSerialize(data)}`;
     if (method == 'POST') fetchParams.body = JSON.stringify(data);
     return fetch(url, fetchParams);
+}
+
+async function postForm (url, form) {
+    let fetchParams = {
+        method: 'POST',
+        credentials: 'credentials',
+        headers: {
+            'Accept': 'application/json'
+        }
+    }
+    fetchParams.body = form
+    return (await fetch(url, fetchParams)).json()
 }
 
 async function get (url, data, fix) { return do_fetch(url, "GET", data, fix); }
@@ -75,6 +88,7 @@ let retinfo = {
     [retcode.PERMISSION_DENIED]: '无权限',
 }
 
+
 export default {
     retcode,
     retinfo,
@@ -86,6 +100,16 @@ export default {
 
     qn: async function () {
         return await nget(`${remote.API_SERVER}/api/qn`);
+    },
+
+    qnUpload: async function (file) {
+        let code = (await this.qn()).data
+        let form = new FormData()
+
+        form.append('token', code)
+        form.append('file', file)
+        form.append('accept', '')
+        return await postForm(config.qiniu.server, form)
     },
 
     /** 获取文章 */

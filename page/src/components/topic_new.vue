@@ -26,21 +26,13 @@
                 </el-select>
             </div>
             <div class="form-item">
-                <markdown-editor :configs="mdeConfig" v-model="topicInfo.content" placeholder="这里填写内容 ..." rows="15" autofocus></markdown-editor>
+                <markdown-editor ref="Editor" :configs="mdeConfig" v-model="topicInfo.content" placeholder="这里填写内容 ..." rows="15" autofocus></markdown-editor>
             </div>
             <div class="form-item">
                 <el-button style="float: right" type="primary" :loading="loading" @click="send">{{postButtonText}}</el-button>
             </div>
         </fieldset>
     </form>
-
-    <form method="post" action="http://upload.qiniu.com/" enctype="multipart/form-data">
-    <input name="token" type="hidden" :value="token">
-    <input name="file" type="file" />
-    <input name="accept" type="hidden" />
-    <input type="submit" />
-    </form>
-
 </div>
 </template>
 
@@ -71,10 +63,12 @@
 
 <script>
 import api from "../netapi.js"
+import config from "../config.js"
 import state from "../state.js"
 import markdownEditor from 'vue-simplemde/src/markdown-editor.vue'
 import 'simplemde/dist/simplemde.min.css'
 import Prism from "prismjs"
+import objectid from 'objectid-js'
 
 export default {
     data () {
@@ -197,9 +191,6 @@ export default {
         }
     },
     mounted: async function () {
-        let ret = await api.qn();
-        this.token = ret.data;
-
         if (localStorage.getItem('topic-post-cache-clear')) {
             // 我不知道为什么，在地址跳转前进行 storage 的清除工作，
             // 并不会实质上起效，因此这是一个替代手段，效果比较理想。
@@ -211,6 +202,44 @@ export default {
         if (!this.is_edit) {
             this.title = localStorage.getItem('topic-post-title') || '';
         }
+
+        let uploadImage = async function (editor, fileList) {
+            let theFile = null
+            if (fileList.length == 0) return
+
+            for (let i of fileList) {
+                if (i.type.indexOf('image') !== -1) {
+                    theFile = i
+                    break
+                }
+            }
+            if (!theFile) return false
+
+            let placeholder = `![Uploading ${theFile['name']} - ${(new objectid()).toString()} ...]()`
+            editor.replaceRange(placeholder, {
+                line: editor.getCursor().line,
+                ch: editor.getCursor().ch
+            })
+
+            let ret = await api.qnUpload(theFile)
+            if (ret.key) {
+                let url = `${config.qiniu.host}/${ret.key}/${config.qiniu.suffix}`
+                let newTxt = `![](${url})`
+                let offset = newTxt.length - placeholder.length
+                let cur = editor.getCursor()
+                editor.setValue(editor.getValue().replace(placeholder, newTxt+'\n'))
+                editor.setCursor(cur.line, cur.ch + offset)
+            }
+        }
+
+        let mdeEditor = this.$refs.Editor.simplemde
+        mdeEditor.codemirror.on('drop', (editor, e) => {
+            uploadImage(editor, e.dataTransfer.files)
+        })
+        mdeEditor.codemirror.on('paste', (editor, e) => {
+            uploadImage(editor, e.clipboardData.files)
+            return false
+        })
     },
     watch: {
         title: _.debounce(function (val, oldVal) {
