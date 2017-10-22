@@ -223,7 +223,7 @@ export default {
 
             let ret = await api.qnUpload(theFile)
             if (ret.key) {
-                let url = `${config.qiniu.host}/${ret.key}/${config.qiniu.suffix}`
+                let url = `${config.qiniu.host}/${ret.key}-${config.qiniu.suffix}`
                 let newTxt = `![](${url})`
                 let offset = newTxt.length - placeholder.length
                 let cur = editor.getCursor()
