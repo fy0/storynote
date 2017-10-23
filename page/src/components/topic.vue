@@ -106,6 +106,11 @@
     padding: 0px;
     font-size: small;
 }
+
+.content img {
+    width: 100%;
+}
+
 </style>
 
 <script>
