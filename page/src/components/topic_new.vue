@@ -26,7 +26,7 @@
                 </el-select>
             </div>
             <div class="form-item">
-                <markdown-editor ref="Editor" :configs="mdeConfig" v-model="topicInfo.content" placeholder="这里填写内容 ..." rows="15" autofocus></markdown-editor>
+                <markdown-editor class="editor" ref="Editor" :configs="mdeConfig" v-model="topicInfo.content" placeholder="这里填写内容 ..." rows="15" autofocus></markdown-editor>
             </div>
             <div class="form-item">
                 <el-button style="float: right" type="primary" :loading="loading" @click="send">{{postButtonText}}</el-button>

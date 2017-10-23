@@ -106,11 +106,6 @@
     padding: 0px;
     font-size: small;
 }
-
-.content img {
-    width: 100%;
-}
-
 </style>
 
 <script>
@@ -241,6 +236,10 @@ export default {
 
 .tag-new-container > input {
     min-height: 25px;
+}
+
+.topic-content img {
+    max-width: 100%;
 }
 </style>
 
