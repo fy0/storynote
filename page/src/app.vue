@@ -9,11 +9,11 @@
         <div class="pure-g main-box">
             <div class="pure-u-6-24 left-bar">
                 <ul class="nav-bar">
-                    <router-link tag="li" :to="{ name: 'index' }" :class="navActiveClass('index', 'topic')"><a>故事</a></router-link>
-                    <router-link tag="li" :to="{ name: 'tags' }" :class="navActiveClass('tag', 'tags')"><a>印记</a></router-link>
+                    <router-link tag="li" :to="{ name: 'index' }" :class="navActiveClass('index', 'topic')"><a>日志</a></router-link>
+                    <router-link tag="li" :to="{ name: 'tags' }" :class="navActiveClass('tag', 'tags')"><a>标签</a></router-link>
                     <router-link tag="li" :to="{ name: 'timeline' }" ><a>时光</a></router-link>
                     <router-link tag="li" :to="{ path: '/signin' }" ><a>用户</a></router-link>
-                    <router-link v-if="user && user.level >= 80" tag="li" :to="{ path: '/new' }" :class="navActiveClass('topic_new', 'topic_edit')"><a>撰文</a></router-link>
+                    <router-link v-if="user && user.level >= 80" tag="li" :to="{ path: '/new' }" :class="navActiveClass('topic_new', 'topic_edit')"><a>新建</a></router-link>
                     <router-link v-if="user && user.level >= 100" tag="li" :to="{ path: '/manage' }" ><a>管理</a></router-link>
                     <router-link tag="li" :to="{ name: 'links' }" ><a>友链</a></router-link>
                     <router-link tag="li" :to="{ path: '/about' }" ><a>关于</a></router-link>
