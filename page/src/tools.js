@@ -1,9 +1,9 @@
-
 import state from "./state.js"
-import {marked} from '../md.js'
+import {marked} from './md.js'
+import markedMod from 'marked'
 
 let marked_brief_renderer = function () {
-    let r = new marked.Renderer();
+    let r = new markedMod.Renderer();
     r.blockquote = r.html = r.heading = r.hr = r.list = r.listitem = r.paragraph 
     = r.table = r.tablerow = r.tablecell = r.codespan = r.br =
     function (text) {
