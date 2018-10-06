@@ -14,7 +14,7 @@
 
 <script>
 import Vue from 'vue'
-import marked from 'marked'
+import {marked} from '../md.js'
 import api from "../netapi.js"
 import state from "../state.js"
 import Paginator from "./utils/paginator.vue"

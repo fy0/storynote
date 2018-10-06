@@ -12,7 +12,7 @@
     "element-ui": "^1.4.4",
     "font-awesome": "^4.7.0",
     "lodash": "^4.17.4",
-    "marked": "^0.3.6",
+    "marked": "^0.5.1",
     "nprogress": "^0.2.0",
     "objectid-js": "^1.0.2patch1",
     "prismjs": "^1.6.0",

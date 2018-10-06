@@ -1,6 +1,6 @@
 
 import state from "./state.js"
-import marked from 'marked'
+import {marked} from '../md.js'
 
 let marked_brief_renderer = function () {
     let r = new marked.Renderer();
