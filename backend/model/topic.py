@@ -62,6 +62,8 @@ class Topic(GFKBaseModel):
         return list(map(Tag.to_dict, self._tags))
 
     def can_edit(self, user):
+        if user.level == USER_LEVEL.ADMIN:
+            return True
         if self.user == user:
             return True
 

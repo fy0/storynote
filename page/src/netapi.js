@@ -30,7 +30,7 @@ async function do_fetch(url, method, data, fix) {
 async function postForm (url, form) {
     let fetchParams = {
         method: 'POST',
-        credentials: 'credentials',
+        credentials: 'include',
         headers: {
             'Accept': 'application/json'
         }

@@ -4,3 +4,4 @@ dist/
 npm-debug.log
 bak/
 .vscode/
+private.js

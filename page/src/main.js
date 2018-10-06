@@ -101,8 +101,10 @@ router.afterEach(async function (to, from, next) {
     // reuse 坑人不浅，貌似还禁用不掉……
     nprogress.done();
 
-    ga('set', 'page', location.pathname + location.hash)    
-    ga('send', 'pageview');
+    setInterval(() => {
+        ga('set', 'page', location.pathname + location.hash)
+        ga('send', 'pageview');
+    }, 0)
 });
 
 new Vue({

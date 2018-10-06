@@ -2,3 +2,4 @@ Mako>=1.0
 peewee~=2.9.0
 requests>=2.0
 tornado>=4
+qiniu_lite
