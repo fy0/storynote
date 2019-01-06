@@ -13,14 +13,13 @@
 </style>
 
 <script>
-import Vue from 'vue'
 // import { marked } from '../md.js'
 import api from '../netapi.js'
 import state from '../state.js'
 import Paginator from './utils/paginator.vue'
 import TopicItem from './utils/topic_item.vue'
 
-Vue.component('TopicItem', TopicItem)
+// Vue.component('TopicItem', TopicItem)
 
 export default {
     data () {
@@ -33,32 +32,29 @@ export default {
         marked_brief: $.marked_brief,
         time_to_text: $.time_to_text
     },
-    mounted: async function () {
-    },
-    beforeRouteEnter: async (to, from, next) => {
-        let page = to.params.page
-        let ret = await api.recent(page)
+    // beforeRouteEnter: async (to, from, next) => {
+    //     let page = to.params.page
+    //     let ret = await api.recent(page)
 
-        if (ret.code === api.retcode.SUCCESS) {
-            return next(vm => {
-                vm.page_info = ret.data
-            })
-        }
+    //     if (ret.code === api.retcode.SUCCESS) {
+    //         return next(vm => {
+    //             vm.page_info = ret.data
+    //         })
+    //     }
 
-        $.message_error(`错误：${api.retinfo[ret.code]}`)
-        return next('/')
-    },
-    beforeRouteUpdate: async function (to, from, next) {
-        let page = to.params.page
+    //     $.message_error(`错误：${api.retinfo[ret.code]}`)
+    //     return next('/')
+    // },
+    created: async function () {
+        let page = this.$route.params.page
         let ret = await api.recent(page)
 
         if (ret.code === api.retcode.SUCCESS) {
             this.page_info = ret.data
-            return next()
+            return
         }
 
         $.message_error(`错误：${api.retinfo[ret.code]}`)
-        return next('/')
     },
     components: {
         Paginator,

@@ -1,6 +1,7 @@
 <template>
 <div class="gotop" @click="gotop" v-show="showGoTop">
-    <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    <template>↑</template>
+    <!-- <i class="fa fa-arrow-up" aria-hidden="true"></i> -->
 </div>
 </template>
 
@@ -14,7 +15,9 @@
     width: 40px;
     color: #056ef0;
     text-align: center;
-    line-height: 40px;
+    border: 1px solid;
+    font-size: 30px;
+    line-height: 35px;
     cursor: pointer;
 }
 
@@ -33,7 +36,7 @@ export default {
         }
     },
     mounted: async function () {
-        var timer = setInterval(() => {
+        setInterval(() => {
             let el = document.documentElement
             this.showGoTop = el.scrollTop > 0
         }, 100)

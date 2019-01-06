@@ -9,11 +9,11 @@ export default {
         ],
         '@uvue/core/plugins/middlewares',
         '@uvue/core/plugins/errorHandler'
-    ],
-    imports: [
-        {
-            src: 'element-ui',
-            ssr: false
-        }
     ]
+    // imports: [
+    //     {
+    //         src: 'element-ui',
+    //         ssr: false
+    //     }
+    // ]
 }

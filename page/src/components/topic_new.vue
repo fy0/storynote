@@ -1,15 +1,15 @@
 <template>
 <div class="">
-    <div class="edit-page-title">
-        <h3 class="" v-if="!is_edit">新建主题</h3>
-        <h3 class="" v-else>编辑主题</h3>
-        <el-button class="right-top-btn" type="primary" :loading="loading" @click="send">{{postButtonText}}</el-button>
-    </div>
+    <no-ssr placeholder="loading">
+        <div class="edit-page-title">
+            <h3 class="" v-if="!is_edit">新建主题</h3>
+            <h3 class="" v-else>编辑主题</h3>
+            <el-button class="right-top-btn" type="primary" :loading="loading" @click="send">{{postButtonText}}</el-button>
+        </div>
 
-    <form class="pure-form" id="form_topic" method="POST" @submit.prevent="send">
-        <fieldset>
+        <form id="form_topic" method="POST" @submit.prevent="send">
             <div class="form-item">
-                <input type="text" name="title" v-model="topicInfo.title" placeholder="这里填写标题，最长50个字" style="width: 72%; font-size: 15px; font-weight: bolder;">
+                <el-input name="title" v-model="topicInfo.title" placeholder="这里填写标题，最长50个字" style="width: 70%; font-size: 15px; margin-right: 2%;"></el-input>
                 <el-date-picker
                     style="width: 27%; margin-top: -0.3px;"
                     v-model="date"
@@ -20,7 +20,7 @@
                 </el-date-picker>
             </div>
             <div class="form-item">
-                <input type="text" name="link_to" v-model="topicInfo.link_to" placeholder="填写外站引用链地址 (可选)" style="width: 72%; font-size: 15px; font-weight: bolder;">
+                <el-input name="link_to" v-model="topicInfo.link_to" placeholder="填写外站引用链地址(可选)" style="width: 70%; font-size: 15px; margin-right: 2%;"></el-input>
                 <el-select v-model="topicInfo.state" placeholder="请选择" style="width: 27%; font-size: 15px; font-weight: bolder;">
                     <el-option v-for="[v, k] in topicStateOptions" :key="parseInt(v)" :label="`状态：${k}`" :value="parseInt(v)"></el-option>
                 </el-select>
@@ -31,8 +31,8 @@
             <div class="form-item">
                 <el-button style="float: right" type="primary" :loading="loading" @click="send">{{postButtonText}}</el-button>
             </div>
-        </fieldset>
-    </form>
+        </form>
+    </no-ssr>
 </div>
 </template>
 
@@ -54,8 +54,8 @@
 }
 
 .el-select > .el-input > input[readonly] {
-    background-color: #fff;
-    color: #1f2d3d;
+    /* background-color: #fff; */
+    /* color: #1f2d3d; */
 }
 </style>
 
@@ -166,7 +166,7 @@ export default {
             }
         }
     },
-    mounted: async function () {
+    created: async function () {
         if (localStorage.getItem('topic-post-cache-clear')) {
             // 我不知道为什么，在地址跳转前进行 storage 的清除工作，
             // 并不会实质上起效，因此这是一个替代手段，效果比较理想。

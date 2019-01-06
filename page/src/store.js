@@ -28,6 +28,7 @@ export default () => {
                     commit('SET_MISC', ret.data)
 
                     ret = await api.userInfo()
+                    console.log('user', ret)
                     if (ret.code === 0) {
                         commit('SET_USER', ret.data)
                         Vue.set(state.data, 'user', ret.data)

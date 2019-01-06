@@ -27,6 +27,7 @@ import nprogress from 'nprogress/nprogress.js'
 
 export default {
     data () {
+        console.log(2222, state.data.misc)
         return {
             form: {
                 username: '',

@@ -6,32 +6,53 @@
             <h1><router-link style="outline: none;" :to="{ path: '/' }">{{config.title.toUpperCase()}}</router-link></h1>
         </div>
         <!-- 正文 -->
-        <div class="pure-g main-box">
-            <div class="pure-u-6-24 left-bar">
+        <div class="main-box">
+            <div class="left">
                 <ul class="nav-bar">
                     <router-link tag="li" :to="{ name: 'index' }" :class="navActiveClass('index', 'topic')"><a>日志</a></router-link>
                     <router-link tag="li" :to="{ name: 'tags' }" :class="navActiveClass('tag', 'tags')"><a>标签</a></router-link>
                     <router-link tag="li" :to="{ name: 'timeline' }" ><a>时光</a></router-link>
                     <router-link tag="li" :to="{ path: '/signin' }" ><a>用户</a></router-link>
-                    <router-link v-if="user && user.level >= 80" tag="li" :to="{ path: '/new' }" :class="navActiveClass('topic_new', 'topic_edit')"><a>新建</a></router-link>
-                    <router-link v-if="user && user.level >= 100" tag="li" :to="{ path: '/manage' }" ><a>管理</a></router-link>
+                    <no-ssr placeholder="loading">
+                        <template>
+                            <router-link v-if="user && user.level >= 80" tag="li" :to="{ path: '/new' }" :class="navActiveClass('topic_new', 'topic_edit')"><a>新建</a></router-link>
+                            <router-link v-if="user && user.level >= 100" tag="li" :to="{ path: '/manage' }" ><a>管理</a></router-link>
+                        </template>
+                    </no-ssr>
                     <router-link tag="li" :to="{ name: 'links' }" ><a>友链</a></router-link>
                     <router-link tag="li" :to="{ path: '/about' }" ><a>关于</a></router-link>
                 </ul>
             </div>
-            <div class="pure-u-18-24">
+            <div class="content">
                 <router-view></router-view>
             </div>
         </div>
         <!-- footer -->
         <footer><p>Copyright © 2017 <a target="_blank" href="http://github.com/fy0/storynote">Story Note</a></p></footer>
         <msg-box></msg-box>
-        <go-top></go-top>
+        <no-ssr>
+            <go-top></go-top>
+        </no-ssr>
     </div>
 </div>
 </template>
 
 <style lang="scss">
+.main-box {
+    min-height: 40vh;
+    display: flex;
+
+    > .left {
+        flex: 6 0 0%;
+        width: 0%;
+    }
+
+    > .content {
+        flex: 18 0 0%;
+        width: 0%;
+        word-break: break-all;
+    }
+}
 </style>
 
 <style>
@@ -41,7 +62,6 @@ footer {
     color: #aaa;
 }
 /*.main-box { min-height: 70vh; }*/
-.main-box { min-height: 40vh; }
 .nav-top { margin-top: -30px; }
 .nav-bar {
     height: 100%;
@@ -56,7 +76,7 @@ footer {
 }
 .nav-bar a { color: black; }
 .nav-bar a:hover { color: black; }
-.nav-bar > li { margin-bottom: 15px; }
+.nav-bar li { margin-bottom: 15px; }
 .page-header { text-align: center; }
 .page-header > h2 { margin: 0; }
 
@@ -74,10 +94,10 @@ footer {
 <script>
 import config from './config.js'
 import state from './state.js'
-import Loading from './components/utils/loading.vue'
+// import Loading from './components/utils/loading.vue'
 import MsgBox from './components/utils/msgbox.vue'
 import GoTop from './components/utils/gotop.vue'
-import ErrorPage from './components/ErrorPage.vue'
+// import ErrorPage from './components/ErrorPage.vue'
 
 export default {
     data () {
@@ -89,7 +109,7 @@ export default {
 
     computed: {
         user: function () {
-            return this.state.data.user
+            return this.state.data.user || {}
         },
         error () {
             return this.$store.state.errorHandler.error
@@ -98,8 +118,7 @@ export default {
 
     components: {
         GoTop,
-        MsgBox,
-        ErrorPage
+        MsgBox
     },
 
     methods: {

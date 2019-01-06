@@ -1,7 +1,8 @@
 
 let data = {
     msgs: [],
-    misc: null
+    misc: null,
+    user: null
     /* 实际内容动态获取
     misc: {
         USER_LEVEL: {

@@ -12,11 +12,16 @@ license: https://github.com/F-loat/vue-simplemde/blob/master/LICENSE
 <script>
 import { marked } from '@/md.js'
 import Prism from 'prismjs'
-import SimpleMDE from 'easymde/src/js/easymde.js'
+// import SimpleMDE from 'easymde/src/js/easymde.js'
 import 'easymde/dist/easymde.min.css'
 
-SimpleMDE.prototype.markdown = function (text) {
-    return marked(text)
+let SimpleMDE = null
+
+if (process.client) {
+    SimpleMDE = require('easymde/src/js/easymde.js')
+    SimpleMDE.prototype.markdown = function (text) {
+        return marked(text)
+    }
 }
 
 export default {

@@ -1,11 +1,11 @@
 <template>
 <div class="tmp">
-    <div class="pure-g" v-for="key in info.key_order" :key="key">
-        <div class="pure-u-2-24 timeline-tag">
+    <div class="tl-item" v-for="key in info.key_order" :key="key">
+        <div class="tl-tag">
             <span>{{key}}</span>
             <!--<span class="vline"></span>-->
         </div>
-        <div class="pure-u-22-24">
+        <div class="info">
             <TopicItem v-for="item in info.timeline[key]" :item="item" :key="item.id"></TopicItem>
         </div>
     </div>
@@ -14,17 +14,24 @@
 </div>
 </template>
 
-<style>
-/*.tmp {
-    max-height: 70vh;
-    overflow-y: scroll;
-}*/
+<style lang="scss">
+.tl-item {
+    display: flex;
 
-.timeline-tag {
-    margin-top: 20px;
+    > .tl-tag {
+        flex: 2 0 0%;
+        width: 0%;
+        margin-top: 20px;
+    }
+
+    > .info {
+        flex: 22 0 0%;
+        width: 0%;
+        word-break: break-all;
+    }
 }
 
-.timeline-tag > .vline {
+.tl-tag > .vline {
     display: block;
     border-left: 1px solid #ccc;
     height: 98%;
