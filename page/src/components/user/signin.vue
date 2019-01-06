@@ -25,35 +25,37 @@
 
 <script>
 import Vue from 'vue'
-import api from "../../netapi.js"
-import state from "../../state.js"
+import api from '../../netapi.js'
+import state from '../../state.js'
 import nprogress from 'nprogress/nprogress.js'
 
 export default {
     data () {
         return {
-            state: state,
+            state,
             loading: false,
             form: {
                 username: '',
                 password: '',
-                remember: true,
+                remember: true
             },
             form_rules: {
                 username: [
                     { required: true, message: '必须输入账号', trigger: 'blur' },
                     {
-                        min: state.data.misc.USERNAME_MIN, max: state.data.misc.USERNAME_MAX, 
+                        min: state.data.misc.USERNAME_MIN,
+                        max: state.data.misc.USERNAME_MAX,
                         message: `用户名不合法`,
-                        trigger: 'blur' 
+                        trigger: 'blur'
                     }
                 ],
                 password: [
                     { required: true, message: '必须输入密码', trigger: 'blur' },
                     {
-                        min: state.data.misc.PASSWORD_MIN, max: state.data.misc.PASSWORD_MAX,
-                        message: `密码长度必须在 ${state.data.misc.PASSWORD_MIN} 到 ${state.data.misc.PASSWORD_MAX} 之间`, 
-                        trigger: 'blur' 
+                        min: state.data.misc.PASSWORD_MIN,
+                        max: state.data.misc.PASSWORD_MAX,
+                        message: `密码长度必须在 ${state.data.misc.PASSWORD_MIN} 到 ${state.data.misc.PASSWORD_MAX} 之间`,
+                        trigger: 'blur'
                     }
                 ]
             }
@@ -61,39 +63,39 @@ export default {
     },
     methods: {
         resetForm (formName) {
-            this.$refs[formName].resetFields();
+            this.$refs[formName].resetFields()
         },
         setLoading (val) {
-            this.loading = val;
-            if (val) nprogress.start();
-            else nprogress.done();
+            this.loading = val
+            if (val) nprogress.start()
+            else nprogress.done()
         },
         submitForm (formName) {
             this.$refs[formName].validate(async (valid) => {
                 if (valid) {
-                    this.setLoading(true);
-                    let ret = await api.userSignin(this.form.username, this.form.password, this.form.remember);
-                    if (ret.code == 0) {
-                        ret = await api.userInfo();
-                        if (ret.code == 0) {
-                            Vue.set(state.data, 'user', ret.data);
-                            $.message_success(`欢迎回来，${ret.data.name}！`);
+                    this.setLoading(true)
+                    let ret = await api.userSignin(this.form.username, this.form.password, this.form.remember)
+                    if (ret.code === 0) {
+                        ret = await api.userInfo()
+                        if (ret.code === 0) {
+                            Vue.set(state.data, 'user', ret.data)
+                            $.message_success(`欢迎回来，${ret.data.name}！`)
                         } else {
-                            $.message_error(`错误：${api.retinfo[ret.code]}`);
+                            $.message_error(`错误：${api.retinfo[ret.code]}`)
                         }
-                        this.$router.replace({ path: '/'})
+                        this.$router.replace({ path: '/' })
                     } else {
                         for (let i of ret.error_msgs) {
-                            $.message_error(i);
+                            $.message_error(i)
                         }
                     }
-                    this.setLoading(false);
+                    this.setLoading(false)
                 } else {
-                    return false;
+                    return false
                 }
-            });
-        },
-    },
+            })
+        }
+    }
 }
 </script>
 

@@ -18,9 +18,9 @@
 </style>
 
 <script>
-import state from "../state.js"
-import UserManage from "./manage/user.vue"
-import TopicManage from "./manage/topic.vue"
+import state from '../state.js'
+import UserManage from './manage/user.vue'
+import TopicManage from './manage/topic.vue'
 
 export default {
     data () {
@@ -30,7 +30,7 @@ export default {
     },
     components: {
         UserManage,
-        TopicManage,
+        TopicManage
     },
     methods: {
         handleClick (tab, event) {
@@ -39,11 +39,11 @@ export default {
     },
     beforeRouteEnter: async (to, from, next) => {
         if (state.data.user.level < 100) {
-            $.message_error(`无权限`);
-            return next('/');
+            $.message_error(`无权限`)
+            return next('/')
         }
-        next();
-    },
+        next()
+    }
 }
 </script>
 

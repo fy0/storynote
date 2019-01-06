@@ -23,33 +23,33 @@
 </style>
 
 <script>
-import state from "../../state.js"
+import state from '../../state.js'
 
 export default {
     data () {
         return {
             state,
-            showGoTop: false,
+            showGoTop: false
         }
     },
     mounted: async function () {
         var timer = setInterval(() => {
-            let el = document.documentElement;
-            this.showGoTop = el.scrollTop > 0;
-        }, 100);
+            let el = document.documentElement
+            this.showGoTop = el.scrollTop > 0
+        }, 100)
     },
     methods: {
         gotop: function () {
-            let el = document.documentElement;
-            let top = el.scrollTop;
+            let el = document.documentElement
+            let top = el.scrollTop
             let timer = setInterval(() => {
-                top -= Math.abs(top * 0.1);
+                top -= Math.abs(top * 0.1)
                 if (top <= 1) {
-                    top = 0;
-                    clearInterval(timer);
+                    top = 0
+                    clearInterval(timer)
                 }
-                el.scrollTop = top;
-            }, 20);
+                el.scrollTop = top
+            }, 20)
         }
     }
 }

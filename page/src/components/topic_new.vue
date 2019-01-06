@@ -26,7 +26,7 @@
                 </el-select>
             </div>
             <div class="form-item">
-                <markdown-editor class="editor" ref="Editor" :configs="mdeConfig" v-model="topicInfo.content" placeholder="这里填写内容 ..." rows="15" autofocus></markdown-editor>
+                <markdown-editor class="editor" ref="editor" v-model="topicInfo.content" rows="15" autofocus />
             </div>
             <div class="form-item">
                 <el-button style="float: right" type="primary" :loading="loading" @click="send">{{postButtonText}}</el-button>
@@ -35,7 +35,6 @@
     </form>
 </div>
 </template>
-
 
 <style>
 .edit-page-title {
@@ -56,19 +55,17 @@
 
 .el-select > .el-input > input[readonly] {
     background-color: #fff;
-    color: #1f2d3d;    
+    color: #1f2d3d;
 }
 </style>
 
-
 <script>
-import api from "../netapi.js"
-import config from "../config.js"
-import state from "../state.js"
-import markdownEditor from 'vue-simplemde/src/markdown-editor.vue'
-import 'simplemde/dist/simplemde.min.css'
-import Prism from "prismjs"
-import objectid from 'objectid-js'
+import api from '../netapi.js'
+import config from '../config.js'
+import state from '../state.js'
+import markdownEditor from '@/components/utils/markdown-editor.vue'
+import './utils/topic-edit-fa.js'
+import Objectid from 'objectid-js'
 
 export default {
     data () {
@@ -79,114 +76,93 @@ export default {
             topicInfo: {
                 title: '',
                 link_to: '',
-                state: state.data.misc.TOPIC_STATE.NORMAL,
                 board: null,
                 content: ''
-            },
-
-            token: '',
-            
-            mdeConfig: {
-                spellChecker: false,
-                autoDownloadFontAwesome: false,
-                autosave: {
-                    enabled: false,
-                    uniqueId: 'topic-post-content'
-                },
-                renderingConfig: {
-                    singleLineBreaks: false,
-                    codeSyntaxHighlighting: false
-                },
-                previewRender: function (plainText, preview) { // Async method
-                    setTimeout(function () {
-                        preview.innerHTML = this.parent.markdown(plainText)
-                        Prism.highlightAll()
-                    }.bind(this), 1)
-                    return 'Loading...'
-                }
             },
 
             pickerOptions: {
                 shortcuts: [{
                     text: '当前',
-                    onClick(picker) {
-                        picker.$emit('pick', new Date());
+                    onClick (picker) {
+                        picker.$emit('pick', new Date())
                     }
                 }, {
                     text: '昨天',
-                    onClick(picker) {
-                        const date = new Date();
-                        date.setTime(date.getTime() - 3600 * 1000 * 24);
-                        picker.$emit('pick', date);
+                    onClick (picker) {
+                        const date = new Date()
+                        date.setTime(date.getTime() - 3600 * 1000 * 24)
+                        picker.$emit('pick', date)
                     }
                 }, {
                     text: '一周前',
-                    onClick(picker) {
-                        const date = new Date();
-                        date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-                        picker.$emit('pick', date);
+                    onClick (picker) {
+                        const date = new Date()
+                        date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
+                        picker.$emit('pick', date)
                     }
                 }]
             },
+
+            token: ''
         }
     },
     computed: {
         topicStateOptions: function () {
-            return Object.entries(state.data.misc.TOPIC_STATE_TXT);
+            return Object.entries(state.data.misc.TOPIC_STATE_TXT)
         },
         is_edit () {
-            return this.$route.name == 'topic_edit'
+            return this.$route.name === 'topic_edit'
         },
         postButtonText: function () {
-            return this.loading ? '请等待' 
-                : (this.is_edit ? '编辑' : '发布');
+            return this.loading ? '请等待'
+                : (this.is_edit ? '编辑' : '发布')
         }
     },
     methods: {
         send: async function (e) {
             if (!this.topicInfo.title) {
-                $.message_error('请输入一个标题！');
-                return false;
+                $.message_error('请输入一个标题！')
+                return false
             }
 
             if (this.topicInfo.title.length < state.data.misc.TITLE_LENGTH_MIN) {
-                $.message_error(`标题应不少于 ${state.data.misc.TITLE_LENGTH_MIN} 个字！`);
-                return false;
+                $.message_error(`标题应不少于 ${state.data.misc.TITLE_LENGTH_MIN} 个字！`)
+                return false
             }
 
             if (this.topicInfo.title.length > state.data.misc.TITLE_LENGTH_MAX) {
-                $.message_error(`标题应不多于 ${TITLE_LENGTH_MAX} 个字！`);
-                return false;
+                $.message_error(`标题应不多于 ${state.data.misc.TITLE_LENGTH_MAX} 个字！`)
+                return false
             }
 
-            this.topicInfo.time = parseInt(this.date.getTime() / 1000);
+            this.topicInfo.time = parseInt(this.date.getTime() / 1000)
 
             // 允许页面内容为空
             // if (!content) return;
 
-            let ret;
-            let success_text;
-            let failed_text;
+            let ret
+            let successText
+            let failedText
 
-            this.loading = true;
+            this.loading = true
             if (this.is_edit) {
-                ret = await api.topicEdit(this.$route.params.id, this.topicInfo);
-                success_text = '编辑成功！已自动跳转至文章页面。';
-                failed_text = ret.msg || '编辑失败！';
+                ret = await api.topicEdit(this.$route.params.id, this.topicInfo)
+                successText = '编辑成功！已自动跳转至文章页面。'
+                failedText = ret.msg || '编辑失败！'
             } else {
-                ret = await api.topicNew(this.topicInfo);
-                success_text = '发表成功！已自动跳转至文章页面。';
-                failed_text = ret.msg || '编辑失败！';
+                ret = await api.topicNew(this.topicInfo)
+                successText = '发表成功！已自动跳转至文章页面。'
+                failedText = ret.msg || '编辑失败！'
             }
-    
-            if (ret.code == 0) {
-                localStorage.setItem('topic-post-cache-clear', 1);
-                this.$router.push({ name: 'topic', params: { id: ret.data.id }})
-                $.message_success(success_text);
+
+            if (ret.code === 0) {
+                localStorage.setItem('topic-post-cache-clear', 1)
+                this.$router.push({ name: 'topic', params: { id: ret.data.id } })
+                $.message_success(successText)
             } else {
-                $.message_error(failed_text);
+                $.message_error(failedText)
                 // 注意：发布成功会跳转，故不做复位，失败则复位
-                this.loading = false;
+                this.loading = false
             }
         }
     },
@@ -194,18 +170,18 @@ export default {
         if (localStorage.getItem('topic-post-cache-clear')) {
             // 我不知道为什么，在地址跳转前进行 storage 的清除工作，
             // 并不会实质上起效，因此这是一个替代手段，效果比较理想。
-            localStorage.removeItem('topic-post-title');
-            localStorage.removeItem('smde_topic-post-content');
-            localStorage.removeItem('topic-post-cache-clear');
+            localStorage.removeItem('topic-post-title')
+            localStorage.removeItem('smde_topic-post-content')
+            localStorage.removeItem('topic-post-cache-clear')
         }
 
         if (!this.is_edit) {
-            this.title = localStorage.getItem('topic-post-title') || '';
+            this.title = localStorage.getItem('topic-post-title') || ''
         }
 
         let uploadImage = async function (editor, fileList) {
             let theFile = null
-            if (fileList.length == 0) return
+            if (fileList.length === 0) return
 
             for (let i of fileList) {
                 if (i.type.indexOf('image') !== -1) {
@@ -215,7 +191,7 @@ export default {
             }
             if (!theFile) return false
 
-            let placeholder = `![Uploading ${theFile['name']} - ${(new objectid()).toString()} ...]()`
+            let placeholder = `![Uploading ${theFile['name']} - ${(new Objectid()).toString()} ...]()`
             editor.replaceRange(placeholder, {
                 line: editor.getCursor().line,
                 ch: editor.getCursor().ch
@@ -227,33 +203,34 @@ export default {
                 let newTxt = `![](${url})`
                 let offset = newTxt.length - placeholder.length
                 let cur = editor.getCursor()
-                editor.setValue(editor.getValue().replace(placeholder, newTxt+'\n'))
+                editor.setValue(editor.getValue().replace(placeholder, newTxt + '\n'))
                 editor.setCursor(cur.line, cur.ch + offset)
             }
         }
 
-        let mdeEditor = this.$refs.Editor.simplemde
-        mdeEditor.codemirror.on('drop', (editor, e) => {
-            uploadImage(editor, e.dataTransfer.files)
+        let editor = this.$refs.editor
+        let cm = editor.simplemde.codemirror
+        cm.on('drop', async (editor, e) => {
+            await uploadImage(editor, e.dataTransfer.files)
         })
-        mdeEditor.codemirror.on('paste', (editor, e) => {
-            uploadImage(editor, e.clipboardData.files)
+        cm.on('paste', async (editor, e) => {
+            await uploadImage(editor, e.clipboardData.files)
             return false
         })
     },
     watch: {
         title: _.debounce(function (val, oldVal) {
-            localStorage.setItem('topic-post-title', val);
-        }, 5000),
+            localStorage.setItem('topic-post-title', val)
+        }, 5000)
     },
     beforeRouteEnter: async (to, from, next) => {
         if (!state.data.user) {
-            $.message_error('抱歉，无权访问此页面');
+            $.message_error('抱歉，无权访问此页面')
             return next('/')
         }
 
-		let editData = null
-        if (to.name == 'topic_edit') {
+        let editData = null
+        if (to.name === 'topic_edit') {
             let ret = await api.topicGet(to.params.id)
             if (ret.code) {
                 $.message_error('抱歉，发生了错误')
@@ -263,7 +240,7 @@ export default {
         }
         next(vm => {
             if (editData) {
-                let date = new Date();
+                let date = new Date()
                 date.setTime(editData.time * 1000)
                 vm.topicInfo = editData
                 vm.date = date

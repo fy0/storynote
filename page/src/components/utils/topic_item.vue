@@ -2,7 +2,7 @@
 <div class="topic-item">
     <h3 class="title">
         <span v-if="item.link_to">[引用]</span>
-        <span v-if="item.state != state.data.misc.TOPIC_STATE.NORMAL">[{{state.data.misc.TOPIC_STATE_TXT[item.state]}}]</span>
+        <span v-if="item.state != aaa.misc.TOPIC_STATE.NORMAL">[{{aaa.misc.TOPIC_STATE_TXT[item.state]}}]</span>
         <a class="ref-topic" target="_blank" :href="item.link_to" v-if="item.link_to">{{item.title}}</a>
         <router-link v-else :to="{ path: '/t/' + item.id }">{{item.title}}</router-link>
     </h3>
@@ -20,20 +20,54 @@
 </style>
 
 <script>
-import state from "../../state.js"
+import state from '../../state.js'
+import api from '@/netapi.js'
 
 export default {
     props: {
-        item: Object,
+        item: Object
     },
     data () {
+        console.debug(3333333333, {})
         return {
-            state,
+            aaa: null,
+            state
         }
+    },
+    async asyncData () {
+        if (!state.data.misc) {
+            let ret = await api.misc()
+            Vue.set(state.data, 'misc', ret.data)
+        }
+            let ret = await api.misc()
+            this.aaa = {}
+            Vue.set(this.aaa, 'misc', ret.data)
+            console.debug(444444)
+
+            ret = await api.userInfo()
+            if (ret.code === 0) {
+                Vue.set(state.data, 'user', ret.data)
+            }
+        console.debug(444433, {})
+        return {}
+    },
+    created: async function () {
+        console.debug(3333333333)
+        // if (!this.state.data.misc) {
+            let ret = await api.misc()
+            this.aaa = {}
+            Vue.set(this.aaa, 'misc', ret.data)
+            console.debug(444444)
+
+            ret = await api.userInfo()
+            if (ret.code === 0) {
+                Vue.set(state.data, 'user', ret.data)
+            }
+        // }
     },
     methods: {
         marked_brief: $.marked_brief,
-        time_to_text: $.time_to_text,
+        time_to_text: $.time_to_text
     }
 }
 </script>

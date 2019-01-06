@@ -14,14 +14,14 @@
             <li v-else><a href="javascript:void(0);" class="disable slim">‹</a></li>
 
             <li v-for="i in page_info.page_numbers" :key="i">
-                <router-link :to="{ path: `/p/${i}` }" :class="(page_info.cur_page == i) ? 'active' : ''">{{i}}</router-link>
+                <router-link :to="{ path: `/p/${i}` }" :class="(page_info.cur_page === i) ? 'active' : ''">{{i}}</router-link>
             </li>
 
             <li v-if="page_info.next_page">
                 <router-link :to="{ path: `/p/${page_info.next_page}` }" class="slim">›</router-link>
             </li>
             <li v-else><a href="javascript:void(0);" class="disable slim">›</a></li>
-            
+
             <li v-if="page_info.last_page">
                 <router-link :to="{ path: `/p/${page_info.last_page}` }" class="slim">»</router-link>
             </li>
@@ -39,47 +39,46 @@
 </style>
 
 <script>
-import Vue from 'vue'
-import api from "../netapi.js"
-import state from "../state.js"
-import Loading from "./utils/loading.vue"
-import TopicItem from "./utils/topic_item.vue"
+import api from '../netapi.js'
+import state from '../state.js'
+import Loading from './utils/loading.vue'
+import TopicItem from './utils/topic_item.vue'
 
 export default {
     data () {
         return {
             exists: false,
             page_info: null,
-            state: state,
+            state: state
         }
     },
     methods: {
         marked_brief: $.marked_brief,
-        time_to_text: $.time_to_text,
+        time_to_text: $.time_to_text
     },
     computed: {
         tagname: function () {
-            return this.$route.params.name;
+            return this.$route.params.name
         }
     },
     mounted: async function () {
     },
     beforeRouteEnter: async (to, from, next) => {
-        let name = to.params.name;
-        let ret = await api.tagGetTopics(name);
+        let name = to.params.name
+        let ret = await api.tagGetTopics(name)
 
-        if (ret.code == api.retcode.SUCCESS) {
+        if (ret.code === api.retcode.SUCCESS) {
             return next(vm => {
-                vm.page_info = ret.data;
-            });
-        } else if (ret.code == api.retcode.NOT_FOUND) {
+                vm.page_info = ret.data
+            })
+        } else if (ret.code === api.retcode.NOT_FOUND) {
             return next(vm => {
                 vm.page_info = {}
-            });
+            })
         }
 
-        $.message_error(`错误：${api.retinfo[ret.code]}`);
-        return next('/');
+        $.message_error(`错误：${api.retinfo[ret.code]}`)
+        return next('/')
     },
     components: {
         Loading,

@@ -7,7 +7,7 @@
             <span>{{topic.user.name}}</span>
             <span>{{getTime(topic.time)}}</span>
             <span>翻阅 {{topic.view_count}}</span>
-            <router-link v-if="canEdit" :to="{ name: 'topic_edit', params: {id: topic.id}}">编辑</router-link>    
+            <router-link v-if="canEdit" :to="{ name: 'topic_edit', params: {id: topic.id}}">编辑</router-link>
         </div>
 
         <div v-html="marked(topic.content)"></div>
@@ -54,7 +54,7 @@
 
         <div v-if="comments_page > 1">
             <span v-for="index in comments_page" :key="index">
-                <span class="comment-page-btn" v-if="$route.params.cmtpage == index">{{index}}</span>
+                <span class="comment-page-btn" v-if="$route.params.cmtpage === index">{{index}}</span>
                 <router-link class="comment-page-btn" v-else :to="{ name: 'topic', params: {id: topic.id, cmtpage: index}}" replace>{{index}}</router-link>
             </span>
         </div>
@@ -73,7 +73,7 @@
         <div style="padding: 20px" v-else>
             需要 <router-link :to="{ path: `/signin` }">登录</router-link> 后方可回复, 如果你还没有账号你可以 <router-link :to="{ path: `/signup` }">注册</router-link> 一个帐号。
         </div>
- 
+
     </div>
     <loading v-else></loading>
 </div>
@@ -109,10 +109,10 @@
 </style>
 
 <script>
-import {marked} from '../md.js'
-import api from "../netapi.js"
-import state from "../state.js"
-import Loading from "./utils/loading.vue"
+import { marked } from '../md.js'
+import api from '../netapi.js'
+import state from '../state.js'
+import Loading from './utils/loading.vue'
 
 export default {
     data () {
@@ -131,62 +131,63 @@ export default {
     },
     computed: {
         canEdit: function () {
-            if (!state.data.user) return;
-            return (state.data.user.level == 100) || (state.data.user.id == this.topic.user.id);
+            if (!state.data.user) return
+            return (state.data.user.level === 100) || (state.data.user.id === this.topic.user.id)
         }
     },
     methods: {
         marked,
         getTime: (timestamp) => {
-            return $.get_time(timestamp);
+            return $.get_time(timestamp)
         },
 
         handleClose: async function (tag) {
-            let ret = await api.tagRemoveFromPostById(tag.id);
-            this.topic_tags.splice(this.topic_tags.indexOf(tag), 1);
+            // let ret =
+            await api.tagRemoveFromPostById(tag.id)
+            this.topic_tags.splice(this.topic_tags.indexOf(tag), 1)
         },
 
         showInput: function () {
-            this.inputVisible = true;
+            this.inputVisible = true
             this.$nextTick(_ => {
-                this.$refs.saveTagInput.$refs.input.focus();
-            });
+                this.$refs.saveTagInput.$refs.input.focus()
+            })
         },
 
         tagInputClose: function () {
-            this.inputValue = '';
-            this.inputVisible = false;
+            this.inputValue = ''
+            this.inputVisible = false
         },
 
         handleInputConfirm: async function () {
-            let inputValue = this.inputValue;
+            let inputValue = this.inputValue
             if (inputValue) {
-                let ret = await api.tagAddToTopic(inputValue, this.topic.id, true);
-                if (ret.code == api.retcode.SUCCESS) {
-                    this.topic_tags.push(ret.data);
+                let ret = await api.tagAddToTopic(inputValue, this.topic.id, true)
+                if (ret.code === api.retcode.SUCCESS) {
+                    this.topic_tags.push(ret.data)
                 } else {
                     $.message_error(api.retinfo[ret.code])
                 }
             }
-            this.inputVisible = false;
-            this.inputValue = '';
+            this.inputVisible = false
+            this.inputValue = ''
         },
-    
-        commentFetch: async function (page=1) {
-            let ret = await api.commentGet(this.topic.id, page);
-            if (ret.code == 0) {
-                this.comments_length = ret.data.count;
-                this.comments = ret.data.items;
-                this.comments_page = Math.ceil(this.comments_length / ret.data.page_size);
+
+        commentFetch: async function (page = 1) {
+            let ret = await api.commentGet(this.topic.id, page)
+            if (ret.code === 0) {
+                this.comments_length = ret.data.count
+                this.comments = ret.data.items
+                this.comments_page = Math.ceil(this.comments_length / ret.data.page_size)
             }
         },
         commentPost: async function () {
-            let ret = await api.commentPost(this.topic.id, this.user_comment_text);
-            if (ret.code == 0) {
-                this.user_comment_text = '';
-                this.commentFetch(this.comments_page);
+            let ret = await api.commentPost(this.topic.id, this.user_comment_text)
+            if (ret.code === 0) {
+                this.user_comment_text = ''
+                this.commentFetch(this.comments_page)
             } else {
-                $.message_error(ret.msg);
+                $.message_error(ret.msg)
             }
         }
     },
@@ -201,33 +202,32 @@ export default {
     },
     beforeRouteEnter: async (to, from, next) => {
         // 获取文章内容
-        let topic = await api.topicGet(to.params.id);
+        let topic = await api.topicGet(to.params.id)
 
-        if (topic.code == api.retcode.SUCCESS) {
+        if (topic.code === api.retcode.SUCCESS) {
             // 获取评论
-            let comment = await api.commentGet(topic.data.id, to.params.cmtpage || 1);
+            let comment = await api.commentGet(topic.data.id, to.params.cmtpage || 1)
 
-            if (comment.code == api.retcode.SUCCESS) {
+            if (comment.code === api.retcode.SUCCESS) {
                 return next(vm => {
-                    vm.topic = topic.data;
-                    vm.topic_tags = topic.data.tags;
+                    vm.topic = topic.data
+                    vm.topic_tags = topic.data.tags
 
-                    vm.comments_length = comment.data.count;
-                    vm.comments = comment.data.items;
-                    vm.comments_page = Math.ceil(vm.comments_length / comment.data.page_size);
-                });
+                    vm.comments_length = comment.data.count
+                    vm.comments = comment.data.items
+                    vm.comments_page = Math.ceil(vm.comments_length / comment.data.page_size)
+                })
             }
         }
 
-        $.message_error(`错误：找不到指定的主题`);
-        return next('/');
+        $.message_error(`错误：找不到指定的主题`)
+        return next('/')
     },
     components: {
-        Loading,
+        Loading
     }
 }
 </script>
-
 
 <style>
 .tag-new-container {

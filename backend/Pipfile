@@ -1,0 +1,16 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+mako = ">=1.0"
+peewee = "~=2.10.2"
+requests = ">=2.0"
+tornado = ">=4"
+qiniu-lite = "*"
+
+[requires]
+python_version = "3.6"

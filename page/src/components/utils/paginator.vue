@@ -10,27 +10,25 @@
     <li v-else><a href="javascript:void(0);" class="disable slim">‹</a></li>
 
     <li v-for="i in pageInfo.page_numbers" :key="i">
-        <router-link :to="toInfo(i)" :class="(pageInfo.cur_page == i) ? 'active' : ''">{{i}}</router-link>
+        <router-link :to="toInfo(i)" :class="(pageInfo.cur_page === i) ? 'active' : ''">{{i}}</router-link>
     </li>
 
     <li v-if="pageInfo.next_page">
         <router-link :to="toInfo(pageInfo.next_page)" class="slim">›</router-link>
     </li>
     <li v-else><a href="javascript:void(0);" class="disable slim">›</a></li>
-    
+
     <li v-if="pageInfo.last_page">
         <router-link :to="toInfo(pageInfo.last_page)" class="slim">»</router-link>
     </li>
 </ul>
 </template>
 
-
 <style>
 </style>
 
-
 <script>
-import state from "../../state.js"
+import state from '../../state.js'
 
 export default {
     props: {
@@ -43,7 +41,7 @@ export default {
     },
     data () {
         return {
-            state,
+            state
         }
     },
     methods: {

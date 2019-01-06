@@ -1,8 +1,7 @@
 
-import tools from "./tools.js"
-
 let data = {
     msgs: [],
+    misc: null
     /* 实际内容动态获取
     misc: {
         USER_LEVEL: {
@@ -15,7 +14,7 @@ let data = {
         },
         TOPIC_STATE: { ... },
         TOPIC_STATE_TXT: { ... }
-    },*/
+    }, */
 }
 
 export default {

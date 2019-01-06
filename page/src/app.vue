@@ -25,11 +25,14 @@
         </div>
         <!-- footer -->
         <footer><p>Copyright © 2017 <a target="_blank" href="http://github.com/fy0/storynote">Story Note</a></p></footer>
+        <msg-box></msg-box>
+        <go-top></go-top>
     </div>
-    <msg-box></msg-box>
-    <go-top></go-top>
 </div>
 </template>
+
+<style lang="scss">
+</style>
 
 <style>
 footer {
@@ -59,53 +62,55 @@ footer {
 
 .nav-bar > li.link-active > a {
     text-decoration-line: underline;
-    text-underline-position: under;    
+    text-underline-position: under;
 }
 
 .nav-bar > li.router-link-active:not(.flag) > a {
     text-decoration-line: underline;
     text-underline-position: under;
 }
-
 </style>
 
 <script>
-import Vue from 'vue'
-import api from "./netapi.js"
-import state from "./state.js"
-import config from "./config.js"
-import Loading from "./components/utils/loading.vue"
+import config from './config.js'
+import state from './state.js'
+import Loading from './components/utils/loading.vue'
 import MsgBox from './components/utils/msgbox.vue'
 import GoTop from './components/utils/gotop.vue'
+import ErrorPage from './components/ErrorPage.vue'
 
 export default {
     data () {
         return {
             state,
-            config,
+            config
         }
     },
+
     computed: {
         user: function () {
-            return this.state.data.user;
+            return this.state.data.user
+        },
+        error () {
+            return this.$store.state.errorHandler.error
         }
     },
+
+    components: {
+        GoTop,
+        MsgBox,
+        ErrorPage
+    },
+
     methods: {
         navActiveClass: function (...names) {
             for (let name of names) {
-                if (name == this.$route.name) {
-                    return 'link-active';
+                if (name === this.$route.name) {
+                    return 'link-active'
                 }
             }
             return 'flag'
         }
-    },
-    mounted: async function () {
-    },
-    components: {
-        // <my-component> 将只在父模板可用
-        GoTop,
-        'msg-box': MsgBox
     }
 }
 </script>

@@ -21,8 +21,8 @@
 
 <script>
 import Vue from 'vue'
-import api from "../../netapi.js"
-import state from "../../state.js"
+import api from '../../netapi.js'
+import state from '../../state.js'
 import nprogress from 'nprogress/nprogress.js'
 
 export default {
@@ -31,35 +31,37 @@ export default {
             form: {
                 username: '',
                 password: '',
-                password_again: '',
+                password_again: ''
             },
             loading: false,
             form_rules: {
                 username: [
                     { required: true, message: '必须输入账号', trigger: 'blur' },
                     {
-                        min: state.data.misc.USERNAME_REG_MIN, max: state.data.misc.USERNAME_REG_MAX, 
+                        min: state.data.misc.USERNAME_REG_MIN,
+                        max: state.data.misc.USERNAME_REG_MAX,
                         message: `账号长度应 ${state.data.misc.USERNAME_REG_MIN} 到 ${state.data.misc.USERNAME_REG_MAX} 之间`,
-                        trigger: 'blur' 
+                        trigger: 'blur'
                     }
                 ],
                 password: [
                     { required: true, message: '必须输入密码', trigger: 'blur' },
                     {
-                        min: state.data.misc.PASSWORD_REG_MIN, max: state.data.misc.PASSWORD_REG_MAX,
-                        message: `密码长度必须在 ${state.data.misc.PASSWORD_REG_MIN} 到 ${state.data.misc.PASSWORD_REG_MAX} 之间`, 
-                        trigger: 'blur' 
+                        min: state.data.misc.PASSWORD_REG_MIN,
+                        max: state.data.misc.PASSWORD_REG_MAX,
+                        message: `密码长度必须在 ${state.data.misc.PASSWORD_REG_MIN} 到 ${state.data.misc.PASSWORD_REG_MAX} 之间`,
+                        trigger: 'blur'
                     }
                 ],
                 password_again: [
                     {
                         validator: (rule, value, callback) => {
                             if (value === '') {
-                                callback(new Error('请再次输入密码'));
+                                callback(new Error('请再次输入密码'))
                             } else if (value !== this.form.password) {
-                                callback(new Error('两次输入密码不一致!'));
+                                callback(new Error('两次输入密码不一致!'))
                             } else {
-                                callback();
+                                callback()
                             }
                         },
                         trigger: 'blur'
@@ -70,40 +72,40 @@ export default {
     },
     methods: {
         resetForm (formName) {
-            this.$refs[formName].resetFields();
+            this.$refs[formName].resetFields()
         },
         setLoading (val) {
-            this.loading = val;
-            if (val) nprogress.start();
-            else nprogress.done();
+            this.loading = val
+            if (val) nprogress.start()
+            else nprogress.done()
         },
         submitForm (formName) {
             this.$refs[formName].validate(async (valid) => {
                 if (valid) {
-                    this.setLoading(true);
-                    let ret = await api.userSignup(this.form.username, this.form.password);
-                    if (ret.code == 0) {
-                        ret = await api.userInfo();                        
-                        Vue.set(state.data, 'user', ret.data);
-                        if (ret.code == 0) {
-                            Vue.set(state.data, 'user', ret.data);
-                            $.message_success(`注册成功！现以新的身份跳转首页。`);
+                    this.setLoading(true)
+                    let ret = await api.userSignup(this.form.username, this.form.password)
+                    if (ret.code === 0) {
+                        ret = await api.userInfo()
+                        Vue.set(state.data, 'user', ret.data)
+                        if (ret.code === 0) {
+                            Vue.set(state.data, 'user', ret.data)
+                            $.message_success(`注册成功！现以新的身份跳转首页。`)
                         } else {
-                            $.message_error(`错误：${api.retinfo[ret.code]}`);
+                            $.message_error(`错误：${api.retinfo[ret.code]}`)
                         }
-                        this.$router.replace({ path: '/'})
+                        this.$router.replace({ path: '/' })
                     } else {
                         for (let i of ret.error_msgs) {
-                            $.message_error(i);
+                            $.message_error(i)
                         }
                     }
-                    this.setLoading(false);
+                    this.setLoading(false)
                 } else {
-                    return false;
+                    return false
                 }
-            });
-        },
-    },
+            })
+        }
+    }
 }
 </script>
 

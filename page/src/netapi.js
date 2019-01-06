@@ -1,66 +1,69 @@
+import config from './config.js'
+import axios from 'axios'
 
-import 'whatwg-fetch'
-import config from "./config.js"
+axios.defaults.retry = 2
+axios.defaults.retryDelay = 300
 
-let remote = config.remote;
+let remote = config.remote
 
-function paramSerialize (obj) {
-    let str = [];
-    for (let i of Object.keys(obj)) {
-        str.push(encodeURIComponent(i) + "=" + encodeURIComponent(obj[i]));
-    }
-    return str.join("&");
-}
+const backend = axios.create({
+    timeout: 5000,
+    withCredentials: true,
+    headers: {}
+})
 
-async function do_fetch(url, method, data, fix) {
-    let fetchParams = {
-        method: method,
-        mode: 'cors',
-        credentials: 'include',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
+backend.interceptors.response.use(function (response) {
+    // Do something with response data
+    return response
+}, function (error) {
+    console.log(111, error)
+    // Do something with response error
+    // alert('请求服务器超时！将刷新页面重试！')
+    setTimeout(() => {
+        // window.location.reload()
+    }, 3000)
+    // return Promise.reject(error);
+})
+
+// function paramSerialize (obj) {
+//     let str = []
+//     for (let i of Object.keys(obj)) {
+//         str.push(encodeURIComponent(i) + '=' + encodeURIComponent(obj[i]))
+//     }
+//     return str.join('&')
+// }
+
+// async function postForm (url, form) {
+// let fetchParams = {
+//     method: 'POST',
+//     credentials: 'omit',
+//     headers: {
+//         'Accept': 'application/json'
+//     }
+// }
+// fetchParams.body = form
+// return (await fetch(url, fetchParams)).json()
+// }
+
+async function nget (url, params) {
+    let resp = await backend.get(url, {
+        params: params
+    })
+    if (resp) {
+        if (typeof resp.data === 'string') {
+            return JSON.parse(resp.data)
         }
+        return resp.data
     }
-    if (method == 'GET') if (data) url += `?${paramSerialize(data)}`;
-    if (method == 'POST') fetchParams.body = JSON.stringify(data);
-    return fetch(url, fetchParams);
 }
 
-async function postForm (url, form) {
-    let fetchParams = {
-        method: 'POST',
-        credentials: 'omit',
-        headers: {
-            'Accept': 'application/json'
+async function npost (url, data) {
+    let resp = await backend.post(url, data, {})
+    if (resp) {
+        if (typeof resp.data === 'string') {
+            return JSON.parse(resp.data)
         }
-    }
-    fetchParams.body = form
-    return (await fetch(url, fetchParams)).json()
-}
-
-async function get (url, data, fix) { return do_fetch(url, "GET", data, fix); }
-async function post (url, data, fix) { return do_fetch(url, "POST", data, fix); }
-
-async function nget(url, info) {
-    try {
-        let resp = await get(url, info);
-        if (!resp.ok) throw "NOT 200";
-        let data = await resp.json();
-        return data;
-    } catch(e) {
-        console.log("Oops, error", e);
-    }
-}
-
-async function npost(url, info) {
-    try {
-        let resp = await post(url, info);
-        if (!resp.ok) throw "NOT 200";
-        let data = await resp.json();
-        return data;
-    } catch(e) {
-        console.log("Oops, error", e);
+        return resp.data
     }
 }
 
@@ -85,21 +88,20 @@ let retinfo = {
     [retcode.NOT_FOUND]: '不存在的对象',
     [retcode.UNKNOWN]: '未知错误',
     [retcode.NOT_USER]: '未登录',
-    [retcode.PERMISSION_DENIED]: '无权限',
+    [retcode.PERMISSION_DENIED]: '无权限'
 }
-
 
 export default {
     retcode,
     retinfo,
 
     /** 获取综合信息 */
-    misc: async function (page=1) {
-        return await nget(`${remote.API_SERVER}/api/misc`);
+    misc: async function (page = 1) {
+        return nget(`${remote.API_SERVER}/api/misc`)
     },
 
     qn: async function () {
-        return await nget(`${remote.API_SERVER}/api/qn`);
+        return nget(`${remote.API_SERVER}/api/qn`)
     },
 
     qnUpload: async function (file) {
@@ -109,136 +111,136 @@ export default {
         form.append('token', code)
         form.append('file', file)
         form.append('accept', '')
-        return await postForm(config.qiniu.server, form)
+        return npost(config.qiniu.server, form)
     },
 
     /** 获取文章 */
-    recent: async function (page=1) {
-        return await nget(`${remote.API_SERVER}/api/recent/${page}`);
+    recent: async function (page = 1) {
+        return nget(`${remote.API_SERVER}/api/recent/${page}`)
     },
 
     /** 时间线 */
-    timeline: async function (page=1) {
-        return await nget(`${remote.API_SERVER}/api/timeline/${page}`);
+    timeline: async function (page = 1) {
+        return nget(`${remote.API_SERVER}/api/timeline/${page}`)
     },
 
     /** 评论 - 获取 */
-    commentGet: async function (topic_id, page=1) {
-        return await nget(`${remote.API_SERVER}/api/comment/${topic_id}`, {page});
+    commentGet: async function (topicId, page = 1) {
+        return nget(`${remote.API_SERVER}/api/comment/${topicId}`, { page })
     },
 
     /** 评论 - 发表 */
-    commentPost: async function (topic_id, content) {
-        return await npost(`${remote.API_SERVER}/api/comment/${topic_id}`, {content});
+    commentPost: async function (topicId, content) {
+        return npost(`${remote.API_SERVER}/api/comment/${topicId}`, { content })
     },
 
     /** 评论 - 删除 */
-    commentDel: async function (comment_id) {
-        return await npost(`${remote.API_SERVER}/api/comment/del/${comment_id}`);
+    commentDel: async function (commentId) {
+        return npost(`${remote.API_SERVER}/api/comment/del/${commentId}`)
     },
 
     /** 主题 - 获取内容 */
     topicGet: async function (id) {
-        return await nget(`${remote.API_SERVER}/api/topic/${id}`);
+        return nget(`${remote.API_SERVER}/api/topic/${id}`)
     },
 
     /** 主题 - 发表 */
     topicNew: async function (data) {
-        return await npost(`${remote.API_SERVER}/api/topic/new`, data);
+        return npost(`${remote.API_SERVER}/api/topic/new`, data)
     },
 
     /** 主题 - 编辑 */
-    topicEdit: async function (topic_id, data) {
-        return await npost(`${remote.API_SERVER}/api/topic/edit/${topic_id}`, data);
+    topicEdit: async function (topicId, data) {
+        return npost(`${remote.API_SERVER}/api/topic/edit/${topicId}`, data)
     },
 
     /** 主题 - 删除 */
-    topicDel: async function (topic_id) {
-        return await npost(`${remote.API_SERVER}/api/topic/del/${topic_id}`);
+    topicDel: async function (topicId) {
+        return npost(`${remote.API_SERVER}/api/topic/del/${topicId}`)
     },
 
     /** 标签 - 定义 */
     tagDefine: async function (name, desc) {
-        return await npost(`${remote.API_SERVER}/api/tag/define`, {name, desc});
+        return npost(`${remote.API_SERVER}/api/tag/define`, { name, desc })
     },
 
     /** 标签 - 获取 */
     tagList: async function () {
-        return await nget(`${remote.API_SERVER}/api/tag/list`);
+        return nget(`${remote.API_SERVER}/api/tag/list`)
     },
 
     /** 标签 - 获取 */
-    tagGetTopics: async function (tag_name) {
-        return await nget(`${remote.API_SERVER}/api/tag/get_topics_by_tag`, {tag_name});
+    tagGetTopics: async function (tagName) {
+        return nget(`${remote.API_SERVER}/api/tag/get_topics_by_tag`, { 'tag_name': tagName })
     },
 
     /** 标签 - 添加至主题 */
-    tagAddToTopic: async function (tag_name, topic_id, add_tag_if_not_exist=false) {
-        return await npost(`${remote.API_SERVER}/api/tag/add_to_topic`, {tag_name, topic_id, add_tag_if_not_exist});
+    tagAddToTopic: async function (tagName, topicId, add_tag_if_not_exist = false) {
+        return npost(`${remote.API_SERVER}/api/tag/add_to_topic`, { 'tag_name': tagName, 'topic_id': topicId, add_tag_if_not_exist })
     },
 
     /** 标签 - 从主题移除 */
-    tagRemoveFromTopic: async function (tag_name, topic_id) {
-        return await npost(`${remote.API_SERVER}/api/tag/remove_from_topic`, {tag_name, topic_id});
+    tagRemoveFromTopic: async function (tagName, topicId) {
+        return npost(`${remote.API_SERVER}/api/tag/remove_from_topic`, { 'tag_name': tagName, 'topic_id': topicId })
     },
 
     /** 标签 - 根据记录ID移除标签 */
     tagRemoveFromPostById: async function (id) {
-        return await npost(`${remote.API_SERVER}/api/tag/remove_from_post_by_id`, {id});
+        return npost(`${remote.API_SERVER}/api/tag/remove_from_post_by_id`, { id })
     },
 
     /** 用户 - 注册 */
     userSignup: async function (username, password) {
-        return await npost(`${remote.API_SERVER}/api/user/signup`, {username, password});
+        return npost(`${remote.API_SERVER}/api/user/signup`, { username, password })
     },
 
     /** 用户 - 登陆 */
     userSignin: async function (username, password, remember) {
-        return await npost(`${remote.API_SERVER}/api/user/signin`, {username, password, remember});
+        return npost(`${remote.API_SERVER}/api/user/signin`, { username, password, remember })
     },
 
     /** 用户 - 注销 */
     userSignout: async function () {
-        return await npost(`${remote.API_SERVER}/api/user/signout`);
+        return npost(`${remote.API_SERVER}/api/user/signout`)
     },
 
     /** 用户 - 个人信息 */
     userInfo: async function () {
-        return await nget(`${remote.API_SERVER}/api/user/userinfo`);
+        return nget(`${remote.API_SERVER}/api/user/userinfo`)
     },
 
     /** 用户 - 修改密码 */
-    userPWChange: async function (password, new_password) {
-        return await npost(`${remote.API_SERVER}/api/user/password_change`, {password, new_password});
+    userPWChange: async function (password, newPassword) {
+        return npost(`${remote.API_SERVER}/api/user/password_change`, { password, 'new_password': newPassword })
     },
 
     /** 管理 - 用户 - 列表 */
-    manageUserList: async function (keyword='', p=1) {
-        return await nget(`${remote.API_SERVER}/api/manage/user`, {keyword, p});
+    manageUserList: async function (keyword = '', p = 1) {
+        return nget(`${remote.API_SERVER}/api/manage/user`, { keyword, p })
     },
 
     /** 管理 - 用户 - 重置密码 */
-    manageUserPasswordReset: async function (user_id, new_password) {
-        return await npost(`${remote.API_SERVER}/api/manage/user/password_reset`, {user_id, new_password});
+    manageUserPasswordReset: async function (userId, newPassword) {
+        return npost(`${remote.API_SERVER}/api/manage/user/password_reset`, { 'user_id': userId, 'new_password': newPassword })
     },
 
     /** 管理 - 用户 - 重置key */
-    manageUserKeyReset: async function (user_id) {
-        return await npost(`${remote.API_SERVER}/api/manage/user/key_reset`, {user_id});
+    manageUserKeyReset: async function (userId) {
+        return npost(`${remote.API_SERVER}/api/manage/user/key_reset`, { 'user_id': userId })
     },
 
     /** 管理 - 用户 - 修改用户组 */
-    manageUserChangeLevel: async function (user_id, level) {
-        return await npost(`${remote.API_SERVER}/api/manage/user/change_level`, {user_id, level});
+    manageUserChangeLevel: async function (userId, level) {
+        return npost(`${remote.API_SERVER}/api/manage/user/change_level`, { 'user_id': userId, level })
     },
 
     /** 管理 - 主题 - 列表 */
-    manageTopicList: async function (p=1) {
-        return await nget(`${remote.API_SERVER}/api/manage/topic`, {p});
+    manageTopicList: async function (p = 1) {
+        return nget(`${remote.API_SERVER}/api/manage/topic`, { p })
     },
 
     /** 管理 - 主题 - 修改状态 */
-    manageUserChangeState: async function (topic_id, state) {
-        return await npost(`${remote.API_SERVER}/api/manage/topic/change_state`, {topic_id, state});
-    },
+    manageUserChangeState: async function (topicId, state) {
+        return npost(`${remote.API_SERVER}/api/manage/topic/change_state`, { 'topic_id': topicId, state })
+    }
 }

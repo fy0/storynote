@@ -5,12 +5,12 @@
     <el-card v-else class="box-card" v-for="i in user_lst.items" :key="i.id">
         <div>
             <span>{{i.username}}</span>
-            <span v-if="i.id == state.data.user.id">[当前用户]</span>
+            <span v-if="i.id === state.data.user.id">[当前用户]</span>
         </div>
         <div>
             <span>权限：</span>
-            <span v-for="v,k in state.data.misc.USER_LEVEL_TXT" :key="k">
-                <span class="level-btn" v-if="k == i.level">{{v}}</span>
+            <span v-for="(v, k) in state.data.misc.USER_LEVEL_TXT" :key="k">
+                <span class="level-btn" v-if="k === i.level">{{v}}</span>
                 <a class="level-btn" v-else href="javascript:void(0)" @click="stateChange(i, k)">{{v}}</a>
             </span>
         </div>
@@ -44,8 +44,8 @@
 </style>
 
 <script>
-import api from "../../netapi.js"
-import state from "../../state.js"
+import api from '../../netapi.js'
+import state from '../../state.js'
 
 export default {
     data () {
@@ -56,54 +56,54 @@ export default {
             curitem: null,
             new_password: '',
             noteText: '加载中 ...',
-            passwordResetDialogVisible: false,
+            passwordResetDialogVisible: false
         }
     },
     mounted: async function () {
-        let ret = await api.manageUserList();
-        this.$set(this, "user_lst", ret.data);
-        this.noteText = '';
+        let ret = await api.manageUserList()
+        this.$set(this, 'user_lst', ret.data)
+        this.noteText = ''
     },
     methods: {
         showPasswordReset: function (item) {
-            this.curitem = item;
-            this.passwordResetDialogVisible = true;
+            this.curitem = item
+            this.passwordResetDialogVisible = true
         },
         stateChange: async function (item, level) {
-            let ret = await api.manageUserChangeLevel(item.id, level);
-            if (ret.code == 0) {
-                item.level = level;
-                $.message_success('操作成功！');
-            } else $.message_error(api.retinfo[ret.code]);
+            let ret = await api.manageUserChangeLevel(item.id, level)
+            if (ret.code === 0) {
+                item.level = level
+                $.message_success('操作成功！')
+            } else $.message_error(api.retinfo[ret.code])
         },
         passwordReset: async function () {
-            let ret = await api.manageUserPasswordReset(this.curitem.id, this.new_password);
-            if (ret.code == 0) {
-                $.message_success('操作成功！');
-            } else $.message_error(api.retinfo[ret.code]);
-            this.passwordResetDialogVisible = false;
+            let ret = await api.manageUserPasswordReset(this.curitem.id, this.new_password)
+            if (ret.code === 0) {
+                $.message_success('操作成功！')
+            } else $.message_error(api.retinfo[ret.code])
+            this.passwordResetDialogVisible = false
         },
         sessionReset: async function (item) {
-            this.$confirm('确认重置？', {lockScroll: false}).then(async _ => {
-                let ret = await api.manageUserKeyReset(item.id);
-                if (ret.code == 0) {
-                    $.message_success('操作成功！');
-                } else $.message_error(api.retinfo[ret.code]);
-            }).catch(_ => {});
+            this.$confirm('确认重置？', { lockScroll: false }).then(async _ => {
+                let ret = await api.manageUserKeyReset(item.id)
+                if (ret.code === 0) {
+                    $.message_success('操作成功！')
+                } else $.message_error(api.retinfo[ret.code])
+            }).catch(_ => {})
         },
         searchIconClick: async function () {
-            this.noteText = '加载中 ...';
-            let ret = await api.manageUserList(this.keyword);
-            if (ret.code == 0) {
-                this.$set(this, "user_lst", ret.data);
-                this.noteText = ret.data.items.length ? '' : '未找到数据';
-            } else $.message_error(api.retinfo[ret.code]);
-            this.passwordResetDialogVisible = false;
+            this.noteText = '加载中 ...'
+            let ret = await api.manageUserList(this.keyword)
+            if (ret.code === 0) {
+                this.$set(this, 'user_lst', ret.data)
+                this.noteText = ret.data.items.length ? '' : '未找到数据'
+            } else $.message_error(api.retinfo[ret.code])
+            this.passwordResetDialogVisible = false
         }
     },
     watch: {
         'keyword': _.debounce(function (val, oldVal) {
-            this.searchIconClick();
+            this.searchIconClick()
         }, 1000)
     }
 }
