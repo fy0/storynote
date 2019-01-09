@@ -1,3 +1,6 @@
+/* eslint-disable no-extend-native */
+/* eslint-disable camelcase */
+
 import state from './state.js'
 import { marked } from './md.js'
 import markedMod from 'marked'

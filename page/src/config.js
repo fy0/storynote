@@ -11,7 +11,7 @@ let config = {
         host: '',
         suffix: ''
     },
-    title: 'fy 的摸鱼之地'
+    title: 'Story Note'
 }
 
 // try {

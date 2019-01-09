@@ -28,22 +28,6 @@ import NoSSR from 'vue-no-ssr'
 
 Vue.component('no-ssr', NoSSR)
 
-Vue.config.productionTip = false
-
-Vue.use(Button)
-Vue.use(Card)
-Vue.use(Checkbox)
-Vue.use(DatePicker)
-Vue.use(Dialog)
-Vue.use(Select)
-Vue.use(Option)
-Vue.use(TabPane)
-Vue.use(Tabs)
-Vue.use(Tag)
-Vue.use(Input)
-Vue.use(Form)
-Vue.use(FormItem)
-
 // MessageBox 处理
 Vue.prototype.$msgbox = MessageBox
 Vue.prototype.$alert = MessageBox.alert

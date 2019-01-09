@@ -1,38 +1,36 @@
 <template>
 <div class="">
-    <no-ssr placeholder="loading">
-        <div class="edit-page-title">
-            <h3 class="" v-if="!is_edit">新建主题</h3>
-            <h3 class="" v-else>编辑主题</h3>
-            <el-button class="right-top-btn" type="primary" :loading="loading" @click="send">{{postButtonText}}</el-button>
-        </div>
+    <div class="edit-page-title">
+        <h3 class="" v-if="!is_edit">新建主题</h3>
+        <h3 class="" v-else>编辑主题</h3>
+        <el-button class="right-top-btn" type="primary" :loading="loading" @click="send">{{postButtonText}}</el-button>
+    </div>
 
-        <form id="form_topic" method="POST" @submit.prevent="send">
-            <div class="form-item">
-                <el-input name="title" v-model="topicInfo.title" placeholder="这里填写标题，最长50个字" style="width: 70%; font-size: 15px; margin-right: 2%;"></el-input>
-                <el-date-picker
-                    style="width: 27%; margin-top: -0.3px;"
-                    v-model="date"
-                    type="datetime"
-                    placeholder="选择日期时间"
-                    align="left"
-                    :picker-options="pickerOptions">
-                </el-date-picker>
-            </div>
-            <div class="form-item">
-                <el-input name="link_to" v-model="topicInfo.link_to" placeholder="填写外站引用链地址(可选)" style="width: 70%; font-size: 15px; margin-right: 2%;"></el-input>
-                <el-select v-model="topicInfo.state" placeholder="请选择" style="width: 27%; font-size: 15px; font-weight: bolder;">
-                    <el-option v-for="[v, k] in topicStateOptions" :key="parseInt(v)" :label="`状态：${k}`" :value="parseInt(v)"></el-option>
-                </el-select>
-            </div>
-            <div class="form-item">
-                <markdown-editor class="editor" ref="editor" v-model="topicInfo.content" rows="15" autofocus />
-            </div>
-            <div class="form-item">
-                <el-button style="float: right" type="primary" :loading="loading" @click="send">{{postButtonText}}</el-button>
-            </div>
-        </form>
-    </no-ssr>
+    <form id="form_topic" method="POST" @submit.prevent="send">
+        <div class="form-item">
+            <el-input name="title" v-model="topicInfo.title" placeholder="这里填写标题，最长50个字" style="width: 70%; font-size: 15px; margin-right: 2%;"></el-input>
+            <el-date-picker
+                style="width: 27%; margin-top: -0.3px;"
+                v-model="date"
+                type="datetime"
+                placeholder="选择日期时间"
+                align="left"
+                :picker-options="pickerOptions">
+            </el-date-picker>
+        </div>
+        <div class="form-item">
+            <el-input name="link_to" v-model="topicInfo.link_to" placeholder="填写外站引用链地址(可选)" style="width: 70%; font-size: 15px; margin-right: 2%;"></el-input>
+            <el-select v-model="topicInfo.state" placeholder="请选择" style="width: 27%; font-size: 15px; font-weight: bolder;">
+                <el-option v-for="[v, k] in topicStateOptions" :key="parseInt(v)" :label="`状态：${k}`" :value="parseInt(v)"></el-option>
+            </el-select>
+        </div>
+        <div class="form-item">
+            <markdown-editor class="editor" ref="editor" v-model="topicInfo.content" rows="15" autofocus />
+        </div>
+        <div class="form-item">
+            <el-button style="float: right" type="primary" :loading="loading" @click="send">{{postButtonText}}</el-button>
+        </div>
+    </form>
 </div>
 </template>
 
@@ -208,14 +206,16 @@ export default {
             }
         }
 
-        let editor = this.$refs.editor
-        let cm = editor.simplemde.codemirror
-        cm.on('drop', async (editor, e) => {
-            await uploadImage(editor, e.dataTransfer.files)
-        })
-        cm.on('paste', async (editor, e) => {
-            await uploadImage(editor, e.clipboardData.files)
-            return false
+        this.$nextTick(() => {
+            let editor = this.$refs.editor
+            let cm = editor.simplemde.codemirror
+            cm.on('drop', async (editor, e) => {
+                await uploadImage(editor, e.dataTransfer.files)
+            })
+            cm.on('paste', async (editor, e) => {
+                await uploadImage(editor, e.clipboardData.files)
+                return false
+            })
         })
     },
     watch: {

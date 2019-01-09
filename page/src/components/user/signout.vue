@@ -15,7 +15,7 @@ export default {
         return {}
     },
     mounted: async function () {
-        let ret = await api.userSignout()
+        await api.userSignout()
         Vue.delete(state.data, 'user')
         this.$router.replace('/')
         $.message_success(`您已成功注销`)

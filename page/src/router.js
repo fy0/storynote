@@ -1,23 +1,23 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Index from './components/index.vue'
-import Timeline from './components/timeline.vue'
-import TopicPage from './components/topic.vue'
-import Tags from './components/tags.vue'
-import TagPage from './components/tag.vue'
-import SignIn from './components/user/signin.vue'
-import SignUp from './components/user/signup.vue'
-import SignOut from './components/user/signout.vue'
-import Loading from './components/utils/loading.vue'
-import Manage from './components/manage.vue'
-import Links from './components/links.vue'
-import About from './components/about.vue'
-const TopicNew = () => import('./components/topic_new.vue')
+import Index from '@/components/index.vue'
+import Timeline from '@/components/timeline.vue'
+import TopicPage from '@/components/topic.vue'
+import Tags from '@/components/tags.vue'
+import TagPage from '@/components/tag.vue'
+import SignIn from '@/components/user/signin.vue'
+import SignUp from '@/components/user/signup.vue'
+import SignOut from '@/components/user/signout.vue'
+import Loading from '@/components/utils/loading.vue'
+import Manage from '@/components/manage.vue'
+import Links from '@/components/links.vue'
+import About from '@/components/about.vue'
+const TopicNew = () => import('@/components/topic_new.vue')
 
 Vue.use(Router)
 
-export default () => {
-    return new Router({
+export function createRouter() {
+    let router = new Router({
         mode: 'history',
         base: process.env.BASE_URL,
         routes: [
@@ -46,4 +46,5 @@ export default () => {
             { path: '/loading', component: Loading }
         ]
     })
+    return router
 }

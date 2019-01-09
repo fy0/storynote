@@ -1,55 +1,48 @@
 {
   "name": "storynote",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "My neat Nuxt.js project",
+  "author": "fy",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "ssr:build": "vue-cli-service ssr:build",
-    "ssr:fix": "vue-cli-service ssr:fix",
-    "ssr:fix-vuex": "vue-cli-service ssr:fix-vuex",
-    "ssr:serve": "vue-cli-service ssr:serve",
-    "ssr:start": "vue-cli-service ssr:start",
-    "ssr:static": "vue-cli-service ssr:static"
+    "dev": "nuxt",
+    "serve": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "precommit": "npm run lint"
+  },
+  "config": {
+    "nuxt": {
+      "port": "3000"
+    }
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.12",
     "@fortawesome/free-regular-svg-icons": "^5.6.3",
     "@fortawesome/free-solid-svg-icons": "^5.6.3",
-    "@uvue/core": "^0.1.0-alpha",
-    "@uvue/server": "^0.1.0-alpha",
+    "@nuxtjs/axios": "^5.0.0",
+    "@nuxtjs/router": "^1.1.0",
+    "@vue/eslint-config-standard": "^4.0.0",
     "animate.css": "^3.7.0",
-    "axios": "^0.18.0",
-    "compression": "^1.7.3",
-    "connect": "^3.6.6",
-    "cookie-parser": "^1.4.3",
-    "core-js": "^2.5.7",
+    "cross-env": "^5.2.0",
     "easymde": "^2.4.2",
-    "element-ui": "^2.4.11",
+    "element-ui": "^2.4.6",
     "lodash": "^4.17.11",
     "marked": "^0.6.0",
+    "node-sass": "^4.11.0",
     "nprogress": "^0.2.0",
+    "nuxt": "^2.0.0",
     "objectid-js": "^1.0.2-patch1",
     "prismjs": "^1.15.0",
-    "purecss": "^1.0.0",
-    "serve-static": "^1.13.2",
-    "vue": "^2.5.21",
-    "vue-no-ssr": "^1.1.1",
-    "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
+    "sass-loader": "^7.1.0"
   },
   "devDependencies": {
-    "@uvue/vue-cli-plugin-ssr": "0.1.0-alpha.13",
-    "@vue/cli-plugin-babel": "^3.0.4",
-    "@vue/cli-plugin-eslint": "^3.0.4",
-    "@vue/cli-service": "^3.0.4",
-    "@vue/eslint-config-standard": "^4.0.0",
-    "babel-eslint": "^10.0.1",
-    "eslint": "^5.8.0",
-    "eslint-plugin-vue": "^5.0.0",
-    "node-sass": "^4.9.0",
-    "sass-loader": "^7.0.1",
-    "vue-template-compiler": "^2.5.21"
+    "nodemon": "^1.11.0",
+    "babel-eslint": "^8.2.1",
+    "eslint": "^5.0.1",
+    "eslint-loader": "^2.0.0",
+    "eslint-plugin-vue": "^4.0.0"
   }
 }
