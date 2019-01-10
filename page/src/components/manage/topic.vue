@@ -5,7 +5,7 @@
         <div>
             <div>
                 <h3 class="topic-title">{{i.title}}</h3>
-                <router-link :to="{ name: 'topic_edit', params: {id: i.id}}">编辑</router-link>
+                <nuxt-link :to="{ name: 'topic_edit', params: {id: i.id}}">编辑</nuxt-link>
             </div>
             <span>作者： <b>{{i.user.username}}</b>
                 <span v-if="i.user.id === state.data.user.id">[当前用户]</span>

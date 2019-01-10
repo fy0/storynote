@@ -12,11 +12,15 @@ import Loading from '@/components/utils/loading.vue'
 import Manage from '@/components/manage.vue'
 import Links from '@/components/links.vue'
 import About from '@/components/about.vue'
+
+import api from '@/netapi'
+import state from '@/state'
+
 const TopicNew = () => import('@/components/topic_new.vue')
 
 Vue.use(Router)
 
-export function createRouter() {
+export function createRouter () {
     let router = new Router({
         mode: 'history',
         base: process.env.BASE_URL,
@@ -27,7 +31,7 @@ export function createRouter() {
             //     component: Home
             // },
             // 注意：router的exact针对的是path而不是对象本身，因此虽然模板中指定的
-            // 是 name: index 但意味着“主页”链接永远带有 router-link-active
+            // 是 name: index 但意味着“主页”链接永远带有 nuxt-link-active
             { path: '/', component: Index },
             // { path: '/p/:page(\\d+)?', name: 'index', component: Index },
             { path: '/:p(p)?/:page(\\d+)?', name: 'index', component: Index },
@@ -45,6 +49,22 @@ export function createRouter() {
             { path: '/about', component: About },
             { path: '/loading', component: Loading }
         ]
+    })
+
+    router.beforeEach(async function (to, from, next) {
+        // nprogress.start()
+        // await store.dispatch('onHttpRequest')
+        let ret = await api.misc()
+        Vue.set(state.data, 'misc', ret.data)
+
+        if (process.client) {
+            ret = await api.userInfo()
+            if (ret.code === 0) {
+                Vue.set(state.data, 'user', ret.data)
+            }
+        }
+
+        next()
     })
     return router
 }

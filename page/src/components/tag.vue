@@ -5,25 +5,25 @@
         <TopicItem v-for="item in page_info.items" :item="item.data" :key="item.id"></TopicItem>
         <ul class="ic-pages">
             <li v-if="page_info.first_page">
-                <router-link :to="{ path: `/p/${page_info.first_page}` }" class="slim">«</router-link>
+                <nuxt-link :to="{ path: `/p/${page_info.first_page}` }" class="slim">«</nuxt-link>
             </li>
 
             <li v-if="page_info.prev_page">
-                <router-link :to="{ path: `/p/${page_info.prev_page}` }" class="slim">‹</router-link>
+                <nuxt-link :to="{ path: `/p/${page_info.prev_page}` }" class="slim">‹</nuxt-link>
             </li>
             <li v-else><a href="javascript:void(0);" class="disable slim">‹</a></li>
 
             <li v-for="i in page_info.page_numbers" :key="i">
-                <router-link :to="{ path: `/p/${i}` }" :class="(page_info.cur_page === i) ? 'active' : ''">{{i}}</router-link>
+                <nuxt-link :to="{ path: `/p/${i}` }" :class="(page_info.cur_page === i) ? 'active' : ''">{{i}}</nuxt-link>
             </li>
 
             <li v-if="page_info.next_page">
-                <router-link :to="{ path: `/p/${page_info.next_page}` }" class="slim">›</router-link>
+                <nuxt-link :to="{ path: `/p/${page_info.next_page}` }" class="slim">›</nuxt-link>
             </li>
             <li v-else><a href="javascript:void(0);" class="disable slim">›</a></li>
 
             <li v-if="page_info.last_page">
-                <router-link :to="{ path: `/p/${page_info.last_page}` }" class="slim">»</router-link>
+                <nuxt-link :to="{ path: `/p/${page_info.last_page}` }" class="slim">»</nuxt-link>
             </li>
         </ul>
     </div>

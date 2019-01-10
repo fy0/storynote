@@ -1,7 +1,7 @@
 <template>
 <div v-if="state.data.user">
     <p>已经登录，身份为 {{state.data.user.name}}</p>
-    <router-link :to="{ path: '/signout' }">注销</router-link>
+    <nuxt-link :to="{ path: '/signout' }">注销</nuxt-link>
 </div>
 <div v-else>
     <h4>登录</h4>

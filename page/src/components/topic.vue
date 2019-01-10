@@ -1,13 +1,13 @@
 <template>
 <div class="topic-content entry">
     <div class="content" v-if="topic">
-        <h1 class="post-title"><router-link :to="{ path: '/t/' + topic.id }">{{topic.title}}</router-link></h1>
+        <h1 class="post-title"><nuxt-link :to="{ path: '/t/' + topic.id }">{{topic.title}}</nuxt-link></h1>
 
         <div class="post-info">
             <span>{{topic.user.name}}</span>
             <span>{{getTime(topic.time)}}</span>
             <span>翻阅 {{topic.view_count}}</span>
-            <router-link v-if="canEdit" :to="{ name: 'topic_edit', params: {id: topic.id}}">编辑</router-link>
+            <nuxt-link v-if="canEdit" :to="{ name: 'topic_edit', params: {id: topic.id}}">编辑</nuxt-link>
         </div>
 
         <div v-html="marked(topic.content)"></div>
@@ -15,7 +15,7 @@
         <div class="tags">
             <el-tag v-for="tag in topic_tags" :key="tag" :closable="canEdit" :close-transition="true" @close="handleClose(tag)">
                 <!-- 这里真是坑 -->
-                <router-link :to="{ name: 'tag', params: {name: tag.tag.name}}">{{tag.tag.name}}</router-link>
+                <nuxt-link :to="{ name: 'tag', params: {name: tag.tag.name}}">{{tag.tag.name}}</nuxt-link>
             </el-tag>
 
             <span v-if="canEdit">
@@ -55,7 +55,7 @@
         <div v-if="comments_page > 1">
             <span v-for="index in comments_page" :key="index">
                 <span class="comment-page-btn" v-if="$route.params.cmtpage === index">{{index}}</span>
-                <router-link class="comment-page-btn" v-else :to="{ name: 'topic', params: {id: topic.id, cmtpage: index}}" replace>{{index}}</router-link>
+                <nuxt-link class="comment-page-btn" v-else :to="{ name: 'topic', params: {id: topic.id, cmtpage: index}}" replace>{{index}}</nuxt-link>
             </span>
         </div>
 
@@ -71,7 +71,7 @@
             </form>
         </div>
         <div style="padding: 20px" v-else>
-            需要 <router-link :to="{ path: `/signin` }">登录</router-link> 后方可回复, 如果你还没有账号你可以 <router-link :to="{ path: `/signup` }">注册</router-link> 一个帐号。
+            需要 <nuxt-link :to="{ path: `/signin` }">登录</nuxt-link> 后方可回复, 如果你还没有账号你可以 <nuxt-link :to="{ path: `/signup` }">注册</nuxt-link> 一个帐号。
         </div>
 
     </div>
@@ -201,7 +201,6 @@ export default {
         }
     },
     async asyncData ({ params, redirect, error }) {
-        console.log(2222222)
         let topic = await api.topicGet(params.id)
 
         if (topic.code === api.retcode.SUCCESS) {
@@ -219,49 +218,9 @@ export default {
             }
         }
 
-        return {}
-    },
-    async fetch () {
-        console.log(333333)
-        let topic = await api.topicGet(this.$route.params.id)
-
-        if (topic.code === api.retcode.SUCCESS) {
-            // 获取评论
-            let comment = await api.commentGet(topic.data.id, this.$route.params.cmtpage || 1)
-
-            if (comment.code === api.retcode.SUCCESS) {
-                this.topic = topic.data
-                this.topic_tags = topic.data.tags
-
-                this.comments_length = comment.data.count
-                this.comments = comment.data.items
-                this.comments_page = Math.ceil(this.comments_length / comment.data.page_size)
-                // return
-            }
-        }
-    },
-    created: async function () {
-        console.log(44444)
-        // 获取文章内容
-        let topic = await api.topicGet(this.$route.params.id)
-
-        if (topic.code === api.retcode.SUCCESS) {
-            // 获取评论
-            let comment = await api.commentGet(topic.data.id, this.$route.params.cmtpage || 1)
-
-            if (comment.code === api.retcode.SUCCESS) {
-                this.topic = topic.data
-                this.topic_tags = topic.data.tags
-
-                this.comments_length = comment.data.count
-                this.comments = comment.data.items
-                this.comments_page = Math.ceil(this.comments_length / comment.data.page_size)
-                // return
-            }
-        }
-
         // 404
         // $.message_error(`错误：找不到指定的主题`)
+        return {}
     },
     components: {
         Loading
