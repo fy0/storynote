@@ -28,6 +28,11 @@ export default {
             state: state
         }
     },
+    head () {
+        return {
+            title: `日志`
+        }
+    },
     methods: {
         marked_brief: $.marked_brief,
         time_to_text: $.time_to_text

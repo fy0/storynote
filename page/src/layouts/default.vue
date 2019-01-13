@@ -11,16 +11,16 @@
                 <ul class="nav-bar">
                     <nuxt-link tag="li" :to="{ name: 'index' }" :class="navActiveClass('index', 'topic')"><a>日志</a></nuxt-link>
                     <nuxt-link tag="li" :to="{ name: 'tags' }" :class="navActiveClass('tag', 'tags')"><a>标签</a></nuxt-link>
-                    <nuxt-link tag="li" :to="{ name: 'timeline' }" ><a>时光</a></nuxt-link>
-                    <nuxt-link tag="li" :to="{ path: '/signin' }" ><a>用户</a></nuxt-link>
-                    <no-ssr placeholder="loading">
+                    <nuxt-link tag="li" :to="{ name: 'timeline' }" :class="navActiveClass('timeline')"><a>时光</a></nuxt-link>
+                    <nuxt-link tag="li" :to="{ path: '/signin' }" :class="navActiveClass('signin', 'signup', 'signout')"><a>用户</a></nuxt-link>
+                    <no-ssr placeholder="">
                         <template>
                             <nuxt-link v-if="user && user.level >= 80" tag="li" :to="{ path: '/new' }" :class="navActiveClass('topic_new', 'topic_edit')"><a>新建</a></nuxt-link>
-                            <nuxt-link v-if="user && user.level >= 100" tag="li" :to="{ path: '/manage' }" ><a>管理</a></nuxt-link>
+                            <nuxt-link v-if="user && user.level >= 100" tag="li" :to="{ path: '/manage' }" :class="navActiveClass('manage')"><a>管理</a></nuxt-link>
                         </template>
                     </no-ssr>
-                    <nuxt-link tag="li" :to="{ name: 'links' }" ><a>友链</a></nuxt-link>
-                    <nuxt-link tag="li" :to="{ path: '/about' }" ><a>关于</a></nuxt-link>
+                    <nuxt-link tag="li" :to="{ name: 'links' }" :class="navActiveClass('links')"><a>友链</a></nuxt-link>
+                    <nuxt-link tag="li" :to="{ path: '/about' }" :class="navActiveClass('about')"><a>关于</a></nuxt-link>
                 </ul>
             </div>
             <div class="content">
@@ -118,18 +118,27 @@ export default {
         }
     },
 
-    metaInfo: {
-        title: 'App',
-        titleTemplate: '%s - StoryNote',
-        htmlAttrs: {
-            lang: 'zh'
-        },
-        meta: [
-            { charset: 'utf-8' },
-            { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-            // Use vmid here for pages that needs to override this value
-            { vmid: 'description', name: 'description', content: 'My awesome application' }
-        ]
+    head () {
+        return {
+            title: '',
+            titleTemplate: function (val) {
+                if (val) {
+                    return `${val} - ${config.title}`
+                }
+                return config.title
+            },
+            htmlAttrs: {
+                lang: 'zh'
+            },
+            meta: [
+                { charset: 'utf-8' },
+                { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+                { hid: 'description', name: 'description', content: '我的个人博客' }
+            ],
+            link: [
+                { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+            ]
+        }
     },
 
     components: {

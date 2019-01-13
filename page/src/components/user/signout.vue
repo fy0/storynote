@@ -14,6 +14,11 @@ export default {
     data () {
         return {}
     },
+    head () {
+        return {
+            title: `登出`
+        }
+    },
     mounted: async function () {
         await api.userSignout()
         Vue.delete(state.data, 'user')

@@ -53,6 +53,15 @@ export default {
             info: {}
         }
     },
+    head () {
+        return {
+            title: '时间线',
+            meta: [
+                // hid is used as unique identifier. Do not use `vmid` for it as it will not work
+                // { hid: 'description', name: 'description', content: 'My custom description' }
+            ]
+        }
+    },
     methods: {
         marked_brief: $.marked_brief,
         time_to_text: $.time_to_text

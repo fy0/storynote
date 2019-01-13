@@ -23,11 +23,10 @@
 import Vue from 'vue'
 import api from '../../netapi.js'
 import state from '../../state.js'
-import nprogress from 'nprogress/nprogress.js'
+// import nprogress from 'nprogress/nprogress.js'
 
 export default {
     data () {
-        console.log(2222, state.data.misc)
         return {
             form: {
                 username: '',
@@ -71,14 +70,19 @@ export default {
             }
         }
     },
+    head () {
+        return {
+            title: `注册`
+        }
+    },
     methods: {
         resetForm (formName) {
             this.$refs[formName].resetFields()
         },
         setLoading (val) {
             this.loading = val
-            if (val) nprogress.start()
-            else nprogress.done()
+            // if (val) nprogress.start()
+            // else nprogress.done()
         },
         submitForm (formName) {
             this.$refs[formName].validate(async (valid) => {

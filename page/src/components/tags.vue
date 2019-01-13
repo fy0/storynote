@@ -19,6 +19,15 @@ export default {
             page_info: null
         }
     },
+    head () {
+        return {
+            title: `标签列表`,
+            meta: [
+                // hid is used as unique identifier. Do not use `vmid` for it as it will not work
+                // { hid: 'description', name: 'description', content: 'My custom description' }
+            ]
+        }
+    },
     mounted: async function () {
     },
     beforeRouteEnter: async (to, from, next) => {

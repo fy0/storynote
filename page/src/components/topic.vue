@@ -88,10 +88,6 @@
     margin-right: 5px;
 }
 
-.el-tag > a {
-    color: #fff;
-}
-
 .post-title {
     word-wrap: break-word;
     margin: 0.3em 0 0;
@@ -127,6 +123,15 @@ export default {
             topic_tags: [],
             inputVisible: false,
             inputValue: ''
+        }
+    },
+    head () {
+        return {
+            title: this.topic && this.topic.title,
+            meta: [
+                // hid is used as unique identifier. Do not use `vmid` for it as it will not work
+                // { hid: 'description', name: 'description', content: 'My custom description' }
+            ]
         }
     },
     computed: {
