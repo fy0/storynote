@@ -3,21 +3,32 @@
 // import myState from '@/state'
 
 export const state = () => ({
-    counter: 0
+    counter: 0,
+    misc: null
 })
 
 export const mutations = {
     increment (state) {
         state.counter++
+    },
+    SET_MISC (state, data) {
+        state.misc = data
+    },
+    SET_USER (state, data) {
+        state.user = data
     }
 }
 
 export const actions = {
-    async nuxtServerInit ({ commit }, { req }) {
-        // if (!myState.data.misc) {
-        // let ret = await api.misc()
-        // Vue.set(myState.data, 'misc', ret.data)
-        // commit('SET_MISC', ret.data)
+    async init ({ state, commit }) {
+        // if (!state.misc) {
+        //     let ret = await api.misc()
+        //     commit('SET_MISC', ret.data)
+
+        //     ret = await api.userInfo()
+        //     if (ret.code === 0) {
+        //         commit('SET_USER', ret.data)
+        //     }
         // }
     }
 }

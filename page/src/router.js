@@ -13,9 +13,6 @@ import Manage from '@/components/manage.vue'
 import Links from '@/components/links.vue'
 import About from '@/components/about.vue'
 
-import api from '@/netapi'
-import state from '@/state'
-
 const TopicNew = () => import('@/components/topic_new.vue')
 
 Vue.use(Router)
@@ -51,20 +48,5 @@ export function createRouter () {
         ]
     })
 
-    router.beforeEach(async function (to, from, next) {
-        // nprogress.start()
-        // await store.dispatch('onHttpRequest')
-        let ret = await api.misc()
-        Vue.set(state.data, 'misc', ret.data)
-
-        if (process.client) {
-            ret = await api.userInfo()
-            if (ret.code === 0) {
-                Vue.set(state.data, 'user', ret.data)
-            }
-        }
-
-        next()
-    })
     return router
 }
