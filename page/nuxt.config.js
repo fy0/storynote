@@ -18,12 +18,16 @@ module.exports = {
         'element-ui/lib/theme-chalk/index.css'
     ],
 
+    /** middleware */
+    router: {
+        middleware: ['router-guards']
+    },
+
     /*
   ** Plugins to load before mounting the App
   */
     plugins: [
-        { src: '@/plugins/element-ui', ssr: false },
-        '@/plugins/route'
+        { src: '@/plugins/element-ui', ssr: false }
     ],
 
     /*
