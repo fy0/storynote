@@ -11,7 +11,6 @@ import 'animate.css'
 // import 'nprogress/nprogress.css'
 
 import './assets/css/base.css'
-// import state from './state.js'
 // import api from './netapi.js'
 import './tools.js'
 import './config.js'

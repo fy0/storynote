@@ -95,7 +95,6 @@ footer {
 
 <script>
 import config from '@/config.js'
-import state from '@/state.js'
 // import Loading from './components/utils/loading.vue'
 import MsgBox from '@/components/utils/msgbox.vue'
 import GoTop from '@/components/utils/gotop.vue'
@@ -104,14 +103,13 @@ import GoTop from '@/components/utils/gotop.vue'
 export default {
     data () {
         return {
-            state,
             config
         }
     },
 
     computed: {
         user: function () {
-            return this.state.data.user || {}
+            return this.$store.state.user || {}
         },
         error () {
             return this.$store.state.errorHandler.error

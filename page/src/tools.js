@@ -1,7 +1,6 @@
 /* eslint-disable no-extend-native */
 /* eslint-disable camelcase */
 
-import state from './state.js'
 import { marked } from './md.js'
 import markedMod from 'marked'
 
@@ -108,10 +107,11 @@ $.message = function (type, text) {
         'error': 'am-alert-danger'
     }
     let data = { type, text, class: convert[type] }
-    state.data.msgs.push(data)
-    _.delay(() => {
-        state.data.msgs.splice(state.data.msgs.indexOf(data), 1)
-    }, 3000)
+    console.log(data)
+    // state.data.msgs.push(data)
+    // _.delay(() => {
+    //     state.data.msgs.splice(state.data.msgs.indexOf(data), 1)
+    // }, 3000)
 }
 
 $.message_text = function (text) {

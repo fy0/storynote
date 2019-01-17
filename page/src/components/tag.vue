@@ -40,7 +40,6 @@
 
 <script>
 import api from '../netapi.js'
-import state from '../state.js'
 import Loading from './utils/loading.vue'
 import TopicItem from './utils/topic_item.vue'
 
@@ -48,8 +47,7 @@ export default {
     data () {
         return {
             exists: false,
-            page_info: null,
-            state: state
+            page_info: null
         }
     },
     head () {

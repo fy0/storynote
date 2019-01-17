@@ -5,11 +5,11 @@
     <el-card v-else class="box-card" v-for="i in user_lst.items" :key="i.id">
         <div>
             <span>{{i.username}}</span>
-            <span v-if="i.id === state.data.user.id">[当前用户]</span>
+            <span v-if="i.id === $store.state.user.id">[当前用户]</span>
         </div>
         <div>
             <span>权限：</span>
-            <span v-for="(v, k) in state.data.misc.USER_LEVEL_TXT" :key="k">
+            <span v-for="(v, k) in $store.state.misc.USER_LEVEL_TXT" :key="k">
                 <span class="level-btn" v-if="k === i.level">{{v}}</span>
                 <a class="level-btn" v-else href="javascript:void(0)" @click="stateChange(i, k)">{{v}}</a>
             </span>
@@ -45,12 +45,10 @@
 
 <script>
 import api from '../../netapi.js'
-import state from '../../state.js'
 
 export default {
     data () {
         return {
-            state,
             keyword: '',
             user_lst: {},
             curitem: null,

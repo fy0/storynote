@@ -42,14 +42,12 @@
 
 <script>
 import api from '../netapi.js'
-import state from '../state.js'
 import Paginator from './utils/paginator.vue'
 import TopicItem from './utils/topic_item.vue'
 
 export default {
     data () {
         return {
-            state,
             info: {}
         }
     },

@@ -1,4 +1,5 @@
 <template>
+<no-ssr>
 <div class="">
     <div class="edit-page-title">
         <h3 class="" v-if="!is_edit">新建主题</h3>
@@ -32,6 +33,7 @@
         </div>
     </form>
 </div>
+</no-ssr>
 </template>
 
 <style>
@@ -60,7 +62,6 @@
 <script>
 import api from '../netapi.js'
 import config from '../config.js'
-import state from '../state.js'
 import markdownEditor from '@/components/utils/markdown-editor.vue'
 import './utils/topic-edit-fa.js'
 import Objectid from 'objectid-js'
@@ -106,7 +107,7 @@ export default {
     },
     computed: {
         topicStateOptions: function () {
-            return Object.entries(state.data.misc.TOPIC_STATE_TXT)
+            return Object.entries(this.$store.state.misc.TOPIC_STATE_TXT)
         },
         is_edit () {
             return this.$route.name === 'topic_edit'
@@ -123,13 +124,13 @@ export default {
                 return false
             }
 
-            if (this.topicInfo.title.length < state.data.misc.TITLE_LENGTH_MIN) {
-                $.message_error(`标题应不少于 ${state.data.misc.TITLE_LENGTH_MIN} 个字！`)
+            if (this.topicInfo.title.length < this.$store.state.misc.TITLE_LENGTH_MIN) {
+                $.message_error(`标题应不少于 ${this.$store.state.misc.TITLE_LENGTH_MIN} 个字！`)
                 return false
             }
 
-            if (this.topicInfo.title.length > state.data.misc.TITLE_LENGTH_MAX) {
-                $.message_error(`标题应不多于 ${state.data.misc.TITLE_LENGTH_MAX} 个字！`)
+            if (this.topicInfo.title.length > this.$store.state.misc.TITLE_LENGTH_MAX) {
+                $.message_error(`标题应不多于 ${this.$store.state.misc.TITLE_LENGTH_MAX} 个字！`)
                 return false
             }
 
@@ -224,7 +225,7 @@ export default {
         }, 5000)
     },
     beforeRouteEnter: async (to, from, next) => {
-        if (!state.data.user) {
+        if (!this.$store.state.user) {
             $.message_error('抱歉，无权访问此页面')
             return next('/')
         }

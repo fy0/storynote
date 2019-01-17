@@ -20,9 +20,7 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import api from '../../netapi.js'
-import state from '../../state.js'
 // import nprogress from 'nprogress/nprogress.js'
 
 export default {
@@ -38,18 +36,18 @@ export default {
                 username: [
                     { required: true, message: '必须输入账号', trigger: 'blur' },
                     {
-                        min: state.data.misc.USERNAME_REG_MIN,
-                        max: state.data.misc.USERNAME_REG_MAX,
-                        message: `账号长度应 ${state.data.misc.USERNAME_REG_MIN} 到 ${state.data.misc.USERNAME_REG_MAX} 之间`,
+                        min: this.$store.state.misc.USERNAME_REG_MIN,
+                        max: this.$store.state.misc.USERNAME_REG_MAX,
+                        message: `账号长度应 ${this.$store.state.misc.USERNAME_REG_MIN} 到 ${this.$store.state.misc.USERNAME_REG_MAX} 之间`,
                         trigger: 'blur'
                     }
                 ],
                 password: [
                     { required: true, message: '必须输入密码', trigger: 'blur' },
                     {
-                        min: state.data.misc.PASSWORD_REG_MIN,
-                        max: state.data.misc.PASSWORD_REG_MAX,
-                        message: `密码长度必须在 ${state.data.misc.PASSWORD_REG_MIN} 到 ${state.data.misc.PASSWORD_REG_MAX} 之间`,
+                        min: this.$store.state.misc.PASSWORD_REG_MIN,
+                        max: this.$store.state.misc.PASSWORD_REG_MAX,
+                        message: `密码长度必须在 ${this.$store.state.misc.PASSWORD_REG_MIN} 到 ${this.$store.state.misc.PASSWORD_REG_MAX} 之间`,
                         trigger: 'blur'
                     }
                 ],
@@ -91,9 +89,8 @@ export default {
                     let ret = await api.userSignup(this.form.username, this.form.password)
                     if (ret.code === 0) {
                         ret = await api.userInfo()
-                        Vue.set(state.data, 'user', ret.data)
                         if (ret.code === 0) {
-                            Vue.set(state.data, 'user', ret.data)
+                            this.$store.commit('SET_USERDATA', ret.data)
                             $.message_success(`注册成功！现以新的身份跳转首页。`)
                         } else {
                             $.message_error(`错误：${api.retinfo[ret.code]}`)

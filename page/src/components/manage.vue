@@ -18,7 +18,6 @@
 </style>
 
 <script>
-import state from '../state.js'
 import UserManage from './manage/user.vue'
 import TopicManage from './manage/topic.vue'
 
@@ -47,7 +46,7 @@ export default {
         }
     },
     beforeRouteEnter: async (to, from, next) => {
-        if (state.data.user.level < 100) {
+        if (this.$store.state.user.level < 100) {
             $.message_error(`无权限`)
             return next('/')
         }

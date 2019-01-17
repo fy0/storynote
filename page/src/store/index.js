@@ -1,8 +1,8 @@
-
-let data = {
+export const state = () => ({
     msgs: [],
     misc: null,
     user: null
+
     /* 实际内容动态获取
     misc: {
         USER_LEVEL: {
@@ -16,11 +16,18 @@ let data = {
         TOPIC_STATE: { ... },
         TOPIC_STATE_TXT: { ... }
     }, */
+})
+
+export const mutations = {
+    SET_MISC (state, val) {
+        state.misc = val
+    },
+    SET_USERDATA (state, val) {
+        state.user = val
+    }
 }
 
-export default {
-    'data': data,
-    'init': () => {
-        ;
+export const actions = {
+    async init ({ state, commit }) {
     }
 }

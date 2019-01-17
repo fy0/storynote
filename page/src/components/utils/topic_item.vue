@@ -2,7 +2,7 @@
 <div class="topic-item">
     <h3 class="title">
         <span v-if="item.link_to">[引用]</span>
-        <span v-if="item.state != state.data.misc.TOPIC_STATE.NORMAL">[{{state.data.misc.TOPIC_STATE_TXT[item.state]}}]</span>
+        <span v-if="item.state != $store.state.misc.TOPIC_STATE.NORMAL">[{{$store.state.misc.TOPIC_STATE_TXT[item.state]}}]</span>
         <a class="ref-topic" target="_blank" :href="item.link_to" v-if="item.link_to">{{item.title}}</a>
         <nuxt-link v-else :to="{ path: '/t/' + item.id }">{{item.title}}</nuxt-link>
     </h3>
@@ -20,7 +20,6 @@
 </style>
 
 <script>
-import state from '../../state.js'
 // import api from '@/netapi.js'
 
 export default {
@@ -29,7 +28,6 @@ export default {
     },
     data () {
         return {
-            state
         }
     },
     created: async function () {

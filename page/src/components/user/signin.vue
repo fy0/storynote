@@ -1,6 +1,6 @@
 <template>
-<div v-if="state.data.user">
-    <p>已经登录，身份为 {{state.data.user.name}}</p>
+<div v-if="$store.state.user">
+    <p>已经登录，身份为 {{$store.state.user.name}}</p>
     <nuxt-link :to="{ path: '/signout' }">注销</nuxt-link>
 </div>
 <div v-else>
@@ -24,15 +24,12 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import api from '../../netapi.js'
-import state from '../../state.js'
 // import nprogress from 'nprogress/nprogress.js'
 
 export default {
     data () {
         return {
-            state,
             loading: false,
             form: {
                 username: '',
@@ -43,8 +40,8 @@ export default {
                 username: [
                     { required: true, message: '必须输入账号', trigger: 'blur' },
                     {
-                        min: state.data.misc.USERNAME_MIN,
-                        max: state.data.misc.USERNAME_MAX,
+                        min: this.$store.state.misc.USERNAME_MIN,
+                        max: this.$store.state.misc.USERNAME_MAX,
                         message: `用户名不合法`,
                         trigger: 'blur'
                     }
@@ -52,9 +49,9 @@ export default {
                 password: [
                     { required: true, message: '必须输入密码', trigger: 'blur' },
                     {
-                        min: state.data.misc.PASSWORD_MIN,
-                        max: state.data.misc.PASSWORD_MAX,
-                        message: `密码长度必须在 ${state.data.misc.PASSWORD_MIN} 到 ${state.data.misc.PASSWORD_MAX} 之间`,
+                        min: this.$store.state.misc.PASSWORD_MIN,
+                        max: this.$store.state.misc.PASSWORD_MAX,
+                        message: `密码长度必须在 ${this.$store.state.misc.PASSWORD_MIN} 到 ${this.$store.state.misc.PASSWORD_MAX} 之间`,
                         trigger: 'blur'
                     }
                 ]
@@ -83,7 +80,7 @@ export default {
                     if (ret.code === 0) {
                         ret = await api.userInfo()
                         if (ret.code === 0) {
-                            Vue.set(state.data, 'user', ret.data)
+                            this.$store.commit('SET_USERDATA', ret.data)
                             $.message_success(`欢迎回来，${ret.data.name}！`)
                         } else {
                             $.message_error(`错误：${api.retinfo[ret.code]}`)

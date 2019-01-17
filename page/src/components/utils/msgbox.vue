@@ -1,7 +1,7 @@
 <template>
 <transition-group class="tipbox" tag="div" enter-active-class="animated fadeInLeft"
     leave-active-class="animated fadeOutLeft">
-    <div class="am-alert item" :class="item.class" :key="item.text" v-for="item in state.data.msgs">
+    <div class="am-alert item" :class="item.class" :key="item.text" v-for="item in $store.state.msgs">
         <a>{{item.text}}</a><br />
     </div>
 </transition-group>
@@ -21,12 +21,9 @@
 </style>
 
 <script>
-import state from '../../state.js'
-
 export default {
     data () {
         return {
-            state
         }
     },
     mounted: async function () {

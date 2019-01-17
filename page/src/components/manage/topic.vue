@@ -8,12 +8,12 @@
                 <nuxt-link :to="{ name: 'topic_edit', params: {id: i.id}}">编辑</nuxt-link>
             </div>
             <span>作者： <b>{{i.user.username}}</b>
-                <span v-if="i.user.id === state.data.user.id">[当前用户]</span>
+                <span v-if="i.user.id === $store.state.user.id">[当前用户]</span>
             </span>
         </div>
         <div>
             <span>权限：</span>
-            <span v-for="(v, k) in state.data.misc.TOPIC_STATE_TXT" :key="k">
+            <span v-for="(v, k) in $store.state.misc.TOPIC_STATE_TXT" :key="k">
                 <span class="level-btn" v-if="k === i.state">{{v}}</span>
                 <a class="level-btn" v-else href="javascript:void(0)" @click="stateChange(i, k)">{{v}}</a>
             </span>
@@ -49,12 +49,10 @@
 
 <script>
 import api from '../../netapi.js'
-import state from '../../state.js'
 
 export default {
     data () {
         return {
-            state,
             data_lst: {},
             new_password: '',
             noteText: '加载中 ...',

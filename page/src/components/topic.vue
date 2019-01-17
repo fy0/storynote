@@ -13,7 +13,7 @@
         <div v-html="marked(topic.content)"></div>
 
         <div class="tags">
-            <el-tag v-for="tag in topic_tags" :key="tag" :closable="canEdit" :close-transition="true" @close="handleClose(tag)">
+            <el-tag v-for="tag in topic_tags" :key="tag.id" :closable="canEdit" :close-transition="true" @close="handleClose(tag)">
                 <!-- 这里真是坑 -->
                 <nuxt-link :to="{ name: 'tag', params: {name: tag.tag.name}}">{{tag.tag.name}}</nuxt-link>
             </el-tag>
@@ -59,7 +59,7 @@
             </span>
         </div>
 
-        <div v-if="state.data.user" style="margin-top: 20px">
+        <div v-if="$store.state.user" style="margin-top: 20px">
             <form method="POST">
                 <div>
                     <textarea name="content" rows="5" placeholder="" style="width:100%;border-color:#d9d9d9" v-model="user_comment_text"></textarea>
@@ -107,13 +107,11 @@
 <script>
 import { marked } from '../md.js'
 import api from '../netapi.js'
-import state from '../state.js'
 import Loading from './utils/loading.vue'
 
 export default {
     data () {
         return {
-            state,
             topic: null,
             comments: [], // 当前显示的评论数
             comments_length: '?', // 总评论数
@@ -136,8 +134,8 @@ export default {
     },
     computed: {
         canEdit: function () {
-            if (!state.data.user) return
-            return (state.data.user.level === 100) || (state.data.user.id === this.topic.user.id)
+            if (!this.$store.state.user) return
+            return (this.$store.state.user.level === 100) || (this.$store.state.user.id === this.topic.user.id)
         }
     },
     methods: {

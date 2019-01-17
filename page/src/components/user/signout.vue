@@ -6,9 +6,7 @@
 </style>
 
 <script>
-import Vue from 'vue'
 import api from '../../netapi.js'
-import state from '../../state.js'
 
 export default {
     data () {
@@ -21,7 +19,7 @@ export default {
     },
     mounted: async function () {
         await api.userSignout()
-        Vue.delete(state.data, 'user')
+        this.$store.commit('SET_USERDATA', null)
         this.$router.replace('/')
         $.message_success(`您已成功注销`)
     }

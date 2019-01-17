@@ -26,12 +26,9 @@
 </style>
 
 <script>
-import state from '../../state.js'
-
 export default {
     data () {
         return {
-            state,
             showGoTop: false
         }
     },

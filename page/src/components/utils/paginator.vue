@@ -28,8 +28,6 @@
 </style>
 
 <script>
-import state from '../../state.js'
-
 export default {
     props: {
         pageInfo: Object,
@@ -41,7 +39,6 @@ export default {
     },
     data () {
         return {
-            state
         }
     },
     methods: {
