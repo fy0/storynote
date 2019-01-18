@@ -12,8 +12,7 @@ import Loading from '@/components/utils/loading.vue'
 import Manage from '@/components/manage.vue'
 import Links from '@/components/links.vue'
 import About from '@/components/about.vue'
-
-const TopicNew = () => import('@/components/topic_new.vue')
+import TopicNew from '@/components/topic-new.vue'
 
 Vue.use(Router)
 

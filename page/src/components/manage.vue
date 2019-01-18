@@ -45,11 +45,11 @@ export default {
             ;
         }
     },
-    beforeRouteEnter: async (to, from, next) => {
-        if (this.$store.state.user.level < 100) {
-            $.message_error(`无权限`)
-            return next('/')
-        }
+    beforeRouteEnter: async function (to, from, next) {
+        // if (this.$store.state.user.level < 100) {
+        //     $.message_error(`无权限`)
+        //     return next('/')
+        // }
         next()
     }
 }

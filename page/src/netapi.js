@@ -209,6 +209,18 @@ export default {
         return nget(`${remote.API_SERVER}/api/user/userinfo`)
     },
 
+    userInfo2: async function (headers) {
+        let resp = await backend.get(`${remote.API_SERVER}/api/user/userinfo`, {
+            headers
+        })
+        if (resp) {
+            if (typeof resp.data === 'string') {
+                return JSON.parse(resp.data)
+            }
+            return resp.data
+        }
+    },
+
     /** 用户 - 修改密码 */
     userPWChange: async function (password, newPassword) {
         return npost(`${remote.API_SERVER}/api/user/password_change`, { password, 'new_password': newPassword })

@@ -1,3 +1,6 @@
+import api from '@/netapi'
+// const cookieparser = process.server ? require('cookieparser') : undefined
+
 export const state = () => ({
     msgs: [],
     misc: null,
@@ -29,5 +32,11 @@ export const mutations = {
 
 export const actions = {
     async init ({ state, commit }) {
+    },
+    async nuxtServerInit ({ commit }, { req }) {
+        let ret = await api.userInfo2(req.headers)
+        if (ret.code === 0) {
+            commit('SET_USERDATA', ret.data)
+        }
     }
 }

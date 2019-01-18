@@ -1,6 +1,6 @@
 import api from '@/netapi'
 
-export default async function ({ store, route, redirect }) {
+export default async function ({ store, route, redirect, req }) {
     let ret = await api.misc()
     store.commit('SET_MISC', ret.data)
 

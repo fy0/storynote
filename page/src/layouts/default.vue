@@ -14,10 +14,8 @@
                     <nuxt-link tag="li" :to="{ name: 'timeline' }" :class="navActiveClass('timeline')"><a>时光</a></nuxt-link>
                     <nuxt-link tag="li" :to="{ path: '/signin' }" :class="navActiveClass('signin', 'signup', 'signout')"><a>用户</a></nuxt-link>
                     <no-ssr placeholder="">
-                        <template>
-                            <nuxt-link v-if="user && user.level >= 80" tag="li" :to="{ path: '/new' }" :class="navActiveClass('topic_new', 'topic_edit')"><a>新建</a></nuxt-link>
-                            <nuxt-link v-if="user && user.level >= 100" tag="li" :to="{ path: '/manage' }" :class="navActiveClass('manage')"><a>管理</a></nuxt-link>
-                        </template>
+                        <nuxt-link v-if="user && user.level >= 80" tag="li" :to="{ path: '/new' }" :class="navActiveClass('topic_new', 'topic_edit')"><a>新建</a></nuxt-link>
+                        <nuxt-link v-if="user && user.level >= 100" tag="li" :to="{ path: '/manage' }" :class="navActiveClass('manage')"><a>管理</a></nuxt-link>
                     </no-ssr>
                     <nuxt-link tag="li" :to="{ name: 'links' }" :class="navActiveClass('links')"><a>友链</a></nuxt-link>
                     <nuxt-link tag="li" :to="{ path: '/about' }" :class="navActiveClass('about')"><a>关于</a></nuxt-link>

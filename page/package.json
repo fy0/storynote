@@ -25,6 +25,7 @@
     "@nuxtjs/router": "^1.1.0",
     "animate.css": "^3.7.0",
     "axios": "^0.18.0",
+    "cookieparser": "^0.1.0",
     "cross-env": "^5.2.0",
     "easymde": "^2.4.2",
     "element-ui": "^2.4.6",

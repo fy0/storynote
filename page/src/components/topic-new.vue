@@ -1,5 +1,4 @@
 <template>
-<no-ssr>
 <div class="">
     <div class="edit-page-title">
         <h3 class="" v-if="!is_edit">新建主题</h3>
@@ -33,7 +32,6 @@
         </div>
     </form>
 </div>
-</no-ssr>
 </template>
 
 <style>
@@ -166,6 +164,28 @@ export default {
         }
     },
     created: async function () {
+        if (!this.$store.state.user) {
+            $.message_error('抱歉，无权访问此页面')
+            return this.$router.redirect('/')
+        }
+
+        let editData = null
+        if (this.$route.name === 'topic_edit') {
+            let ret = await api.topicGet(this.$route.params.id)
+            if (ret.code) {
+                $.message_error('抱歉，发生了错误')
+                return this.$router.redirect('/')
+            }
+            editData = ret.data
+        }
+
+        if (editData) {
+            let date = new Date()
+            date.setTime(editData.time * 1000)
+            this.topicInfo = editData
+            this.date = date
+        }
+
         if (localStorage.getItem('topic-post-cache-clear')) {
             // 我不知道为什么，在地址跳转前进行 storage 的清除工作，
             // 并不会实质上起效，因此这是一个替代手段，效果比较理想。
@@ -223,30 +243,6 @@ export default {
         title: _.debounce(function (val, oldVal) {
             localStorage.setItem('topic-post-title', val)
         }, 5000)
-    },
-    beforeRouteEnter: async (to, from, next) => {
-        if (!this.$store.state.user) {
-            $.message_error('抱歉，无权访问此页面')
-            return next('/')
-        }
-
-        let editData = null
-        if (to.name === 'topic_edit') {
-            let ret = await api.topicGet(to.params.id)
-            if (ret.code) {
-                $.message_error('抱歉，发生了错误')
-                return next('/')
-            }
-            editData = ret.data
-        }
-        next(vm => {
-            if (editData) {
-                let date = new Date()
-                date.setTime(editData.time * 1000)
-                vm.topicInfo = editData
-                vm.date = date
-            }
-        })
     },
     components: {
         markdownEditor
