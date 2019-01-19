@@ -31,10 +31,11 @@ export const mutations = {
 }
 
 export const actions = {
-    async init ({ state, commit }) {
-    },
     async nuxtServerInit ({ commit }, { req }) {
-        let ret = await api.userInfo2(req.headers)
+        let ret = await api.misc()
+        commit('SET_MISC', ret.data)
+
+        ret = await api.userInfo2(req.headers)
         if (ret.code === 0) {
             commit('SET_USERDATA', ret.data)
         }

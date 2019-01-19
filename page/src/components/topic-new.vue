@@ -166,7 +166,7 @@ export default {
     created: async function () {
         if (!this.$store.state.user) {
             $.message_error('抱歉，无权访问此页面')
-            return this.$router.redirect('/')
+            return this.$router.replace('/')
         }
 
         let editData = null
@@ -174,7 +174,7 @@ export default {
             let ret = await api.topicGet(this.$route.params.id)
             if (ret.code) {
                 $.message_error('抱歉，发生了错误')
-                return this.$router.redirect('/')
+                return this.$router.replace('/')
             }
             editData = ret.data
         }

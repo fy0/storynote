@@ -1,6 +1,7 @@
-const pkg = require('./package')
+// const pkg = require('./package')
 const path = require('path')
 const webpack = require('webpack')
+const mm = require('micromatch')
 
 module.exports = {
     mode: 'universal',
@@ -19,6 +20,20 @@ module.exports = {
     ],
 
     /** middleware */
+    serverMiddleware: [
+        {
+            handler: function (req, res, next) {
+                let spaPaths = [
+                    '/new'
+                ]
+                if (mm.some(req._parsedUrl.pathname, spaPaths)) {
+                    res.spa = true
+                }
+                next()
+            }
+        }
+    ],
+
     router: {
         middleware: ['router-guards']
     },
